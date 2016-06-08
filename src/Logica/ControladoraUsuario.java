@@ -11,6 +11,13 @@ public class ControladoraUsuario {
 		usuarios = new ArrayList<Usuario>();
 		permisos = new ArrayList<Permiso>();
 		cargarPermisos();
+		cargarUsuarioPrueba();
+	}
+	
+	public void cargarUsuarioPrueba() {
+		Usuario u = new Usuario("Master", "Master1!", "Master", "49290325", "master@gmail.com", "099954750", "091410102", 
+				"Satint bois 5063", "Treinta y tres 1334", "123123122123", new Date(11,12,1992));
+		usuarios.add(u);
 	}
 	
 	public void cargarPermisos() {
@@ -51,14 +58,15 @@ public class ControladoraUsuario {
 	private void validateUsrSession(String usuarioActual) throws Exception {
 		String usuarioActualDesencriptado = Utilidades.Desencriptar(usuarioActual);
 		String[] parts = usuarioActualDesencriptado.split("-"); 
-		String result = login(parts[0], parts[1]);
+		String result = login(parts[0], parts[2]);
 		if (result == "usuario" || result == "contrasenia")
 			throw new Exception("Session error");
 	}
 	
-	public void AgregarUsuario(String usuario, String contrasenia, String nombre, String cedula, String email, 
+	public void AgregarUsuario(String usuarioActual, String usuario, String contrasenia, String nombre, String cedula, String email, 
 			String tel, String cel, String domicilio, String domicilioLaboral, String rut, Date fechaDeNacimiento) throws Exception {
 		
+		validateUsrSession(usuarioActual);
 		
 		validarDatosUsuario(usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral);
 		
@@ -104,7 +112,10 @@ public class ControladoraUsuario {
 		return retorno;
 	}
 	
-	public void eliminarUsuario(String usuarioActual, String usuario) {
+	public String eliminarUsuario(String usuarioActual, String usuario) throws Exception {
+		
+		validateUsrSession(usuarioActual);
+		
 		Usuario aux = null;
 		
 		for (Usuario u: usuarios) {
@@ -113,6 +124,11 @@ public class ControladoraUsuario {
 			}
 		}
 		
-		usuarios.remove(aux);		
+		if(aux == null) {
+			return "not found";	
+		} else {
+			usuarios.remove(aux);
+			return "completado";
+		}	
 	}
 }

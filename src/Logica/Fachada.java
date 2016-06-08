@@ -25,12 +25,12 @@ public class Fachada {
 	
 
 	// CONTROLADORA USUARIO
-	public String AgregarUsuario(String usuario, String contrasenia, String nombre, String cedula, String email, String tel, String cel,
+	public String AgregarUsuario(String usrKey, String usuario, String contrasenia, String nombre, String cedula, String email, String tel, String cel,
 			String domicilio, String domicilioLaboral, String rut, Date fechaDeNacimiento) {
 		try {
 			if(controladoraUsuario.existeUsuario(usuario))
 				return "duplicado";
-			controladoraUsuario.AgregarUsuario(usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, rut, fechaDeNacimiento);
+			controladoraUsuario.AgregarUsuario(usrKey, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, rut, fechaDeNacimiento);
 		} catch (Exception e) {
 			return e.getMessage();
 		}
@@ -49,9 +49,14 @@ public class Fachada {
 		return controladoraUsuario.login(usuario, contrasenia);
 	}
 	
-	public void eliminarUsuario(String usuarioActual, String usuario) {
+	public String eliminarUsuario(String usrKey, String usuario) {
 		
-		controladoraUsuario.eliminarUsuario(usuarioActual, usuario);
+		try {
+			return controladoraUsuario.eliminarUsuario(usrKey, usuario);
+			
+		} catch (Exception e) {
+			return e.getMessage();
+		}
 	}
 	// CONTROLADORA USUARIO
 }

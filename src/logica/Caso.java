@@ -13,7 +13,7 @@ public class Caso {
 	protected Caso() {}
 
 	public Caso(String iUE, String juzgado, int turno, String caratulado) {
-		IUE = iUE;
+		this.IUE = iUE;
 		this.juzgado = juzgado;
 		this.turno = turno;
 		this.caratulado = caratulado;

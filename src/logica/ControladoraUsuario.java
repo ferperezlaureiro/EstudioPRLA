@@ -12,12 +12,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 public class ControladoraUsuario {
-	public ControladoraUsuario() {
-        BasicConfigurator.configure();
-        Logger.getLogger("org.hibernate").setLevel(Level.WARN);
-        cargarUsuarioPrueba();
-	}
-	
 	//PRINCIPIO SECCION CONSULTAS
 	public static boolean existeUsuario(String usuario) {
 		//Se obtiene y empieza la session
@@ -26,6 +20,7 @@ public class ControladoraUsuario {
         Query query = s.createQuery("from Usuario where usuario = :usuario ");
         query.setParameter("usuario", usuario);
         List list = query.list();
+        
         s.disconnect();
         
         if (list.isEmpty()){
@@ -48,6 +43,7 @@ public class ControladoraUsuario {
         Query query = s.createQuery("from Usuario where usuario = :usuario ");
         query.setParameter("usuario", usuario);
         List list = query.list();
+        
         s.disconnect();
         
         if(list.isEmpty()){
@@ -60,14 +56,7 @@ public class ControladoraUsuario {
 	}
 	
 	public static String login(String usuario, String contrasenia) {
-		//Se obtiene y empieza la session
-		Session s = HibernateUtil.getSession();
-        s.beginTransaction();
-        
         Usuario usr = buscarUsuario(usuario);
-
-		s.getTransaction().commit();
-        s.disconnect();
 		
 		String retorno = "usuario";
 		
@@ -84,28 +73,13 @@ public class ControladoraUsuario {
 	//FIN SECCION CONSULTAS
 
 	//PRINCIPIO SECCION ALTAS
-	public static void cargarUsuarioPrueba() {
-		//Se obtiene y empieza la session
-		Session s = HibernateUtil.getSession();
-        s.beginTransaction();
-		
-        //Se ingresa un nuevo usuario
-        Usuario u = new Usuario("Master", "Master1!", "Master", "49290325", "master@gmail.com", "099954750", "091410102", 
-				"Satint bois 5063", "Treinta y tres 1334", "123123122123", new Date(11,12,1992));
-		
-		//Se guarda el nuevo usuario en la base de datos
-		s.save(u);
-		s.getTransaction().commit();
-        s.disconnect();
-	}
-	
 	public static void AgregarUsuario(String usuarioActual, String usuario, String contrasenia, String nombre, String cedula, String email, 
 			String tel, String cel, String domicilio, String domicilioLaboral, String rut, Date fechaDeNacimiento) throws Exception {
         //Se valida que la sesion sea valida
 		validateUsrSession(usuarioActual);
 		
 		//Se valida que los datos sean validos
-		validarDatosUsuario(usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral);
+		validarDatosUsuario(usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, fechaDeNacimiento);
 		
 		//Se obtiene y empieza la session
 		Session s = HibernateUtil.getSession();
@@ -117,11 +91,12 @@ public class ControladoraUsuario {
 		//Se guarda el nuevo usuario en la base de datos
 		s.save(u);
 		s.getTransaction().commit();
-        s.disconnect();
+        
+		s.disconnect();
 	}
 	
 	private static void validarDatosUsuario (String usuario, String contrasenia, String nombre, String cedula, String email, String tel, String cel, 
-			String domicilio, String domicilioLaboral) throws Exception {
+			String domicilio, String domicilioLaboral, Date fechaDeNacimiento) throws Exception {
 		String errores = "";
 		if(!Validacion.validarUsuario(usuario))
 			errores += "usuario";
@@ -141,6 +116,8 @@ public class ControladoraUsuario {
 			errores += "|domicilio";
 		if(!Validacion.validarDomicilio(domicilioLaboral))
 			errores += "|domicilioLaboral";
+		if(!Validacion.validarFechaDeNacimiento(fechaDeNacimiento))
+			errores += "|fechaDeNacimiento";
 		
 		if(errores != "")
 			throw new Exception(errores);
@@ -160,25 +137,21 @@ public class ControladoraUsuario {
 		
 		//Se valida que la sesion sea valida
 		validateUsrSession(usuarioActual);
-		
-		//Se obtiene y empieza la session
-		Session s = HibernateUtil.getSession();
-        s.beginTransaction();
         
         Usuario usr = buscarUsuario(usuario);
-
-		s.getTransaction().commit();
-        s.disconnect();
 		
 		if(usr == null) {
 			return "not found";	
 		} else {
+			//Se obtiene y empieza la session
+			Session s = HibernateUtil.getSession();
 	        s.beginTransaction();
 	        
 	        s.delete(usr); 
 	        
 			s.getTransaction().commit();
-	        s.disconnect();
+	        
+			s.disconnect();
 			
 			return "completado";
 		}	

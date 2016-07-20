@@ -22,13 +22,13 @@ public class TestUsuario {
 		fachada.AgregarUsuario(actualUsr, "Ernesto", "Adasd1!", "Ernesto Rodriguez", "17823243", "Ernestorod@gmail.com", "12341231", 
 				"099954750", "Saint Bois 5063", "Treinta y tres 1334", "34234", new Date(11,12,1992));
 		
-		assertEquals(true,fachada.existeUsuario("Graciela"));
-		assertEquals(true,fachada.existeUsuario("Fernando"));
-		assertEquals(true,fachada.existeUsuario("Ernesto"));
+		assertEquals(true,ControladoraUsuario.existeUsuario("Graciela"));
+		assertEquals(true,ControladoraUsuario.existeUsuario("Fernando"));
+		assertEquals(true,ControladoraUsuario.existeUsuario("Ernesto"));
 		
 		fachada.eliminarUsuario(actualUsr, "Graciela");
 		
-		assertEquals(false,fachada.existeUsuario("Graciela"));
+		assertEquals(false,ControladoraUsuario.existeUsuario("Graciela"));
 	}
 
 	@Test
@@ -39,15 +39,15 @@ public class TestUsuario {
 		
 		fachada.AgregarUsuario(actualUsr, "Graciela", "Adasd1!", "Graciela Laureiro", "17823243", "Gracielalaureiro@gmail.com", "12341231", 
 				"099954750", "Saint Bois 5063", "Treinta y tres 1334", "34234", new Date(11,12,1992));
-		assertEquals(true,fachada.existeUsuario("Graciela"));
+		assertEquals(true,ControladoraUsuario.existeUsuario("Graciela"));
 		
 		fachada.AgregarUsuario(actualUsr, "Fernando", "Adasd1!", "Fernando Perez", "17823243", "Fernandopr_57@gmail.com", "12341231", 
 				"099954750", "Saint Bois 5063", "Treinta y tres 1334", "34234", new Date(11,12,1992));
-		assertEquals(true,fachada.existeUsuario("Fernando"));
+		assertEquals(true,ControladoraUsuario.existeUsuario("Fernando"));
 		
 		fachada.AgregarUsuario(actualUsr, "Ernesto", "Adasd1!", "Ernesto Rodriguez", "17823243", "Ernestorod@gmail.com", "12341231", 
 				"099954750", "Saint Bois 5063", "Treinta y tres 1334", "34234", new Date(11,12,1992));
-		assertEquals(true,fachada.existeUsuario("Ernesto"));
+		assertEquals(true,ControladoraUsuario.existeUsuario("Ernesto"));
 	}
 
 	@Test
@@ -478,15 +478,15 @@ public class TestUsuario {
 		fachada.AgregarUsuario(actualUsr, "Ernesto", "Adasd1!", "Ernesto Rodriguez", "17823243", "Ernestorod@gmail.com", "12341231", 
 				"099954750", "Saint Bois 5063", "Treinta y tres 1334", "34234", new Date(11,12,1992));
 
-		Usuario u = fachada.buscarUsuario("Graciela");
+		Usuario u = ControladoraUsuario.buscarUsuario("Graciela");
 		String usrEncriptado = Utilidades.Encriptar(u.getUsuario() + "-" + u.getCedula() + "-" + u.getContrasenia());
 		assertEquals(usrEncriptado, fachada.login("Graciela", "Adasd1!"));
 		
-		u = fachada.buscarUsuario("Fernando");
+		u = ControladoraUsuario.buscarUsuario("Fernando");
 		usrEncriptado = Utilidades.Encriptar(u.getUsuario() + "-" + u.getCedula() + "-" + u.getContrasenia());
 		assertEquals(usrEncriptado, fachada.login("Fernando", "Adasd1!"));
 		
-		u = fachada.buscarUsuario("Ernesto");
+		u = ControladoraUsuario.buscarUsuario("Ernesto");
 		usrEncriptado = Utilidades.Encriptar(u.getUsuario() + "-" + u.getCedula() + "-" + u.getContrasenia());
 		assertEquals(usrEncriptado, fachada.login("Ernesto", "Adasd1!"));
 	}
@@ -525,7 +525,7 @@ public class TestUsuario {
 		Usuario u = new Usuario("Graciela", "Adasd1!", "Graciela Laureiro", "17823243", "Gracielalaureiro@gmail.com", "12341231", 
 				"099954750", "Saint Bois 5063", "Treinta y tres 1334", "34234", new Date(11,12,1992));
 
-		assertEquals(u.getUsuario(), fachada.buscarUsuario("Graciela").getUsuario());
-		assertEquals(null, fachada.buscarUsuario("Gabriela"));
+		assertEquals(u.getUsuario(), ControladoraUsuario.buscarUsuario("Graciela").getUsuario());
+		assertEquals(null, ControladoraUsuario.buscarUsuario("Gabriela"));
 	}
 }

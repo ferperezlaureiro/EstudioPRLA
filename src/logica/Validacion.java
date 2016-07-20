@@ -1,5 +1,6 @@
 package logica;
 
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -75,5 +76,54 @@ public class Validacion {
 		Pattern patron = Pattern.compile(regex);
 		Matcher emparejador = patron.matcher(domicilio);
 		return emparejador.matches();
+	}
+	
+	public static boolean validarFechaDeNacimiento (Date fechaDeNacimiento) {
+		if (fechaDeNacimiento == null)
+			return false;
+		if (fechaDeNacimiento.after(new Date()))
+			return false;
+		return true;
+	}
+	
+	public static boolean validarIUE(String IUE) {
+		if (IUE == null || IUE == "")
+			return true;
+		String regex = "(([0-9]{1})+(-([0-9]{4}))+(/([1-9]{4})))";
+		Pattern patron = Pattern.compile(regex);
+		Matcher emparejador = patron.matcher(IUE);
+		return emparejador.matches();
+	}
+	
+	public static boolean validarDosPalabras (String dosPalabras) {
+		if (dosPalabras == null || dosPalabras == "")
+			return true;
+		String regex = "(\\p{L}+)(([ ])(\\p{L}+))?";
+		Pattern patron = Pattern.compile(regex);
+		Matcher emparejador = patron.matcher(dosPalabras);
+		return emparejador.matches();
+	}
+	
+	public static boolean validarTurno(int turno) {
+		if (turno > 0 && turno < 30) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public static boolean validarCaratulado (String caratulado) {
+		if (caratulado == null || caratulado == "")
+			return true;
+		String regex = "(\\p{L}+)(([ ])(\\p{L}+))?(([ ])(\\p{L}+))?(([ ])(\\p{L}+))?(([ ])(\\p{L}+))?(([ ])(\\p{L}+))?(([ ])(\\p{L}+))?(([ ])(\\p{L}+))?(([ ])(\\p{L}+))?(([ ])(\\p{L}+))?";
+		Pattern patron = Pattern.compile(regex);
+		Matcher emparejador = patron.matcher(caratulado);
+		return emparejador.matches();
+	}
+	
+	public static boolean validarContenidoMensaje (String contenido) {
+		if (contenido == null || contenido == "")
+			return false;
+		return true;
 	}
 }

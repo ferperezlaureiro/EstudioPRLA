@@ -89,7 +89,7 @@ public class Validacion {
 	public static boolean validarIUE(String IUE) {
 		if (IUE == null || IUE == "")
 			return true;
-		String regex = "(([0-9]{1})+(-([0-9]{4}))+(/([1-9]{4})))";
+		String regex = "(([0-9]{1})+(-([0-9]{4}))+(/([1-9]{1}[0-9]{1}[1-9]{1}[1-9]{1})))";
 		Pattern patron = Pattern.compile(regex);
 		Matcher emparejador = patron.matcher(IUE);
 		return emparejador.matches();

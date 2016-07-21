@@ -19,6 +19,8 @@ public class Involucrado {
 
 	public Involucrado(long idCaso, Date fechaDeNacimiento, String nombre, String cedula, String nacionalidad, String direccion,
 			String clase) {
+		super();
+		this.idCaso = idCaso;
 		this.fechaDeNacimiento = fechaDeNacimiento;
 		this.nombre = nombre;
 		this.cedula = cedula;

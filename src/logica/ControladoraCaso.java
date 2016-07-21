@@ -46,8 +46,10 @@ public class ControladoraCaso {
         List list = query.list();
 
         s.disconnect();
+        Caso c = null;
         
-        Caso c = (Caso)list.get(0);
+        if (!list.isEmpty())
+        	c = (Caso)list.get(0);
 
         return (c != null);
 	}
@@ -129,7 +131,10 @@ public class ControladoraCaso {
 
             s.disconnect();
 
-            Involucrado i = (Involucrado)list.get(0);
+            Involucrado i = null;
+            
+            if (!list.isEmpty())
+            	i = (Involucrado)list.get(0);
             
             return (i != null);
 		}
@@ -187,7 +192,6 @@ public class ControladoraCaso {
 		if(c != null) {
 			//Se obtiene y empieza la session
 			Session s = HibernateUtil.getSession();
-			
 	        s.beginTransaction();
 
 	        Involucrado i = new Involucrado(c.getId(), fechaDeNacimiento, nombre, cedula, nacionalidad, domicilio, clase);
@@ -276,7 +280,6 @@ public class ControladoraCaso {
 		
 		//Se obtiene y empieza la session
 		Session s = HibernateUtil.getSession();
-		s.getTransaction().commit();
 		
 		if(c == null) {
 			return "not found";	

@@ -25,14 +25,10 @@ public class ControladoraCaso {
 
         s.disconnect();
         
-        Caso c = (Caso)list.get(0);
-        
-
-        if(c != null) {
-        	return c;
-        } else {
+        if (!list.isEmpty())
+        	return (Caso)list.get(0);
+        else
         	return null;
-        }
 	}
 	
 	public static boolean existeCaso (String usuarioActual, String iUE) throws Exception {
@@ -43,15 +39,13 @@ public class ControladoraCaso {
 		
         Query query = s.createQuery("from Caso where IUE = :iUE ");
         query.setParameter("iUE", iUE);
-        List list = query.list();
 
         s.disconnect();
-        Caso c = null;
         
-        if (!list.isEmpty())
-        	c = (Caso)list.get(0);
-
-        return (c != null);
+        if (!query.list().isEmpty())
+        	return true;
+        else
+        	return false;
 	}
 	
 	public static ArrayList<Mensaje> obtenerConversacion (String usuarioActual, String iUE) throws Exception {
@@ -231,6 +225,11 @@ public class ControladoraCaso {
 	public static void agregarMensaje(String usuarioActual, String iUE,  String usuario, Date fecha, String contenido) throws Exception {
 		//Se valida que la sesion sea valida
 		ControladoraUsuario.validateUsrSession(usuarioActual);
+		
+		validarDatosMensaje(iUE, usuario, fecha, contenido);
+		
+		if (!ControladoraUsuario.existeUsuario(usuario))
+			throw new Exception("usuario");
 		
 		Caso c = obtenerCasoPorIUE(usuarioActual, iUE);
 		

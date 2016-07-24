@@ -78,6 +78,7 @@ public class Fachada {
 		try {
 			ControladoraCaso.agregarMensaje(usuarioActual, iUE, usuario, fecha, contenido);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return e.getMessage();
 		}
 		return "completado";

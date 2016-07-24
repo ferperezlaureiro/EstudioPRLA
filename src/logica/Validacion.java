@@ -122,7 +122,7 @@ public class Validacion {
 	}
 	
 	public static boolean validarContenidoMensaje (String contenido) {
-		if (contenido == null || contenido == "")
+		if (contenido == null || contenido == "" || contenido.length() == 0 || contenido == " ")
 			return false;
 		return true;
 	}

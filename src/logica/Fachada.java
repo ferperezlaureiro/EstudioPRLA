@@ -23,6 +23,18 @@ public class Fachada {
 	
 
 	// CONTROLADORA USUARIO
+	@SuppressWarnings("finally")
+	public ArrayList<Usuario> obtenerUsuarios(String usrKey) {
+		ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+		try {
+			usuarios = ControladoraUsuario.obtenerUsuarios(usrKey);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			return usuarios;
+		}
+	}
+	
 	public String AgregarUsuario(String usrKey, String usuario, String contrasenia, String nombre, String cedula, String email, String tel, String cel,
 			String domicilio, String domicilioLaboral, String rut, Date fechaDeNacimiento) {
 		try {
@@ -30,13 +42,19 @@ public class Fachada {
 				return "duplicado";
 			ControladoraUsuario.AgregarUsuario(usrKey, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, rut, fechaDeNacimiento);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return e.getMessage();
 		}
 		return "completado";
 	}
 	
 	public String login(String usuario, String contrasenia) {
-		return ControladoraUsuario.login(usuario, contrasenia);
+		try {
+			return ControladoraUsuario.login(usuario, contrasenia);
+		} catch (Exception e){
+			e.printStackTrace();
+			return e.getMessage();
+		}
 	}
 	
 	public String eliminarUsuario(String usrKey, String usuario) {
@@ -45,7 +63,17 @@ public class Fachada {
 			return ControladoraUsuario.eliminarUsuario(usrKey, usuario);
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			return e.getMessage();
+		}
+	}
+	
+	public Usuario obtenerUsuario(String usrKey, String usuario) {
+		try {
+			return ControladoraUsuario.buscarUsuario(usrKey, usuario);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 	// CONTROLADORA USUARIO
@@ -57,6 +85,7 @@ public class Fachada {
 				return "duplicado";
 			ControladoraCaso.agregarCaso(usuarioActual, iUE, juzgado, turno, caratulado);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return e.getMessage();
 		}
 		return "completado";
@@ -69,6 +98,7 @@ public class Fachada {
 				return "duplicado";
 			ControladoraCaso.agregarInvolucrado(usuarioActual, iUE, fechaDeNacimiento, nombre, cedula, nacionalidad, domicilio, clase);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return e.getMessage();
 		}
 		return "completado";
@@ -82,6 +112,18 @@ public class Fachada {
 			return e.getMessage();
 		}
 		return "completado";
+	}
+	
+	@SuppressWarnings("finally")
+	public ArrayList<Caso> obtenerCasos (String usuarioActual, String iUE) {
+		ArrayList<Caso> casos = null;
+		try {
+			casos = ControladoraCaso.obtenerCasos(usuarioActual);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			return casos;
+		}
 	}
 	
 	@SuppressWarnings("finally")
@@ -121,11 +163,23 @@ public class Fachada {
 	}
 	
 	public String eliminarCaso (String usuarioActual, String iUE) {
-		return ControladoraCaso.eliminarCaso(usuarioActual, iUE);
+		try {
+			ControladoraCaso.eliminarCaso(usuarioActual, iUE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+		return "completado";
 	}
 	
 	public String eliminarInvolucrado(String usuarioActual, String iUE, String ciInvolucrado) {
-		return ControladoraCaso.eliminarInvolucrado(usuarioActual, iUE, ciInvolucrado);
+		try {
+			ControladoraCaso.eliminarInvolucrado(usuarioActual, iUE, ciInvolucrado);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+		return "completado";
 	}
 	// CONTROLADORA CASO
 }

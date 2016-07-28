@@ -396,17 +396,21 @@ public class TestUsuario {
 		fachada.AgregarUsuario(actualUsr, "Ernesto", "Adasd1!", "Ernesto Rodriguez", "17823243", "Ernestorod@gmail.com", "12341231", 
 				"099954750", "Saint Bois 5063", "Treinta y tres 1334", "34234", new Date(11,12,1992));
 
-		Usuario u = ControladoraUsuario.buscarUsuario("Graciela");
-		String usrEncriptado = Utilidades.Encriptar(u.getUsuario() + "-" + u.getCedula() + "-" + u.getContrasenia());
-		assertEquals(usrEncriptado, fachada.login("Graciela", "Adasd1!"));
-		
-		u = ControladoraUsuario.buscarUsuario("Fernando");
-		usrEncriptado = Utilidades.Encriptar(u.getUsuario() + "-" + u.getCedula() + "-" + u.getContrasenia());
-		assertEquals(usrEncriptado, fachada.login("Fernando", "Adasd1!"));
-		
-		u = ControladoraUsuario.buscarUsuario("Ernesto");
-		usrEncriptado = Utilidades.Encriptar(u.getUsuario() + "-" + u.getCedula() + "-" + u.getContrasenia());
-		assertEquals(usrEncriptado, fachada.login("Ernesto", "Adasd1!"));
+		try {
+			Usuario u = ControladoraUsuario.buscarUsuario(actualUsr, "Graciela");
+			String usrEncriptado = Utilidades.Encriptar(u.getUsuario() + "-" + u.getCedula() + "-" + u.getContrasenia());
+			assertEquals(usrEncriptado, fachada.login("Graciela", "Adasd1!"));
+			
+			u = ControladoraUsuario.buscarUsuario(actualUsr, "Fernando");
+			usrEncriptado = Utilidades.Encriptar(u.getUsuario() + "-" + u.getCedula() + "-" + u.getContrasenia());
+			assertEquals(usrEncriptado, fachada.login("Fernando", "Adasd1!"));
+			
+			u = ControladoraUsuario.buscarUsuario(actualUsr, "Ernesto");
+			usrEncriptado = Utilidades.Encriptar(u.getUsuario() + "-" + u.getCedula() + "-" + u.getContrasenia());
+			assertEquals(usrEncriptado, fachada.login("Ernesto", "Adasd1!"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
@@ -422,13 +426,21 @@ public class TestUsuario {
 		fachada.AgregarUsuario(actualUsr, "Ernesto", "Adasd1!", "Ernesto Rodriguez", "17823243", "Ernestorod@gmail.com", "12341231", 
 				"099954750", "Saint Bois 5063", "Treinta y tres 1334", "34234", new Date(11,12,1992));
 
-		assertEquals("contrasenia", fachada.login("Graciela", "1111"));
-		assertEquals("contrasenia", fachada.login("Fernando", "1111"));
-		assertEquals("contrasenia", fachada.login("Ernesto", "1111"));
+		assertEquals("|contrasenia", fachada.login("Graciela", "1111"));
+		assertEquals("|contrasenia", fachada.login("Fernando", "1111"));
+		assertEquals("|contrasenia", fachada.login("Ernesto", "1111"));
 
-		assertEquals("usuario", fachada.login("no user", "1111"));
-		assertEquals("usuario", fachada.login("no user one", "1111"));
-		assertEquals("usuario", fachada.login("no user two", "1111"));
+		assertEquals("usuario|contrasenia", fachada.login("no user", "1111"));
+		assertEquals("usuario|contrasenia", fachada.login("no user one", "1111"));
+		assertEquals("usuario|contrasenia", fachada.login("no user two", "1111"));
+
+		assertEquals("usuario no encontrado", fachada.login("Nouser", "Nouser1!"));
+		assertEquals("usuario no encontrado", fachada.login("Nouserone", "Nouserone1!"));
+		assertEquals("usuario no encontrado", fachada.login("Nousertwo", "Nousertwo1!"));
+
+		assertEquals("contrasenia incorrecta", fachada.login("Master", "Nouser1!"));
+		assertEquals("contrasenia incorrecta", fachada.login("Master", "Nouserone1!"));
+		assertEquals("contrasenia incorrecta", fachada.login("Master", "Nousertwo1!"));
 	}
 	
 	@Test
@@ -443,7 +455,11 @@ public class TestUsuario {
 		Usuario u = new Usuario("Graciela", "Adasd1!", "Graciela Laureiro", "17823243", "Gracielalaureiro@gmail.com", "12341231", 
 				"099954750", "Saint Bois 5063", "Treinta y tres 1334", "34234", new Date(11,12,1992));
 
-		assertEquals(u.getUsuario(), ControladoraUsuario.buscarUsuario("Graciela").getUsuario());
-		assertEquals(null, ControladoraUsuario.buscarUsuario("Gabriela"));
+		try {
+			assertEquals(u.getUsuario(), ControladoraUsuario.buscarUsuario(actualUsr, "Graciela").getUsuario());
+			assertEquals(null, ControladoraUsuario.buscarUsuario(actualUsr, "Gabriela"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

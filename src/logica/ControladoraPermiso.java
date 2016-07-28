@@ -1,5 +1,6 @@
 package logica;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -7,35 +8,63 @@ import org.hibernate.Session;
 
 public class ControladoraPermiso {
 	//PRINCIPIO SECCION CONSULTAS
-	public static boolean tienePermiso(String codePermiso, Long idUsuario) {
+	public static ArrayList<Permiso> obtenerPermisos() {
 		Session s = HibernateUtil.getSession();
-        s.beginTransaction();
+		
+        Query query = s.createQuery("from Permiso");
+        List list = query.list();
+        
+        s.disconnect();
+        
+        if(!list.isEmpty())
+        	return null;
+        
+        ArrayList<Permiso> permisos = new ArrayList<Permiso>();
+        for(Object o : list)
+        	permisos.add((Permiso)o);
+        
+        return permisos;
+	}
+	
+	public static Permiso obtenerPermisoPorCode(String codePermiso) {
+		Session s = HibernateUtil.getSession();
 		
         Query query = s.createQuery("from Permiso where code = :code ");
         query.setParameter("code", codePermiso);
         List list = query.list();
+
+        s.disconnect();
         
-        Permiso p = (Permiso)list.get(0);
+        if (list.isEmpty())
+        	return null;
+        else
+        	return (Permiso)list.get(0);
+	}
+	
+	public static void tienePermiso(String codePermiso, Long idUsuario) throws Exception{
+        Permiso p = obtenerPermisoPorCode(codePermiso);
+        
+        if (p == null)
+        	throw new Exception("Accion no permitida");
+
+		Session s = HibernateUtil.getSession();
 		
-        query = s.createQuery("from PermisoUsuario where idPermiso = :idP and idUsuario = :idU ");
+        Query query = s.createQuery("from PermisoUsuario where idPermiso = :idP and idUsuario = :idU ");
         query.setParameter("idP", p.getId());
         query.setParameter("idU", idUsuario);
-        list = query.list();
-        
-        s.getTransaction().commit();
+
+        s.disconnect();
 		
-        PermisoUsuario pU = (PermisoUsuario) list.get(0);
-        
-        if (pU == null) {
-        	return false;
-        } else {
-        	return true;
-        }
+        if (query.list().isEmpty())
+        	throw new Exception("Accion no permitida");
 	}
 	//FIN SECCION CONSULTAS
 
 	//PRINCIPIO SECCION ALTAS
-	public static void crearPermiso (String nombre, String code) {
+	public static boolean crearPermiso (String nombre, String code) {
+		if(obtenerPermisoPorCode(code) != null)
+			return false;
+		
 		//Se obtiene y empieza la session
 		Session s = HibernateUtil.getSession();
         s.beginTransaction();
@@ -45,45 +74,73 @@ public class ControladoraPermiso {
 		//Se guarda el nuevo permiso en la base de datos
 		s.save(p);
 		s.getTransaction().commit();
+		s.disconnect();
+		
+		return true;
 	}
 	
-	public static void asignarPermiso(String codePermiso, Long idUsuario) {
+	public static boolean asignarPermiso(String usuarioActual, String codePermiso, String usuario) throws Exception{
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
+		
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("AP", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		
+		Usuario u = ControladoraUsuario.buscarUsuario(usuarioActual, usuario);
+		if(u == null)
+			return false;
+		
+		Permiso p = obtenerPermisoPorCode(codePermiso);
+		if(p == null)
+			return false;
+		
+		tienePermiso(codePermiso, u.getId());
+		
 		Session s = HibernateUtil.getSession();
         s.beginTransaction();
-		
-        Query query = s.createQuery("from Permiso where code = :code ");
-        query.setParameter("code", codePermiso);
-        List list = query.list();
-        
-        Permiso p = (Permiso)list.get(0);
 
-        PermisoUsuario pU = new PermisoUsuario(p.getId(), idUsuario);
+        PermisoUsuario pU = new PermisoUsuario(p.getId(), u.getId());
         
         s.save(pU);
         s.getTransaction().commit();
+        s.disconnect();
+        
+        return true;
 	}
 	//FIN SECCION ALTAS
 
 	//PRINCIPIO SECCION BAJAS
-	public static void rebocarPermiso(String codePermiso, Long idUsuario) {
+	public static boolean rebocarPermiso(String usuarioActual, String codePermiso, Long idUsuario) throws Exception{
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
+		
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("RP", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		
+        Permiso p = obtenerPermisoPorCode(codePermiso);
+        
+        if (p == null)
+        	return false;
+
 		Session s = HibernateUtil.getSession();
         s.beginTransaction();
 		
-        Query query = s.createQuery("from Permiso where code = :code ");
-        query.setParameter("code", codePermiso);
-        List list = query.list();
-        
-        Permiso p = (Permiso)list.get(0);
-		
-        query = s.createQuery("from PermisoUsuario where idPermiso = :idP and idUsuario = :idU ");
+        Query query = s.createQuery("from PermisoUsuario where idPermiso = :idP and idUsuario = :idU ");
         query.setParameter("idP", p.getId());
         query.setParameter("idU", idUsuario);
-        list = query.list();
+
+        if (query.list().isEmpty()) {
+            s.disconnect();
+        	return false;
+        }
         
-        PermisoUsuario pU = (PermisoUsuario) list.get(0);
+        PermisoUsuario pU = (PermisoUsuario) query.list().get(0);
         
         s.delete(pU);
         s.getTransaction().commit();
+        s.disconnect();
+        
+        return true;
 	}
 	//FIN SECCION BAJAS
 }

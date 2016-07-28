@@ -9,6 +9,29 @@ import org.hibernate.Session;
 
 public class ControladoraCaso {
 	//PRINCIPIO SECCION CONSULTAS
+	public static ArrayList<Caso> obtenerCasos (String usuarioActual) throws Exception {
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
+		
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("OC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+			
+		Session s = HibernateUtil.getSession();
+		
+        Query query = s.createQuery("from Casos");
+        List list = query.list();
+
+        s.disconnect();
+        
+        if (!list.isEmpty()) {
+        	ArrayList<Caso> casos = new ArrayList<Caso>();
+        	for (Object o: list)
+        		casos.add((Caso)o);
+        	return casos;
+        } else
+        	throw new Exception ("No hay casos");
+	}
+
 	public static Caso obtenerCasoPorIUE (String usuarioActual, String iUE) throws Exception {
 		//Se valida que la sesion sea valida
 		ControladoraUsuario.validateUsrSession(usuarioActual);
@@ -139,8 +162,11 @@ public class ControladoraCaso {
 	
 	//PRINCIPIO SECCION INSERCIONES
 	public static void agregarCaso(String usuarioActual, String iUE, String juzgado, int turno, String caratulado) throws Exception {
-		//Se valida que la sesion sea valida
-		ControladoraUsuario.validateUsrSession(usuarioActual);
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
+		
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("AC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
 		
 		//Se valida que los datos sean validos
 		validarDatosCaso(iUE, juzgado, turno, caratulado);
@@ -175,8 +201,11 @@ public class ControladoraCaso {
 	
 	public static void agregarInvolucrado(String usuarioActual, String iUE, Date fechaDeNacimiento, String nombre, String cedula, 
 			String nacionalidad, String domicilio,String clase) throws Exception {
-		//Se valida que la sesion sea valida
-		ControladoraUsuario.validateUsrSession(usuarioActual);
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
+		
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("AI", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
 		
 		//Se valida que los datos sean validos
 		validarDatosInvolucrado(iUE, fechaDeNacimiento, nombre, cedula, nacionalidad, domicilio, clase);
@@ -238,7 +267,7 @@ public class ControladoraCaso {
 			Session s = HibernateUtil.getSession();
 	        s.beginTransaction();
 
-	        Mensaje m = new Mensaje(c.getId(), ControladoraUsuario.buscarUsuario(usuario).getId(), fecha, contenido);
+	        Mensaje m = new Mensaje(c.getId(), ControladoraUsuario.buscarUsuario(usuarioActual, usuario).getId(), fecha, contenido);
 			
 			//Se guarda el nuevo involucrado en la base de datos
 			s.save(m);
@@ -266,39 +295,35 @@ public class ControladoraCaso {
 	//FIN SECCION INSERCIONES
 	
 	//PRINCIPIO SECCION BAJAS
-	public static String eliminarCaso(String usuarioActual, String iUE) {
-		Caso c;
-		try {
-			//Se valida que la sesion sea valida
-			ControladoraUsuario.validateUsrSession(usuarioActual);
+	public static void eliminarCaso(String usuarioActual, String iUE) throws Exception{
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
+		
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("EC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
 	        
-	        c = obtenerCasoPorIUE(usuarioActual, iUE);
-		} catch (Exception e) {
-			return e.getMessage();
-		}
+	    Caso c = obtenerCasoPorIUE(usuarioActual, iUE);
 		
 		//Se obtiene y empieza la session
 		Session s = HibernateUtil.getSession();
 		
-		if(c == null) {
-			return "not found";	
-		} else {
-	        s.beginTransaction();
-	        
-	        eliminarInvolucradosPorCaso(usuarioActual, c.getId());
-	        eliminarMensajesPorCaso(usuarioActual, c.getId());
-	        
-	        s.delete(c); 
-	        
-			s.getTransaction().commit();
-			
-			s.disconnect();
-			
-			return "completado";
-		}	
+		if(c == null)
+			throw new Exception("Caso no encontrado");	
+		
+        s.beginTransaction();
+        
+        eliminarInvolucradosPorCaso(usuarioActual, c.getId());
+        eliminarMensajesPorCaso(usuarioActual, c.getId());
+        
+        s.delete(c); 
+        
+		s.getTransaction().commit();
+		
+		s.disconnect();
+		
 	}
 	
-	private static String eliminarInvolucradosPorCaso(String usuarioActual, long idCaso) {
+	private static void eliminarInvolucradosPorCaso(String usuarioActual, long idCaso) {
 		//Se obtiene y empieza la session
 		Session s = HibernateUtil.getSession();
 
@@ -306,19 +331,14 @@ public class ControladoraCaso {
         query.setParameter("idCaso", idCaso);
         List list = query.list();
 		
-		if(list.isEmpty()) {
-			return "not found";	
-		} else {
-	        
+		if(!list.isEmpty()) {
 	        for(Object o : list){
 		        s.delete((Involucrado)o); 
 	        }
-			
-			return "completado";
 		}	
 	}
 	
-	private static String eliminarMensajesPorCaso(String usuarioActual, long idCaso) {
+	private static void eliminarMensajesPorCaso(String usuarioActual, long idCaso) {
 		//Se obtiene y empieza la session
 		Session s = HibernateUtil.getSession();
 
@@ -327,54 +347,43 @@ public class ControladoraCaso {
         List list = query.list();
 		
 		if(list.isEmpty()) {
-			return "not found";	
-		} else {
 	        for(Object o : list){
 		        s.delete((Mensaje)o); 
 	        }
-			
-			return "completado";
 		}	
 	}
 	
-	public static String eliminarInvolucrado(String usuarioActual, String iUE, String ciInvolucrado) {
-		Caso c;
+	public static void eliminarInvolucrado(String usuarioActual, String iUE, String ciInvolucrado) throws Exception{
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
-		try {
-			//Se valida que la sesion sea valida
-			ControladoraUsuario.validateUsrSession(usuarioActual);
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("EI", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
 	        
-	        c = obtenerCasoPorIUE(usuarioActual, iUE);
-		} catch (Exception e) {
-			return e.getMessage();
-		}
+	    Caso c = obtenerCasoPorIUE(usuarioActual, iUE);
 		
-        if(c != null) {
-    		//Se obtiene y empieza la session
-    		Session s = HibernateUtil.getSession();
-    		
-            Query query = s.createQuery("from Involucrado where idCaso = :idCaso and cedula = :ciInvolucrado");
-            query.setParameter("idCaso", c.getId());
-            query.setParameter("ciInvolucrado", ciInvolucrado);
-            List list = query.list();
-            Involucrado i = (Involucrado)list.get(0);
-    		
-    		if(i == null) {
-    			return "not found";	
-    		} else {
-    	        s.beginTransaction();
-    	        
-    	        s.delete(i); 
-    	        
-    			s.getTransaction().commit();
-    			
-    			s.disconnect();
-    			
-    			return "completado";
-    		}	
-        } else {
-        	return "not found";
-        }
+        if(c == null) 
+        	throw new Exception ("Caso no encontrado");
+    
+		//Se obtiene y empieza la session
+		Session s = HibernateUtil.getSession();
+		
+        Query query = s.createQuery("from Involucrado where idCaso = :idCaso and cedula = :ciInvolucrado");
+        query.setParameter("idCaso", c.getId());
+        query.setParameter("ciInvolucrado", ciInvolucrado);
+        List list = query.list();
+        Involucrado i = (Involucrado)list.get(0);
+		
+		if(i == null)
+			throw new Exception("Involucrado no encontrado");	
+	
+        s.beginTransaction();
+        
+        s.delete(i); 
+        
+		s.getTransaction().commit();
+		
+		s.disconnect();
 	}
 	//FIN SECCION BAJAS
 }

@@ -13,6 +13,31 @@ import org.hibernate.Session;
 
 public class ControladoraUsuario {
 	//PRINCIPIO SECCION CONSULTAS
+	public static ArrayList<Usuario> obtenerUsuarios(String usuarioActual) throws Exception{
+        //Se valida que la sesion sea valida
+		String usr = validateUsrSession(usuarioActual);
+		
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("OU", buscarUsuarioPrivate(usr).getId());
+		
+		//Se obtiene y empieza la session
+		Session s = HibernateUtil.getSession();
+
+        Query query = s.createQuery("from Usuario where usuario");
+        List list = query.list();
+        
+        s.disconnect();
+        
+        if (list.isEmpty()){
+        	return null;
+        } else {
+        	ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+        	for (Object o: list)
+        		usuarios.add((Usuario)o);
+        	return usuarios;
+        }
+	}
+	
 	public static boolean existeUsuario(String usuario) {
 		//Se obtiene y empieza la session
 		Session s = HibernateUtil.getSession();
@@ -25,18 +50,19 @@ public class ControladoraUsuario {
         
         if (list.isEmpty()){
         	return false;
+        } else {
+        	return true;
         }
-        
-        Usuario usr = (Usuario)list.get(0);
-		
-		if(usr == null) {
-			return false;
-		} else {
-			return true;
-		}
 	}
 	
-	public static Usuario buscarUsuario(String usuario) {
+	public static Usuario buscarUsuario(String usuarioActual, String usuario) throws Exception{
+        //Se valida que la sesion sea valida
+		validateUsrSession(usuarioActual);
+
+		return buscarUsuarioPrivate(usuario);
+	}
+	
+	private static Usuario buscarUsuarioPrivate(String usuario) {
 		//Se obtiene y empieza la session
 		Session s = HibernateUtil.getSession();
 		
@@ -55,20 +81,30 @@ public class ControladoraUsuario {
 		return usr;
 	}
 	
-	public static String login(String usuario, String contrasenia) {
-        Usuario usr = buscarUsuario(usuario);
+	public static String login(String usuario, String contrasenia) throws Exception{
+		//Validar usuario y contrasenia
+		validateLogin(usuario, contrasenia);
 		
-		String retorno = "usuario";
+        Usuario usr = buscarUsuarioPrivate(usuario);
 		
-		if (usr != null) {
-			if (usr.getContrasenia().equals(contrasenia)) {
-				retorno = Utilidades.Encriptar(usr.getUsuario() + "-" + usr.getCedula() + "-" + usr.getContrasenia());
-			} else {
-				retorno = "contrasenia";
-			}
-		}
+		if (usr == null)
+			throw new Exception("usuario no encontrado");
 		
-		return retorno;
+		if (!usr.getContrasenia().equals(contrasenia))
+			throw new Exception("contrasenia incorrecta");
+		
+		return Utilidades.Encriptar(usr.getUsuario() + "-" + usr.getCedula() + "-" + usr.getContrasenia());
+	}
+	
+	private static void validateLogin(String usuario, String contrasenia) throws Exception{
+		String errores = "";
+		if (!Validacion.validarUsuario(usuario))
+			errores += "usuario";
+		if (!Validacion.validarContrasenia(contrasenia))
+			errores += "|contrasenia";
+		
+		if (errores != "")
+			throw new Exception(errores);
 	}
 	//FIN SECCION CONSULTAS
 
@@ -76,8 +112,11 @@ public class ControladoraUsuario {
 	public static void AgregarUsuario(String usuarioActual, String usuario, String contrasenia, String nombre, String cedula, String email, 
 			String tel, String cel, String domicilio, String domicilioLaboral, String rut, Date fechaDeNacimiento) throws Exception {
         //Se valida que la sesion sea valida
-		validateUsrSession(usuarioActual);
+		String usr = validateUsrSession(usuarioActual);
 		
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("AU", buscarUsuarioPrivate(usr).getId());
+			
 		//Se valida que los datos sean validos
 		validarDatosUsuario(usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, fechaDeNacimiento);
 		
@@ -123,12 +162,14 @@ public class ControladoraUsuario {
 			throw new Exception(errores);
 	}
 	
-	public static void validateUsrSession(String usuarioActual) throws Exception {
+	public static String validateUsrSession(String usuarioActual) throws Exception {
 		String usuarioActualDesencriptado = Utilidades.Desencriptar(usuarioActual);
 		String[] parts = usuarioActualDesencriptado.split("-"); 
 		String result = login(parts[0], parts[2]);
 		if (result == "usuario" || result == "contrasenia")
 			throw new Exception("Session error");
+		
+		return parts[0];
 	}
 	//FIN SECCION ALTAS
 	
@@ -136,18 +177,21 @@ public class ControladoraUsuario {
 	public static String eliminarUsuario(String usuarioActual, String usuario) throws Exception {
 		
 		//Se valida que la sesion sea valida
-		validateUsrSession(usuarioActual);
-        
-        Usuario usr = buscarUsuario(usuario);
+		String usr = validateUsrSession(usuarioActual);
 		
-		if(usr == null) {
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("EU", buscarUsuarioPrivate(usr).getId());
+        
+        Usuario u = buscarUsuarioPrivate(usuario);
+		
+		if(u == null) {
 			return "not found";	
 		} else {
 			//Se obtiene y empieza la session
 			Session s = HibernateUtil.getSession();
 	        s.beginTransaction();
 	        
-	        s.delete(usr); 
+	        s.delete(u); 
 	        
 			s.getTransaction().commit();
 	        

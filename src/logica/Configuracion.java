@@ -37,19 +37,22 @@ public class Configuracion {
 	}
 	
 	private void crearPermisos(){
-		ControladoraPermiso.crearPermiso("Agregar Usuario", "AU");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-		ControladoraPermiso.crearPermiso("Eliminar Usuario", "EU");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-		ControladoraPermiso.crearPermiso("Modificar Usuario", "MU");
-		ControladoraPermiso.crearPermiso("Agregar Caso", "AC");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-		ControladoraPermiso.crearPermiso("Eliminar Caso", "EC");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-		ControladoraPermiso.crearPermiso("Modificar Caso", "MC");
-		ControladoraPermiso.crearPermiso("Agregar Involucrado", "AI");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-		ControladoraPermiso.crearPermiso("Eliminar Involucrado", "EI");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-		ControladoraPermiso.crearPermiso("Modificar Involucrado", "MI");
-		ControladoraPermiso.crearPermiso("Asignar Permiso", "AP");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-		ControladoraPermiso.crearPermiso("Revocar Permiso", "RP");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-		ControladoraPermiso.crearPermiso("Obtener Usuarios", "OU");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
-		ControladoraPermiso.crearPermiso("Obtener Todos los Casos", "OTC");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+		ControladoraPermiso.crearPermiso("Agregar usuario", "AU");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+		ControladoraPermiso.crearPermiso("Eliminar usuario", "EU");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+		ControladoraPermiso.crearPermiso("Modificar usuario", "MU");
+		ControladoraPermiso.crearPermiso("Agregar caso", "AC");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+		ControladoraPermiso.crearPermiso("Eliminar caso", "EC");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+		ControladoraPermiso.crearPermiso("Modificar caso", "MC");
+		ControladoraPermiso.crearPermiso("Agregar involucrado", "AI");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+		ControladoraPermiso.crearPermiso("Eliminar involucrado", "EI");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+		ControladoraPermiso.crearPermiso("Modificar involucrado", "MI");
+		ControladoraPermiso.crearPermiso("Asignar permiso", "AP");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+		ControladoraPermiso.crearPermiso("Revocar permiso", "RP");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+		ControladoraPermiso.crearPermiso("Obtener usuarios", "OU");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+		ControladoraPermiso.crearPermiso("Obtener todos los casos", "OTC");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+		ControladoraPermiso.crearPermiso("Asociar usuario a caso", "AUC");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+		ControladoraPermiso.crearPermiso("Desasociar usuario a caso", "DUC");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+		ControladoraPermiso.crearPermiso("Obtener casos por usuario", "OCU");//DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
 	}
 	
 	private void asignarPermisosAMaster(){
@@ -66,6 +69,9 @@ public class Configuracion {
 		asignarPermisoAP("RP", "Master");
 		asignarPermisoAP("OU", "Master");
 		asignarPermisoAP("OTC", "Master");
+		asignarPermisoAP("AUC", "Master");
+		asignarPermisoAP("DUC", "Master");
+		asignarPermisoAP("OCU", "Master");
 	}
 	
 	private void asignarPermisoAP(String code, String usuario){

@@ -117,6 +117,35 @@ public class TestCaso {
 	}
 	
 	@Test
+	public void asociarYDesasociarUsuarioACaso () {
+		Fachada fachada = Fachada.getInstancia();
+
+		String actualUsr = fachada.login("Master", "Master1!");
+		
+		fachada.agregarCaso(actualUsr, "2-1231/2015", "familia", 12, "Juan Pedro");
+		fachada.agregarCaso(actualUsr, "2-1451/2015", "familia", 12, "Juan Pedro");
+		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro");
+		
+		assertEquals("completado", fachada.asociarUsuarioACaso(actualUsr, "Master", "2-5431/2015", "profecional"));
+		assertNotEquals(null, fachada.obtenerCasosPorUsuario(actualUsr, "Master"));
+		assertEquals("completado", fachada.desasociarUsuarioACaso(actualUsr, "Master", "2-5431/2015"));
+		assertEquals(null, fachada.obtenerCasosPorUsuario(actualUsr, "Master"));
+	}
+	
+	public void asociarUsuarioACasoTipoIncorrecto () {
+
+		Fachada fachada = Fachada.getInstancia();
+
+		String actualUsr = fachada.login("Master", "Master1!");
+
+		assertEquals("tipo", fachada.asociarUsuarioACaso(actualUsr, "Master", "2-1451/2015", null));
+		assertEquals("tipo", fachada.asociarUsuarioACaso(actualUsr, "Master", "2-1451/2015", ""));
+		assertEquals("tipo", fachada.asociarUsuarioACaso(actualUsr, "Master", "2-1451/2015", " "));
+		assertEquals("tipo", fachada.asociarUsuarioACaso(actualUsr, "Master", "2-1451/2015", "something"));
+		assertEquals("tipo", fachada.asociarUsuarioACaso(actualUsr, "Master", "2-1451/2015", " profecional "));
+	}
+	
+	@Test
 	public void testAgregarCasoIUEIncorrecto () {
 		Fachada fachada = Fachada.getInstancia();
 		

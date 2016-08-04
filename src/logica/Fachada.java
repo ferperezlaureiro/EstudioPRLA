@@ -91,6 +91,26 @@ public class Fachada {
 		return "completado";
 	}
 	
+	public String asociarUsuarioACaso (String usuarioActual, String usuario, String iUE, String tipo) {
+		try {
+			ControladoraCaso.asociarUsuarioACaso(usuarioActual, usuario, iUE, tipo);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+		return "completado";
+	}
+
+	public String desasociarUsuarioACaso (String usuarioActual, String usuario, String iUE) {
+		try {
+			ControladoraCaso.desasociarUsuarioACaso(usuarioActual, usuario, iUE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+		return "completado";
+	}
+	
 	public String agregarInvolucrado (String usuarioActual, String iUE, Date fechaDeNacimiento, String nombre, String cedula, 
 			String nacionalidad, String domicilio, String clase) {
 		try {
@@ -119,6 +139,18 @@ public class Fachada {
 		ArrayList<Caso> casos = null;
 		try {
 			casos = ControladoraCaso.obtenerCasos(usuarioActual);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			return casos;
+		}
+	}
+	
+	@SuppressWarnings("finally")
+	public ArrayList<Caso> obtenerCasosPorUsuario (String usuarioActual, String usuario) {
+		ArrayList<Caso> casos = null;
+		try {
+			casos = ControladoraCaso.obtenerCasosPorUsuario(usuarioActual, usuario);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

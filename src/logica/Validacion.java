@@ -126,4 +126,12 @@ public class Validacion {
 			return false;
 		return true;
 	}
+	
+	public static boolean validarTipoUsuario (String tipo) {
+		if (tipo == null || tipo == "")
+			return false;
+		if (tipo.equals("profecional") || tipo.equals("funcionario") || tipo.equals("cliente"))
+			return true;
+		return false;
+	}
 }

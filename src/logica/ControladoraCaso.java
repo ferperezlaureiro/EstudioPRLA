@@ -161,7 +161,7 @@ public class ControladoraCaso {
         return involucrados;
 	}
 	
-	public static boolean existeInvolucrado (String usuarioActual, String iUE, String cedula) throws Exception {
+	public static Involucrado obtenerInvolucrado (String usuarioActual, String iUE, String cedula) throws Exception {
 		//Se valida que la sesion sea valida
 		ControladoraUsuario.validateUsrSession(usuarioActual);
 
@@ -182,10 +182,10 @@ public class ControladoraCaso {
             if (!list.isEmpty())
             	i = (Involucrado)list.get(0);
             
-            return (i != null);
+            return i;
 		}
 		
-		return false;
+		return null;
 	}
 	//FIN SECCION CONSULTAS
 	
@@ -355,6 +355,107 @@ public class ControladoraCaso {
 		s.disconnect();
 	}
 	//FIN SECCION INSERCIONES
+	
+	//PRINCIPIO SECCION MODIFICACIONES
+
+	public static void modificarCaso(String usuarioActual, String iUEUsado, String iUE, String juzgado, int turno, String caratulado) throws Exception {
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
+		
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("MC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		
+		Caso c = obtenerCasoPorIUE(usuarioActual, iUEUsado);
+		
+		if (c == null) {
+			throw new Exception ("not found");
+		} else {
+			//Se valida que los datos sean validos
+			validarDatosCaso(iUE, juzgado, turno, caratulado);
+			
+			if (!iUE.equals(iUEUsado)) {
+				Caso casoUpdate = obtenerCasoPorIUE(usuarioActual, iUE);
+				
+				if (casoUpdate == null) {
+					c.setIUE(iUE);
+				} else {
+					throw new Exception("Duplicado");
+				}
+			}
+			
+			c.setJuzgado(juzgado);
+			c.setTurno(turno);
+			c.setCaratulado(caratulado);
+
+			//Se obtiene y empieza la session
+			Session s = HibernateUtil.getSession();
+	        s.beginTransaction();
+	        
+			//Se modifica el caso en la base de datos
+			s.update(c);
+			s.getTransaction().commit();
+
+	        s.disconnect();
+		}		
+	}
+	
+	public static void modificarInvolucrado(String usuarioActual, String iUE, String cedulaUsada, Date fechaDeNacimiento, String nombre, 
+			String cedula, String nacionalidad, String domicilio,String clase) throws Exception {
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
+		
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("MI", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+
+		//Se valida que los datos sean validos
+		validarDatosInvolucrado(iUE, fechaDeNacimiento, nombre, cedula, nacionalidad, domicilio, clase);
+		
+		Caso c = obtenerCasoPorIUE(usuarioActual, iUE);
+		
+
+        if(c == null) 
+        	throw new Exception ("Caso no encontrado");
+    
+		//Se obtiene y empieza la session
+		Session s = HibernateUtil.getSession();
+		
+        Query query = s.createQuery("from Involucrado where idCaso = :idCaso and cedula = :ciInvolucrado");
+        query.setParameter("idCaso", c.getId());
+        query.setParameter("ciInvolucrado", cedulaUsada);
+		
+		if(query.list().isEmpty())
+			throw new Exception("involucrado no encontrado");	
+		
+        Involucrado i = (Involucrado)query.list().get(0);
+		
+        if (cedulaUsada != cedula) {
+    		query = s.createQuery("from Involucrado where idCaso = :idCaso and cedula = :ciInvolucrado");
+            query.setParameter("idCaso", c.getId());
+            query.setParameter("ciInvolucrado", cedula);
+    		
+    		if(!query.list().isEmpty())
+    			throw new Exception("Duplicado");
+    		
+    		i.setCedula(cedula);
+        }	
+		
+		i.setFechaDeNacimiento(fechaDeNacimiento);
+		i.setNombre(nombre);
+		i.setCedula(cedula);
+		i.setNacionalidad(nacionalidad);
+		i.setDireccion(domicilio);
+		i.setClase(clase);
+		
+
+        s.beginTransaction();
+        
+        s.update(i); 
+        
+		s.getTransaction().commit();
+		
+		s.disconnect();
+	}
+	//FIN SECCION MODIFICACIONES
 	
 	//PRINCIPIO SECCION BAJAS
 	public static void eliminarCaso(String usuarioActual, String iUE) throws Exception{

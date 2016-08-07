@@ -87,11 +87,11 @@ public class TestCaso {
 		try {
 			assertEquals(true, ControladoraCaso.existeCaso(actualUsr, "2-1451/2015"));
 
-			assertEquals(true, ControladoraCaso.existeInvolucrado(actualUsr, "2-1451/2015", "49290325"));
+			assertNotEquals(null, ControladoraCaso.obtenerInvolucrado(actualUsr, "2-1451/2015", "49290325"));
 			
 			fachada.eliminarInvolucrado(actualUsr, "2-1451/2015", "49290325");
 
-			assertEquals(false, ControladoraCaso.existeInvolucrado(actualUsr, "2-1451/2015", "49290325"));
+			assertEquals(null, ControladoraCaso.obtenerInvolucrado(actualUsr, "2-1451/2015", "49290325"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -327,5 +327,109 @@ public class TestCaso {
 		assertEquals("|contenido", fachada.agregarMensaje(actualUsr, "2-1459/2015", "Master", new Date(20,07,2016), ""));
 		assertEquals("|contenido", fachada.agregarMensaje(actualUsr, "2-1459/2015", "Master", new Date(20,07,2016), " "));
 		assertEquals("|contenido", fachada.agregarMensaje(actualUsr, "2-1459/2015", "Master", new Date(20,07,2016), null));
+	}
+	
+	@Test
+	public void testModificarCasoSinModificarIUE () {
+		Fachada fachada = Fachada.getInstancia();
+		
+		String actualUsr = fachada.login("Master", "Master1!");
+
+		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro");
+
+		fachada.modificarCaso(actualUsr, "2-5431/2015", "2-5431/2015", "civil", 11, "Andres Pedro");
+		try {
+			Caso c = ControladoraCaso.obtenerCasoPorIUE(actualUsr, "2-5431/2015");
+			
+			assertEquals("civil", c.getJuzgado());
+			assertEquals(11, c.getTurno());
+			assertEquals("Andres Pedro", c.getCaratulado());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testModificarCasoConIUECorrecto () {
+		Fachada fachada = Fachada.getInstancia();
+		
+		String actualUsr = fachada.login("Master", "Master1!");
+
+		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro");
+
+		fachada.modificarCaso(actualUsr, "2-5431/2015", "2-5031/2015", "civil", 11, "Andres Pedro");
+		try {
+			assertNotEquals(null, ControladoraCaso.obtenerCasoPorIUE(actualUsr, "2-5031/2015"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testModificarCasoConIUEIncorrecto () {
+		Fachada fachada = Fachada.getInstancia();
+		
+		String actualUsr = fachada.login("Master", "Master1!");
+
+		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro");
+
+		assertEquals("Duplicado", fachada.modificarCaso(actualUsr, "2-5431/2015", "2-1231/2015", "civil", 11, "Andres Pedro"));
+	}
+	
+	@Test
+	public void testModificarInvolucradoSinModificarCedula () {
+		Fachada fachada = Fachada.getInstancia();
+		
+		String actualUsr = fachada.login("Master", "Master1!");
+
+		fachada.agregarInvolucrado(actualUsr, "2-5431/2015", new Date(11,12,1992), "Raquel Perez", "47591234", "uruguaya", "Saint Bois 5063", 
+				"hija");
+
+		fachada.modificarInvolucrado(actualUsr, "2-5431/2015", "47591234", new Date(11,12,1995), "Raul Perez", "47591234", "uruguayo", 
+				"Chapicuy 5063", "hijo");
+		try {
+			Involucrado i = ControladoraCaso.obtenerInvolucrado(actualUsr, "2-5431/2015", "47591234");
+			
+			assertEquals("Raul Perez", i.getNombre());
+			assertEquals("uruguayo", i.getNacionalidad());
+			assertEquals("Chapicuy 5063", i.getDireccion());
+			assertEquals("hijo", i.getClase());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testModificarInvolucradoConCedulaCorrecta () {
+		Fachada fachada = Fachada.getInstancia();
+		
+		String actualUsr = fachada.login("Master", "Master1!");
+
+		fachada.agregarInvolucrado(actualUsr, "2-5431/2015", new Date(11,12,1992), "Raquel Perez", "47591234", "uruguaya", "Saint Bois 5063", 
+				"hija");
+
+		fachada.modificarInvolucrado(actualUsr, "2-5431/2015", "47591234", new Date(11,12,1981), "Raul Perez", "14725836", "argentino", 
+				"Guerra 5063", "hermano");
+		try {
+			assertNotEquals(null, ControladoraCaso.obtenerInvolucrado(actualUsr, "2-5431/2015", "14725836"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testModificarInvolucradoConCedulaIncorrecta () {
+		Fachada fachada = Fachada.getInstancia();
+		
+		String actualUsr = fachada.login("Master", "Master1!");
+
+		fachada.agregarInvolucrado(actualUsr, "2-5431/2015", new Date(11,12,1992), "Raquel Perez", "47591234", "uruguaya", "Saint Bois 5063", 
+				"hija");
+
+		fachada.agregarInvolucrado(actualUsr, "2-5431/2015", new Date(11,12,1992), "Gerardo Perez", "78945612", "uruguaya", "Saint Bois 5063", 
+				"hija");
+
+		assertEquals("Duplicado", fachada.modificarInvolucrado(actualUsr, "2-5431/2015", "47591234", new Date(11,12,1981), "Raul Perez", 
+				"78945612", "argentino", "Guerra 5063", "hermano"));
 	}
 }

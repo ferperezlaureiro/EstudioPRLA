@@ -35,12 +35,23 @@ public class Fachada {
 		}
 	}
 	
-	public String AgregarUsuario(String usrKey, String usuario, String contrasenia, String nombre, String cedula, String email, String tel, String cel,
-			String domicilio, String domicilioLaboral, String rut, Date fechaDeNacimiento) {
+	public String AgregarUsuario(String usrKey, String usuario, String contrasenia, String nombre, String cedula, String email, String tel, 
+			String cel, String domicilio, String domicilioLaboral, String rut, Date fechaDeNacimiento) {
 		try {
 			if(ControladoraUsuario.existeUsuario(usuario))
 				return "duplicado";
 			ControladoraUsuario.AgregarUsuario(usrKey, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, rut, fechaDeNacimiento);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+		return "completado";
+	}
+	
+	public String ModificarUsuario(String usrKey, String usuarioUsado, String usuario, String contrasenia, String nombre, String cedula, 
+			String email, String tel, String cel, String domicilio, String domicilioLaboral, String rut, Date fechaDeNacimiento) {
+		try {
+			ControladoraUsuario.modificarUsuario(usrKey, usuarioUsado, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, rut, fechaDeNacimiento);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
@@ -91,6 +102,16 @@ public class Fachada {
 		return "completado";
 	}
 	
+	public String modificarCaso (String usuarioActual, String iUEUsado, String iUE, String juzgado, int turno, String caratulado) {
+		try {
+			ControladoraCaso.modificarCaso(usuarioActual, iUEUsado, iUE, juzgado, turno, caratulado);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+		return "completado";
+	}
+	
 	public String asociarUsuarioACaso (String usuarioActual, String usuario, String iUE, String tipo) {
 		try {
 			ControladoraCaso.asociarUsuarioACaso(usuarioActual, usuario, iUE, tipo);
@@ -114,9 +135,20 @@ public class Fachada {
 	public String agregarInvolucrado (String usuarioActual, String iUE, Date fechaDeNacimiento, String nombre, String cedula, 
 			String nacionalidad, String domicilio, String clase) {
 		try {
-			if (ControladoraCaso.existeInvolucrado(usuarioActual, iUE, cedula))
+			if (ControladoraCaso.obtenerInvolucrado(usuarioActual, iUE, cedula) != null)
 				return "duplicado";
 			ControladoraCaso.agregarInvolucrado(usuarioActual, iUE, fechaDeNacimiento, nombre, cedula, nacionalidad, domicilio, clase);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+		return "completado";
+	}
+	
+	public String modificarInvolucrado (String usuarioActual, String iUE, String cedulaUsada, Date fechaDeNacimiento, String nombre, String cedula, 
+			String nacionalidad, String domicilio, String clase) {
+		try {
+			ControladoraCaso.modificarInvolucrado(usuarioActual, iUE, cedulaUsada, fechaDeNacimiento, nombre, cedula, nacionalidad, domicilio, clase);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();

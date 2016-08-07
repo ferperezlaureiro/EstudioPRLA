@@ -462,4 +462,62 @@ public class TestUsuario {
 			e.printStackTrace();
 		}
 	}
+	
+	@Test
+	public void testModificarUsuarioSinCambioDeUsuario() {
+		Fachada fachada = Fachada.getInstancia();
+		
+		String actualUsr = fachada.login("Master", "Master1!");
+		
+		fachada.AgregarUsuario(actualUsr, "Carlos", "Adasd1!", "Graciela Laureiro", "17823243", "Gracielalaureiro@gmail.com", "12341231", 
+				"099954750", "Saint Bois 5063", "Treinta y tres 1334", "34234", new Date(11,12,1992));
+		
+		fachada.ModificarUsuario(actualUsr, "Carlos", "Carlos", "Cambio1!", "Victor Laureiro", "28444112", "Gracielalaureiro@gmail.com", 
+				"24516587", "099874750", "Treinta y tres 5063", "Castro 1334", "34234", new Date(11,12,1985));
+		try {
+			Usuario u  = ControladoraUsuario.buscarUsuario(actualUsr, "Victor");
+			assertEquals("Cambio1!",u.getContrasenia());
+			assertEquals("Victor Laureiro",u.getNombre());
+			assertEquals("28444112",u.getTel());
+			assertEquals("Gracielalaureiro@gmail.com",u.getEmail());
+			assertEquals("24516587",u.getCedula());
+			assertEquals("099874750",u.getCel());
+			assertEquals("Treinta y tres 5063",u.getDomicilio());
+			assertEquals("Castro 1334",u.getDomicilioLaboral());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testModificarUsuarioCambioDeUsuarioCorrecto() {
+		Fachada fachada = Fachada.getInstancia();
+		
+		String actualUsr = fachada.login("Master", "Master1!");
+		
+		fachada.AgregarUsuario(actualUsr, "Carlos", "Adasd1!", "Graciela Laureiro", "17823243", "Gracielalaureiro@gmail.com", "12341231", 
+				"099954750", "Saint Bois 5063", "Treinta y tres 1334", "34234", new Date(11,12,1992));
+		
+		fachada.ModificarUsuario(actualUsr, "Carlos", "Victor", "Cambio1!", "Victor Laureiro", "28444112", "Gracielalaureiro@gmail.com", 
+				"24516587", "099874750", "Treinta y tres 5063", "Castro 1334", "34234", new Date(11,12,1985));
+		try {
+			assertNotEquals(null, ControladoraUsuario.buscarUsuario(actualUsr, "Victor"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testModificarUsuarioCambioDeUsuarioIncorrecto() {
+		Fachada fachada = Fachada.getInstancia();
+		
+		String actualUsr = fachada.login("Master", "Master1!");
+		
+		fachada.AgregarUsuario(actualUsr, "Carlos", "Adasd1!", "Graciela Laureiro", "17823243", "Gracielalaureiro@gmail.com", "12341231", 
+				"099954750", "Saint Bois 5063", "Treinta y tres 1334", "34234", new Date(11,12,1992));
+		
+		assertEquals("Duplicado", fachada.ModificarUsuario(actualUsr, "Carlos", "Master", "Cambio1!", "Victor Laureiro", "28444112", 
+				"Gracielalaureiro@gmail.com", "24516587", "099874750", "Treinta y tres 5063", "Castro 1334", "34234", 
+				new Date(11,12,1985)));
+	}
 }

@@ -173,6 +173,62 @@ public class ControladoraUsuario {
 	}
 	//FIN SECCION ALTAS
 	
+	//PRINCIPIO SECCION MODIFICACIONES
+	public static String modificarUsuario(String usuarioActual, String usuarioUsado, String usuario, String contrasenia, String nombre, 
+			String cedula, String email, String tel, String cel, String domicilio, String domicilioLaboral, String rut, 
+			Date fechaDeNacimiento) throws Exception{
+		
+		//Se valida que la sesion sea valida
+		String usr = validateUsrSession(usuarioActual);
+		
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("MU", buscarUsuarioPrivate(usr).getId());
+        
+        Usuario u = buscarUsuarioPrivate(usuarioUsado);
+		
+		if (u == null) {
+			return "not found";	
+		} else {
+			//Se valida que los datos sean validos
+			validarDatosUsuario(usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, fechaDeNacimiento);
+			
+			//Se valida que en caso de haber cambiado el nombre de usuario, el nuevo nombre no este aun registrado
+			if (!usuario.equals(usuarioUsado)) {
+				Usuario usrUpdate = buscarUsuarioPrivate(usuario);
+				
+				if (usrUpdate == null) {
+					u.setUsuario(usuario);
+				} else {
+					throw new Exception ("Duplicado");
+				}
+			}
+			
+			u.setContrasenia(contrasenia);
+			u.setNombre(nombre);
+			u.setCedula(cedula);
+			u.setEmail(email);
+			u.setTel(tel);
+			u.setCel(cel);
+			u.setDomicilio(domicilio);
+			u.setDomicilioLaboral(domicilioLaboral);
+			u.setFechaDeNacimiento(fechaDeNacimiento);
+	        
+			//Se obtiene y empieza la session
+			Session s = HibernateUtil.getSession();
+	        s.beginTransaction();
+	        
+	        s.update(u); 
+	        
+			s.getTransaction().commit();
+	        
+			s.disconnect();
+			
+			return "completado";
+		}	
+		
+	}
+	//FIN SECCION MODIFICACIONES
+	
 	//PRINCIPIO SECCION BAJAS
 	public static String eliminarUsuario(String usuarioActual, String usuario) throws Exception {
 		

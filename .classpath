@@ -21,5 +21,8 @@
 	<classpathentry kind="lib" path="C:/Users/faper/Desktop/EstudioPRLA/slf4j-api-1.4.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/faper/Desktop/EstudioPRLA/hibernate-annotations-3.5.2-Final.jar"/>
 	<classpathentry kind="lib" path="C:/Users/faper/Desktop/EstudioPRLA/ejb3-persistence.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
+	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="C:/Users/faper/Desktop/EstudioPRLA/mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

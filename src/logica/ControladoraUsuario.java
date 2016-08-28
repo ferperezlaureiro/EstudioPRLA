@@ -23,7 +23,7 @@ public class ControladoraUsuario {
 		//Se obtiene y empieza la session
 		Session s = HibernateUtil.getSession();
 
-        Query query = s.createQuery("from Usuario where usuario");
+        Query query = s.createQuery("from Usuario");
         List list = query.list();
         
         s.disconnect();

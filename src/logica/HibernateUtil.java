@@ -1,11 +1,8 @@
 package logica;
 
-import java.io.File;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 
 
@@ -21,6 +18,7 @@ public class HibernateUtil {
             configuration.addPackage("models").addAnnotatedClass(Mensaje.class);
             configuration.addPackage("models").addAnnotatedClass(Permiso.class);
             configuration.addPackage("models").addAnnotatedClass(PermisoUsuario.class);
+            configuration.addPackage("models").addAnnotatedClass(UsuarioAsociadoACaso.class);
     		configuration.configure("hibernate.cfg.xml");
     		sessionFactory = configuration.buildSessionFactory();
         } catch (Throwable ex) {

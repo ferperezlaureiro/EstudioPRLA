@@ -1,11 +1,16 @@
 package logica;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
-public class Usuario {
+@XmlRootElement(name = "usuario")
+public class Usuario implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	private long id;
 	private String usuario;
 	private String contrasenia;
@@ -44,6 +49,7 @@ public class Usuario {
     {
         return id;
     }
+	@XmlElement
 	private void setId(long id) {
 		this.id = id;
 	}
@@ -53,6 +59,7 @@ public class Usuario {
 	public String getUsuario() {
 		return usuario;
 	}
+	@XmlElement
 	public void setUsuario(String usuario) {
 		this.usuario = usuario;
 	}
@@ -61,6 +68,7 @@ public class Usuario {
 	public String getContrasenia() {
 		return contrasenia;
 	}
+	@XmlElement
 	public void setContrasenia(String contrasenia) {
 		this.contrasenia = contrasenia;
 	}
@@ -69,6 +77,7 @@ public class Usuario {
 	public String getNombre() {
 		return nombre;
 	}
+	@XmlElement
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
@@ -77,6 +86,7 @@ public class Usuario {
 	public String getCedula() {
 		return cedula;
 	}
+	@XmlElement
 	public void setCedula(String cedula) {
 		this.cedula = cedula;
 	}
@@ -85,6 +95,7 @@ public class Usuario {
 	public String getEmail() {
 		return email;
 	}
+	@XmlElement
 	public void setEmail(String email) {
 		this.email = email;
 	}
@@ -93,6 +104,7 @@ public class Usuario {
 	public String getTel() {
 		return tel;
 	}
+	@XmlElement
 	public void setTel(String tel) {
 		this.tel = tel;
 	}
@@ -101,6 +113,7 @@ public class Usuario {
 	public String getCel() {
 		return cel;
 	}
+	@XmlElement
 	public void setCel(String cel) {
 		this.cel = cel;
 	}
@@ -109,6 +122,7 @@ public class Usuario {
 	public String getDomicilio() {
 		return domicilio;
 	}
+	@XmlElement
 	public void setDomicilio(String domicilio) {
 		this.domicilio = domicilio;
 	}
@@ -117,6 +131,7 @@ public class Usuario {
 	public String getDomicilioLaboral() {
 		return domicilioLaboral;
 	}
+	@XmlElement
 	public void setDomicilioLaboral(String domicilioLaboral) {
 		this.domicilioLaboral = domicilioLaboral;
 	}
@@ -125,6 +140,7 @@ public class Usuario {
 	public String getRut() {
 		return rut;
 	}
+	@XmlElement
 	public void setRut(String rut) {
 		this.rut = rut;
 	}
@@ -133,6 +149,7 @@ public class Usuario {
 	public Date getFechaDeNacimiento() {
 		return fechaDeNacimiento;
 	}
+	@XmlElement
 	public void setFechaDeNacimiento(Date fechaDeNacimiento) {
 		this.fechaDeNacimiento = fechaDeNacimiento;
 	}

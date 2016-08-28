@@ -163,6 +163,9 @@ public class ControladoraUsuario {
 	}
 	
 	public static String validateUsrSession(String usuarioActual) throws Exception {
+		if (usuarioActual == "")
+			throw new Exception("Session error");
+		
 		String usuarioActualDesencriptado = Utilidades.Desencriptar(usuarioActual);
 		String[] parts = usuarioActualDesencriptado.split("-"); 
 		String result = login(parts[0], parts[2]);

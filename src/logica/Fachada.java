@@ -167,7 +167,7 @@ public class Fachada {
 	}
 	
 	@SuppressWarnings("finally")
-	public ArrayList<Caso> obtenerCasos (String usuarioActual, String iUE) {
+	public ArrayList<Caso> obtenerCasos (String usuarioActual) {
 		ArrayList<Caso> casos = null;
 		try {
 			casos = ControladoraCaso.obtenerCasos(usuarioActual);

@@ -7,6 +7,8 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import consultaIUEwsdl.ConsultaMain;
+
 public class ControladoraCaso {
 	//PRINCIPIO SECCION CONSULTAS
 	public static ArrayList<Caso> obtenerCasos (String usuarioActual) throws Exception {
@@ -186,6 +188,47 @@ public class ControladoraCaso {
 		}
 		
 		return null;
+	}
+	
+	public static void notificarMovimientos(String usuarioActual) throws Exception {
+		//Se valida que la sesion sea valida
+		ControladoraUsuario.validateUsrSession(usuarioActual);
+
+		Session s = HibernateUtil.getSession();
+		
+		Query query = s.createQuery("from Caso where suscrito = true");
+		List list = query.list();
+		
+		if (!list.isEmpty()) {
+			ArrayList<Caso> casosSuscriptos = (ArrayList<Caso>) list;
+			
+			String[] aux = null;
+			ArrayList<Usuario> usuarios = null;
+			String[] mensage = null;
+			
+			for (Caso caso : casosSuscriptos) {
+				aux = ConsultaMain.TieneMovimiento(caso.getIUE());
+				if (aux != null) {
+					usuarios = ControladoraUsuario.obtenerNotificados(caso.getId());
+					if (usuarios != null) {
+						for (Usuario u : usuarios) {
+							for (int i = 0; i<aux.length; i++) {
+								mensage = aux[i].split("&");
+								ConsultaMain.SendMail(u.getEmail(), 
+														"Nuevo movimiento (" + mensage[2] + ") de " + 
+														caso.getCaratulado(),
+														"IUE: " + caso.getIUE() + "</br>" + 
+														"Caratulado: " + caso.getCaratulado() + "</br>" +
+														"Tipo de movimiento: " + mensage[2] + "</br>" +
+														"Decreto: " + mensage[0] + "</br>" + 
+														"Vencimiento: " + mensage[3] + "</br>" + 
+														"Fecha: " + mensage[1]);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 	//FIN SECCION CONSULTAS
 	
@@ -454,6 +497,56 @@ public class ControladoraCaso {
 		s.getTransaction().commit();
 		
 		s.disconnect();
+	}
+	
+	public static void suscribirCaso (String usuarioActual, String iUE) throws Exception{
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
+		
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("MC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		
+		Caso c = obtenerCasoPorIUE(usuarioActual, iUE);
+		
+		if (c == null) 
+        	throw new Exception ("Caso no encontrado");
+		
+		c.setSuscrito(true);
+
+		//Se obtiene y empieza la session
+		Session s = HibernateUtil.getSession();
+        s.beginTransaction();
+        
+		//Se modifica el caso en la base de datos
+		s.update(c);
+		s.getTransaction().commit();
+
+        s.disconnect();
+	}
+	
+	public static void dessuscribirCaso (String usuarioActual, String iUE) throws Exception{
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
+		
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("MC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		
+		Caso c = obtenerCasoPorIUE(usuarioActual, iUE);
+		
+		if (c == null) 
+        	throw new Exception ("Caso no encontrado");
+		
+		c.setSuscrito(false);
+
+		//Se obtiene y empieza la session
+		Session s = HibernateUtil.getSession();
+        s.beginTransaction();
+        
+		//Se modifica el caso en la base de datos
+		s.update(c);
+		s.getTransaction().commit();
+
+        s.disconnect();
 	}
 	//FIN SECCION MODIFICACIONES
 	

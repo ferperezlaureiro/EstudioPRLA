@@ -20,7 +20,7 @@ public class ConsultaMain {
 			Resultado resultado = consulta.consultaIUE("2-36949/2015");
 			Giro[] movimientos = resultado.getMovimientos();
 			System.out.println(movimientos[0].getFecha());
-			SendMail("fperezlaureiro@gmail.com", "HOLA");
+			SendMail("fperezlaureiro@gmail.com", "nuevo movimiento", "HOLA");
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -62,7 +62,7 @@ public class ConsultaMain {
 		return giro.getDecreto()+"&"+giro.getFecha()+"&"+giro.getTipo()+"&"+giro.getVencimiento();
 	}
 
- 	public static void SendMail(String To, String Mensage) {
+ 	public static void SendMail(String To, String Subject, String Mensage) {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -82,7 +82,7 @@ public class ConsultaMain {
             message.setFrom(new InternetAddress("estudioprla@gmail.com"));
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(To));
-            message.setSubject("Nuevo Movimiento");
+            message.setSubject(Subject);
             message.setText(Mensage);
  
             Transport.send(message);

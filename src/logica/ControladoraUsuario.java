@@ -55,6 +55,26 @@ public class ControladoraUsuario {
         }
 	}
 	
+	public static ArrayList<Usuario> obtenerNotificados(long idCaso) {
+		//Se obtiene y empieza la session
+		Session s = HibernateUtil.getSession();
+
+        Query query = s.createQuery("select U from Usuario as U, UsuarioAsociadoACaso as UA where UA.idCaso = :idCaso and UA.tipo = 'profesional' or UA.tipo = 'funcionario'");
+        query.setParameter("idCaso", idCaso);
+        List list = query.list();
+        
+        s.disconnect();
+
+        if (list.isEmpty()){
+        	return null;
+        } else {
+        	ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+        	for (Object o: list)
+        		usuarios.add((Usuario)o);
+        	return usuarios;
+        }
+	}
+	
 	public static Usuario buscarUsuario(String usuarioActual, String usuario) throws Exception{
         //Se valida que la sesion sea valida
 		validateUsrSession(usuarioActual);

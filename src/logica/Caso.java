@@ -1,14 +1,18 @@
 package logica;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
+@XmlRootElement(name = "caso")
 public class Caso {
 	private long id;
 	private String IUE;
 	private String juzgado;
 	private int turno;
 	private String caratulado;
+	private boolean suscrito;
 	
 	protected Caso() {}
 
@@ -17,6 +21,7 @@ public class Caso {
 		this.juzgado = juzgado;
 		this.turno = turno;
 		this.caratulado = caratulado;
+		this.suscrito = false;
 	}
 
 	@Id
@@ -24,6 +29,7 @@ public class Caso {
 	public long getId() {
 		return id;
 	}
+	@XmlElement
 	private void setId(long id) {
 		this.id = id;
 	}
@@ -33,6 +39,7 @@ public class Caso {
 	public String getIUE() {
 		return IUE;
 	}
+	@XmlElement
 	public void setIUE(String iUE) {
 		IUE = iUE;
 	}
@@ -41,6 +48,7 @@ public class Caso {
 	public String getJuzgado() {
 		return juzgado;
 	}
+	@XmlElement
 	public void setJuzgado(String juzgado) {
 		this.juzgado = juzgado;
 	}
@@ -49,6 +57,7 @@ public class Caso {
 	public int getTurno() {
 		return turno;
 	}
+	@XmlElement
 	public void setTurno(int turno) {
 		this.turno = turno;
 	}
@@ -57,8 +66,18 @@ public class Caso {
 	public String getCaratulado() {
 		return caratulado;
 	}
+	@XmlElement
 	public void setCaratulado(String caratulado) {
 		this.caratulado = caratulado;
+	}
+
+	@Basic
+	public boolean getSuscrito() {
+		return suscrito;
+	}
+	@XmlElement
+	public void setSuscrito(boolean suscrito) {
+		this.suscrito = suscrito;
 	}
 	
 }

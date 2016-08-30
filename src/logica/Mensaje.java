@@ -3,8 +3,11 @@ package logica;
 import java.util.Date;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
+@XmlRootElement(name = "mensaje")
 public class Mensaje {
 	private long id;
 	private long idCaso;
@@ -28,6 +31,7 @@ public class Mensaje {
 	public long getId() {
 		return id;
 	}
+	@XmlElement
 	private void setId(long id) {
 		this.id = id;
 	}
@@ -36,6 +40,7 @@ public class Mensaje {
 	public long getIdCaso() {
 		return idCaso;
 	}
+	@XmlElement
 	public void setIdCaso(long idCaso) {
 		this.idCaso = idCaso;
 	}
@@ -44,6 +49,7 @@ public class Mensaje {
 	public long getIdUsuario() {
 		return idUsuario;
 	}
+	@XmlElement
 	public void setIdUsuario(long idUsuario) {
 		this.idUsuario = idUsuario;
 	}
@@ -52,6 +58,7 @@ public class Mensaje {
 	public Date getFecha() {
 		return fecha;
 	}
+	@XmlElement
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
@@ -60,6 +67,7 @@ public class Mensaje {
 	public String getContenido() {
 		return contenido;
 	}
+	@XmlElement
 	public void setContenido(String contenido) {
 		this.contenido = contenido;
 	}

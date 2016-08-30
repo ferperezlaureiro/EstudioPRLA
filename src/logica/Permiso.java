@@ -1,8 +1,11 @@
 package logica;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
+@XmlRootElement(name = "permiso")
 public class Permiso {
 	private long id;
 	private String code;
@@ -20,6 +23,7 @@ public class Permiso {
 	public long getId() {
 		return id;
 	}
+	@XmlElement
 	private void setId(long id) {
 		this.id = id;
 	}
@@ -28,7 +32,7 @@ public class Permiso {
 	public String getNombre() {
 		return nombre;
 	}
-	
+	@XmlElement
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
@@ -37,7 +41,7 @@ public class Permiso {
 	public String getCode() {
 		return code;
 	}
-
+	@XmlElement
 	public void setCode(String code) {
 		this.code = code;
 	}

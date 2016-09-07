@@ -53,6 +53,7 @@ public class Configuracion {
 		ControladoraPermiso.crearPermiso("Asociar usuario a caso", "AUC");
 		ControladoraPermiso.crearPermiso("Desasociar usuario a caso", "DUC");
 		ControladoraPermiso.crearPermiso("Obtener casos por usuario", "OCU");
+		ControladoraPermiso.crearPermiso("Configurar", "CON");
 	}
 	
 	private void asignarPermisosAMaster(){
@@ -72,6 +73,7 @@ public class Configuracion {
 		asignarPermisoAP("AUC", "Master");
 		asignarPermisoAP("DUC", "Master");
 		asignarPermisoAP("OCU", "Master");
+		asignarPermisoAP("CON", "Master");
 	}
 	
 	private void asignarPermisoAP(String code, String usuario){

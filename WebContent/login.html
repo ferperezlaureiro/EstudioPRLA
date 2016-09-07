@@ -1,0 +1,11 @@
+<div ng-controller="loginController">
+	<form class="form-signin">
+		<h2 class="form-signin-heading">Estudio PRLA</h2>
+		<label for="Usuario" class="sr-only">Usuario</label>
+		<input type="text" id="Usuario" class="form-control" placeholder="Usuario" required="" autofocus="" ng-model="usuario">
+		<label for="Contrasenia" class="sr-only">Contrasenia</label>
+		<input type="password" id="Contrasenia" class="form-control" placeholder="Contrasenia" required="" ng-model="contrasenia">
+
+		<button class="btn btn-lg btn-primary btn-block" type="button" ng-click="login()">Iniciar Sesion</button>
+	</form>
+</div>

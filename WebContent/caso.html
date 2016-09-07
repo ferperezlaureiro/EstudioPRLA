@@ -1,0 +1,88 @@
+<div class="panel panel-default"  ng-controller="casoController" > 
+
+	<div class="panel panel-default" ng-hide="accionesPermitidas.obtenerTodosCasos == '' || todosCasos == ''"> 
+		<div class="panel-heading">Todos los Casos
+		</div> 
+		<table class="table"> 
+			<thead> 
+				<tr> 
+					<th>IUE</th> 
+					<th>Juzgado</th> 
+					<th>Turno</th> 
+					<th>Caratulado</th> 
+					<th>Suscrito</th> 
+					<th ng-hide="accionesPermitidas.casoEliminar == ''">Eliminar</th> 
+					<th ng-hide="accionesPermitidas.casoModificar == ''">Modificar</th>
+					<th>Detalle</th>
+				</tr> 
+			</thead> 
+			<tbody> 
+				<tr ng-repeat="caso in todosCasos"> 
+					<td>{{caso.iUE}}</td> 
+					<td>{{caso.juzgado}}</td> 
+					<td>{{caso.turno}}</td> 
+					<td>{{caso.caratulado}}</td> 
+					<td>{{caso.suscrito}}</td> 
+					<td ng-hide="accionesPermitidas.casoEliminar == ''"">
+						<button class="btn glyphicon glyphicon-trash" type="button" ng-click="eliminarCaso(caso.iUE)"></button>
+					</td> 
+					<td ng-hide="accionesPermitidas.casoModificar == ''">
+						<button class="btn glyphicon glyphicon-edit" type="button" ng-click="mostrarModificarCaso(caso.iUE)"></button>
+					</td> 
+					<td>
+						<button class="btn glyphicon glyphicon-eye-open" type="button" ng-click="detalleCaso(caso.iUE)"></button>
+					</td> 
+				</tr> 
+			</tbody> 
+		</table> 
+	</div>
+
+	<div class="panel panel-default" ng-show="accionesPermitidas.obtenerTodosCasos != '' && todosCasos == ''">
+		<div class="panel-body">
+			No hay casos agregados.
+		</div>
+	</div>
+
+	<div class="panel panel-default" ng-hide="misCasos == ''"> 
+		<div class="panel-heading">Mis Casos
+		</div> 
+		<table class="table"> 
+			<thead> 
+				<tr> 
+					<th>IUE</th> 
+					<th>Juzgado</th> 
+					<th>Turno</th> 
+					<th>Caratulado</th> 
+					<th>Suscrito</th> 
+					<th ng-hide="accionesPermitidas.casoEliminar == ''">Eliminar</th> 
+					<th ng-hide="accionesPermitidas.casoModificar == ''">Modificar</th>
+					<th>Detalle</th>
+				</tr> 
+			</thead> 
+			<tbody> 
+				<tr ng-repeat="caso in misCasos"> 
+					<td>{{caso.iUE}}</td> 
+					<td>{{caso.juzgado}}</td> 
+					<td>{{caso.turno}}</td> 
+					<td>{{caso.caratulado}}</td> 
+					<td>{{caso.suscrito}}</td> 
+					<td ng-hide="accionesPermitidas.casoEliminar == ''"">
+						<button class="btn glyphicon glyphicon-trash" type="button" ng-click="eliminarCaso(caso.iUE)"></button>
+					</td> 
+					<td ng-hide="accionesPermitidas.casoModificar == ''">
+						<button class="btn glyphicon glyphicon-edit" type="button" ng-click="mostrarModificarCaso(caso.iUE)"></button>
+					</td> 
+					<td>
+						<button class="btn glyphicon glyphicon-eye-open" type="button" ng-click="detalleCaso(caso.iUE)"></button>
+					</td> 
+				</tr> 
+			</tbody> 
+		</table> 
+	</div>
+
+	<div class="panel panel-default" ng-show="misCasos == ''">
+		<div class="panel-body">
+			No tienes casos asignados.
+		</div>
+	</div>
+</div>

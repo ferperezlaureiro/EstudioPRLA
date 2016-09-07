@@ -16,11 +16,11 @@ public class ControladoraCaso {
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("OC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		ControladoraPermiso.tienePermiso("OTC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
 			
 		Session s = HibernateUtil.getSession();
 		
-        Query query = s.createQuery("from Casos");
+        Query query = s.createQuery("from Caso");
         List list = query.list();
 
         s.disconnect();

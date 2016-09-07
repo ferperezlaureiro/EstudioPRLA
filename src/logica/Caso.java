@@ -1,12 +1,16 @@
 package logica;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @XmlRootElement(name = "caso")
-public class Caso {
+public class Caso  implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	private long id;
 	private String IUE;
 	private String juzgado;

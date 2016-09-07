@@ -20,7 +20,7 @@ public class UsuarioService {
 		
 	@GET
     @Path("/login")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_HTML)
 	public String login(@QueryParam("usuario") String usuario, 
 						@QueryParam("contrasenia") String contrasenia) {
 		try {
@@ -53,6 +53,19 @@ public class UsuarioService {
 								  @QueryParam("usuario") String usuario) {
 		try {
 			return ControladoraUsuario.buscarUsuario(usrKey, usuario);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@GET
+    @Path("/obtenerPermisos")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Permiso> obtenerPermisos(@QueryParam("usrKey") String usrKey, 
+								  @QueryParam("usuario") String usuario) {
+		try {
+			return ControladoraPermiso.obtenerPermisoPorUsuario(usrKey, usuario);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

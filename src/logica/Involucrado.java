@@ -1,5 +1,6 @@
 package logica;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
@@ -7,8 +8,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @XmlRootElement(name = "involucrado")
-public class Involucrado {
+public class Involucrado implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
 	private long id;
 	private long idCaso;
 	private Date fechaDeNacimiento;

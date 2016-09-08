@@ -86,7 +86,7 @@ public class UsuarioService {
 									@QueryParam("domicilio") String domicilio, 
 									@QueryParam("domicilioLaboral") String domicilioLaboral, 
 									@QueryParam("rut") String rut, 
-									@QueryParam("fechaDeNacimiento") Date fechaDeNacimiento) {
+									@QueryParam("fechaDeNacimiento") String fechaDeNacimiento) {
 		try {
 			if(ControladoraUsuario.existeUsuario(usuario))
 				return "duplicado";
@@ -113,7 +113,7 @@ public class UsuarioService {
 									@QueryParam("domicilio") String domicilio, 
 									@QueryParam("domicilioLaboral") String domicilioLaboral, 
 									@QueryParam("rut") String rut, 
-									@QueryParam("fechaDeNacimiento") Date fechaDeNacimiento) {
+									@QueryParam("fechaDeNacimiento") String fechaDeNacimiento) {
 		try {
 			ControladoraUsuario.modificarUsuario(usrKey, usuarioUsado, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, rut, fechaDeNacimiento);
 		} catch (Exception e) {

@@ -130,7 +130,7 @@ public class ControladoraUsuario {
 
 	//PRINCIPIO SECCION ALTAS
 	public static void AgregarUsuario(String usuarioActual, String usuario, String contrasenia, String nombre, String cedula, String email, 
-			String tel, String cel, String domicilio, String domicilioLaboral, String rut, Date fechaDeNacimiento) throws Exception {
+			String tel, String cel, String domicilio, String domicilioLaboral, String rut, String fechaDeNacimiento) throws Exception {
         //Se valida que la sesion sea valida
 		String usr = validateUsrSession(usuarioActual);
 		
@@ -155,7 +155,7 @@ public class ControladoraUsuario {
 	}
 	
 	private static void validarDatosUsuario (String usuario, String contrasenia, String nombre, String cedula, String email, String tel, String cel, 
-			String domicilio, String domicilioLaboral, Date fechaDeNacimiento) throws Exception {
+			String domicilio, String domicilioLaboral, String fechaDeNacimiento) throws Exception {
 		String errores = "";
 		if(!Validacion.validarUsuario(usuario))
 			errores += "usuario";
@@ -199,7 +199,7 @@ public class ControladoraUsuario {
 	//PRINCIPIO SECCION MODIFICACIONES
 	public static String modificarUsuario(String usuarioActual, String usuarioUsado, String usuario, String contrasenia, String nombre, 
 			String cedula, String email, String tel, String cel, String domicilio, String domicilioLaboral, String rut, 
-			Date fechaDeNacimiento) throws Exception{
+			String fechaDeNacimiento) throws Exception{
 		
 		//Se valida que la sesion sea valida
 		String usr = validateUsrSession(usuarioActual);

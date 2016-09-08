@@ -1,0 +1,155 @@
+<div ng-controller="detalleCasoController">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<nav class="navbar-default">
+	        	<div class="container-fluid">
+	          		<div class="navbar-header">
+						<h1>Detalles caso {{casoADetallar}}</h1>
+	          		</div>
+	          		<div id="navbar" class="navbar-collapse">
+	            		<ul class="nav navbar-nav">
+	              
+	            		</ul>
+	            		<ul class="nav navbar-nav navbar-right">
+	              			<li>
+	              				<button class="btn btn-default navbar-btn" type="button" ng-click="volver()">Volver</button>
+	              			</li>
+	            		</ul>
+	          		</div>
+	        	</div>
+	      	</nav>
+		</div>
+	</div>
+	<div class="jumbotron">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<nav class="navbar-default">
+		        	<div class="container-fluid">
+		          		<div class="navbar-header">
+		            		<span class="navbar-brand" href="#">Datos generales del caso</span>
+		          		</div>
+		          		<div id="navbar" class="navbar-collapse">
+		            		<ul class="nav navbar-nav">
+		              
+		            		</ul>
+		            		<ul class="nav navbar-nav navbar-right">
+		              			<li ng-hide="accionesPermitidas.casoModificar == '' || modificandoCaso">
+		              				<button class="btn btn-default navbar-btn" type="button" ng-click="cambiarAModificar()">Modificar Caso</button>
+		              			</li>
+		            		</ul>
+		          		</div>
+		        	</div>
+		      	</nav>
+			</div> 
+			<ul class="list-group">
+				<li class="list-group-item">
+					<span>IUE: </span>
+					<span ng-hide="modificandoCaso">{{casoDetallado.iUE}}</span>
+					<input type="text" class="form-control" id="iue" placeholder="Ingresar IUE" ng-model="casoDetallado.iUE" ng-hide="!modificandoCaso">
+				</li>
+				<li class="list-group-item">
+					<span>Juzgado: </span>
+					<span ng-hide="modificandoCaso">{{casoDetallado.juzgado}}</span>
+					<input type="text" class="form-control" id="juzgado" placeholder="Ingresar juzgado" ng-model="casoDetallado.juzgado" ng-hide="!modificandoCaso">
+				</li>
+				<li class="list-group-item">
+					<span>Turno: </span>
+					<span ng-hide="modificandoCaso">{{casoDetallado.turno}}</span>
+					<input type="text" class="form-control" id="turno" placeholder="Ingresar turno" ng-model="casoDetallado.turno" ng-hide="!modificandoCaso">
+				</li>
+				<li class="list-group-item">
+					<span>Caratulado: </span>
+					<span ng-hide="modificandoCaso">{{casoDetallado.caratulado}}</span>
+					<input type="text" class="form-control" id="caratulado" placeholder="Ingresar caratulado" ng-model="casoDetallado.caratulado" ng-hide="!modificandoCaso">
+				</li>
+				<li class="list-group-item">
+					<span>Suscripto: </span>
+					<span ng-hide="modificandoCaso">{{casoDetallado.suscrito}}</span>
+					<input type="text" class="form-control" id="suscrito" placeholder="Ingresar suscrito" ng-model="casoDetallado.suscrito" ng-hide="!modificandoCaso">
+				</li>
+			</ul>
+			<button class="btn btn-default navbar-btn" type="button" ng-click="modificarCaso()" ng-hide="!modificandoCaso">Aplicar Modificacion</button>
+			<button class="btn btn-default navbar-btn" type="button" ng-click="cancelarModificarCaso()" ng-hide="!modificandoCaso">Cancelar</button>
+		</div>
+	</div>	
+
+	<div class="jumbotron">
+		<div class="panel panel-default" ng-hide="todosInvolucrados == ''"> 
+			<div class="panel-heading">
+				<nav class="navbar-default">
+		        	<div class="container-fluid">
+		          		<div class="navbar-header">
+		            		<span class="navbar-brand" href="#">Todos los involucrados</span>
+		          		</div>
+		          		<div id="navbar" class="navbar-collapse">
+		            		<ul class="nav navbar-nav">
+		              
+		            		</ul>
+		            		<ul class="nav navbar-nav navbar-right">
+		              			<li ng-hide="accionesPermitidas.involucradoAgregar == ''">
+		              				<button class="btn btn-default navbar-btn" type="button" ng-click="mostrarAgregarInvolucrado()">Agregar Involucrado</button>
+		              			</li>
+		            		</ul>
+		          		</div>
+		        	</div>
+		      	</nav>
+			</div> 
+			<table class="table"> 
+				<thead> 
+					<tr> 
+						<th>Fecha de Nacimiento</th> 
+						<th>Nombre</th> 
+						<th>Cedula</th> 
+						<th>Nacionalidad</th> 
+						<th>Direccion</th> 
+						<th>Clase</th> 
+						<th ng-hide="accionesPermitidas.involucradoBorrar == ''">Eliminar</th> 
+						<th ng-hide="accionesPermitidas.involucradoModificar == ''">Modificar</th>
+					</tr> 
+				</thead> 
+				<tbody> 
+					<tr ng-repeat="involucrado in todosInvolucrados"> 
+						<td>{{involucrado.fechaDeNacimiento}}</td> 
+						<td>{{involucrado.nombre}}</td> 
+						<td>{{involucrado.cedula}}</td> 
+						<td>{{involucrado.nacionalidad}}</td> 
+						<td>{{involucrado.direccion}}</td> 
+						<td>{{involucrado.clase}}</td> 
+						<td ng-hide="accionesPermitidas.involucradoBorrar == ''"">
+							<button class="btn glyphicon glyphicon-trash" type="button" ng-click="eliminarInvolucrado(involucrado.cedula)"></button>
+						</td> 
+						<td ng-hide="accionesPermitidas.involucradoModificar == ''">
+							<button class="btn glyphicon glyphicon-edit" type="button" ng-click="mostrarModificarInvolucrado(involucrado.cedula)"></button>
+						</td> 
+					</tr> 
+				</tbody> 
+			</table> 
+		</div>
+		<div class="panel panel-default" ng-show="todosInvolucrados == ''">
+			<nav class="navbar-default">
+	        	<div class="container-fluid">
+	          		<div class="navbar-header">
+	            		<span class="navbar-brand" href="#">No hay involucrados agregados.</span>
+	          		</div>
+	          		<div id="navbar" class="navbar-collapse">
+	            		<ul class="nav navbar-nav">
+	              
+	            		</ul>
+	            		<ul class="nav navbar-nav navbar-right">
+	              			<li ng-hide="accionesPermitidas.involucradoAgregar == ''">
+	              				<button class="btn btn-default navbar-btn" type="button" ng-click="mostrarAgregarInvolucrado()">Agregar Involucrado</button>
+	              			</li>
+	            		</ul>
+	          		</div>
+	        	</div>
+	      	</nav>
+		</div>
+	</div>
+
+		
+
+</div>
+
+
+
+	

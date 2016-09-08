@@ -1,3 +1,4 @@
+
 package logica;
 
 import static org.junit.Assert.*;
@@ -40,15 +41,15 @@ public class TestCaso {
 		fachada.agregarCaso(actualUsr, "2-1231/2015", "familia", 12, "Juan Pedro");
 		fachada.agregarCaso(actualUsr, "2-1451/2015", "familia", 12, "Juan Pedro");
 		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro");
-		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", new Date(11,12,1992), "Hernesto Perez", "49290325", "uruguayo", "Saint Bois 5063", 
+		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", "11/12/1992", "Hernesto Perez", "49290325", "uruguayo", "Saint Bois 5063", 
 				"hijo");
-		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", new Date(11,12,1992), "Raquel Perez", "49290325", "uruguaya", "Saint Bois 5063", 
+		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", "11/12/1992", "Raquel Perez", "49290325", "uruguaya", "Saint Bois 5063", 
 				"hija");
-		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", new Date(11,12,1992), "Maria Perez", "49290325", "uruguaya", "Saint Bois 5063", 
+		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", "11/12/1992", "Maria Perez", "49290325", "uruguaya", "Saint Bois 5063", 
 				"hija");
-		fachada.agregarMensaje(actualUsr, "2-1451/2015", "Master", new Date(20,07,2016), "Mensaje de prueba");
-		fachada.agregarMensaje(actualUsr, "2-1451/2015", "Master", new Date(20,07,2016), "Mensaje de prueba");
-		fachada.agregarMensaje(actualUsr, "2-1451/2015", "Master", new Date(20,07,2016), "Mensaje de prueba");
+		fachada.agregarMensaje(actualUsr, "2-1451/2015", "Master", "11/12/1992", "Mensaje de prueba");
+		fachada.agregarMensaje(actualUsr, "2-1451/2015", "Master", "11/12/1992", "Mensaje de prueba");
+		fachada.agregarMensaje(actualUsr, "2-1451/2015", "Master", "11/12/1992", "Mensaje de prueba");
 		
 		try {
 			assertEquals(true,ControladoraCaso.existeCaso(actualUsr, "2-1231/2015"));
@@ -77,11 +78,11 @@ public class TestCaso {
 
 		fachada.agregarCaso(actualUsr, "2-1451/2015", "familia", 12, "Juan Pedro");
 
-		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", new Date(11,12,1992), "Hernesto Perez", "49290325", "uruguayo", "Saint Bois 5063", 
+		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", "11/12/1992", "Hernesto Perez", "49290325", "uruguayo", "Saint Bois 5063", 
 				"hijo");
-		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", new Date(11,12,1992), "Raquel Perez", "49290325", "uruguaya", "Saint Bois 5063", 
+		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", "11/12/1992", "Raquel Perez", "49290325", "uruguaya", "Saint Bois 5063", 
 				"hija");
-		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", new Date(11,12,1992), "Maria Perez", "49290325", "uruguaya", "Saint Bois 5063", 
+		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", "11/12/1992", "Maria Perez", "49290325", "uruguaya", "Saint Bois 5063", 
 				"hija");
 		
 		try {
@@ -209,25 +210,25 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, " ", new Date(11,12,1992), "Raquel Perez", "49290325", 
+		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, " ", "11/12/1992", "Raquel Perez", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "textoerror", new Date(11,12,1992), "Raquel Perez", "49290325", 
+		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "textoerror", "11/12/1992", "Raquel Perez", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "1234", new Date(11,12,1992), "Raquel Perez", "49290325", 
+		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "1234", "11/12/1992", "Raquel Perez", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "12312-12312", new Date(11,12,1992), "Raquel Perez", "49290325", 
+		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "12312-12312", "11/12/1992", "Raquel Perez", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "12312/12312", new Date(11,12,1992), "Raquel Perez", "49290325", 
+		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "12312/12312", "11/12/1992", "Raquel Perez", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "2-1234/asda", new Date(11,12,1992), "Raquel Perez", "49290325", 
+		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "2-1234/asda", "11/12/1992", "Raquel Perez", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "q-1231/2015", new Date(11,12,1992), "Raquel Perez", "49290325", 
+		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "q-1231/2015", "11/12/1992", "Raquel Perez", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "2-aaaa/2015", new Date(11,12,1992), "Raquel Perez", "49290325", 
+		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "2-aaaa/2015", "11/12/1992", "Raquel Perez", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "2-1451/20153", new Date(11,12,1992), "Raquel Perez", "49290325", 
+		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "2-1451/20153", "11/12/1992", "Raquel Perez", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "2-143333351/2015", new Date(11,12,1992), "Raquel Perez", "49290325", 
+		assertEquals("IUE", fachada.agregarInvolucrado(actualUsr, "2-143333351/2015", "11/12/1992", "Raquel Perez", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
 	}
 	
@@ -237,23 +238,23 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "", "49290325", 
+		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), " ", "49290325", 
+		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", " ", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "12312", "49290325", 
+		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "12312", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "Raquel 123123", "49290325", 
+		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "Raquel 123123", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "123123 123123", "49290325", 
+		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "123123 123123", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "Raq233uel Pe23rez", "49290325", 
+		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "Raq233uel Pe23rez", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "Migu!!el Rodri!!guez", "49290325", 
+		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "Migu!!el Rodri!!guez", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "!!!!!", "49290325", 
+		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "!!!!!", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "Raquel", "49290325", 
+		assertEquals("|nombre", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "Raquel", "49290325", 
 				"uruguaya", "Saint Bois 5063", "hija"));
 	}
 	
@@ -263,27 +264,27 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "Raquel Perez", "", 
+		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "Raquel Perez", "", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "Raquel Perez", " ", 
+		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "Raquel Perez", " ", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "Raquel Perez", "asdadasd", 
+		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "Raquel Perez", "asdadasd", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "Raquel Perez", "asdasdasd123123", 
+		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "Raquel Perez", "asdasdasd123123", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "Raquel Perez", "17823243a", 
+		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "Raquel Perez", "17823243a", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "Raquel Perez", "a17823243", 
+		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "Raquel Perez", "a17823243", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "Raquel Perez", "178 3243", 
+		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "Raquel Perez", "178 3243", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "Raquel Perez", "17823asd", 
+		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "Raquel Perez", "17823asd", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "Raquel Perez", "07823243", 
+		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "Raquel Perez", "07823243", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "Raquel Perez", "0782324", 
+		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "Raquel Perez", "0782324", 
 				"uruguaya", "Saint Bois 5063", "hija"));
-		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", new Date(11,12,1992), "Raquel Perez", "078232433", 
+		assertEquals("|cedula", fachada.agregarInvolucrado(actualUsr, "2-1459/2015", "11/12/1992", "Raquel Perez", "078232433", 
 				"uruguaya", "Saint Bois 5063", "hija"));
 	}
 	
@@ -293,16 +294,16 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, " ", "Master", new Date(20,07,2016), "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "textoerror", "Master", new Date(20,07,2016), "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "1234", "Master", new Date(20,07,2016), "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "12312-12312", "Master", new Date(20,07,2016), "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "12312/12312", "Master", new Date(20,07,2016), "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-1234/asda", "Master", new Date(20,07,2016), "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "q-1231/2015", "Master", new Date(20,07,2016), "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-aaaa/2015", "Master", new Date(20,07,2016), "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-1451/20153", "Master", new Date(20,07,2016), "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-143333351/2015", "Master", new Date(20,07,2016), "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, " ", "Master", "11/12/1992", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "textoerror", "Master", "11/12/1992", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "1234", "Master", "11/12/1992", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "12312-12312", "Master", "11/12/1992", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "12312/12312", "Master", "11/12/1992", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-1234/asda", "Master", "11/12/1992", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "q-1231/2015", "Master", "11/12/1992", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-aaaa/2015", "Master", "11/12/1992", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-1451/20153", "Master", "11/12/1992", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-143333351/2015", "Master", "11/12/1992", "Mensaje de prueba"));
 	}
 	
 	@Test
@@ -311,11 +312,11 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		assertEquals("|usuario", fachada.agregarMensaje(actualUsr, "2-1459/2015", "", new Date(20,07,2016), "Mensaje de prueba"));
-		assertEquals("|usuario", fachada.agregarMensaje(actualUsr, "2-1459/2015", " ", new Date(20,07,2016), "Mensaje de prueba"));
-		assertEquals("|usuario", fachada.agregarMensaje(actualUsr, "2-1459/2015", "123123", new Date(20,07,2016), "Mensaje de prueba"));
+		assertEquals("|usuario", fachada.agregarMensaje(actualUsr, "2-1459/2015", "", "11/12/1992", "Mensaje de prueba"));
+		assertEquals("|usuario", fachada.agregarMensaje(actualUsr, "2-1459/2015", " ", "11/12/1992", "Mensaje de prueba"));
+		assertEquals("|usuario", fachada.agregarMensaje(actualUsr, "2-1459/2015", "123123", "11/12/1992", "Mensaje de prueba"));
 		assertEquals("|usuario", fachada.agregarMensaje(actualUsr, "2-1459/2015", "abcdabcdabcdabcdabcdabcdabcdabcdabcd", 
-				new Date(20,07,2016), "Mensaje de prueba"));
+				"11/12/1992", "Mensaje de prueba"));
 	}
 	
 	@Test
@@ -324,9 +325,9 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		assertEquals("|contenido", fachada.agregarMensaje(actualUsr, "2-1459/2015", "Master", new Date(20,07,2016), ""));
-		assertEquals("|contenido", fachada.agregarMensaje(actualUsr, "2-1459/2015", "Master", new Date(20,07,2016), " "));
-		assertEquals("|contenido", fachada.agregarMensaje(actualUsr, "2-1459/2015", "Master", new Date(20,07,2016), null));
+		assertEquals("|contenido", fachada.agregarMensaje(actualUsr, "2-1459/2015", "Master", "11/12/1992", ""));
+		assertEquals("|contenido", fachada.agregarMensaje(actualUsr, "2-1459/2015", "Master", "11/12/1992", " "));
+		assertEquals("|contenido", fachada.agregarMensaje(actualUsr, "2-1459/2015", "Master", "11/12/1992", null));
 	}
 	
 	@Test
@@ -382,10 +383,10 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		fachada.agregarInvolucrado(actualUsr, "2-5431/2015", new Date(11,12,1992), "Raquel Perez", "47591234", "uruguaya", "Saint Bois 5063", 
+		fachada.agregarInvolucrado(actualUsr, "2-5431/2015", "11/12/1992", "Raquel Perez", "47591234", "uruguaya", "Saint Bois 5063", 
 				"hija");
 
-		fachada.modificarInvolucrado(actualUsr, "2-5431/2015", "47591234", new Date(11,12,1995), "Raul Perez", "47591234", "uruguayo", 
+		fachada.modificarInvolucrado(actualUsr, "2-5431/2015", "47591234", "11/12/1992", "Raul Perez", "47591234", "uruguayo", 
 				"Chapicuy 5063", "hijo");
 		try {
 			Involucrado i = ControladoraCaso.obtenerInvolucrado(actualUsr, "2-5431/2015", "47591234");
@@ -405,10 +406,10 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		fachada.agregarInvolucrado(actualUsr, "2-5431/2015", new Date(11,12,1992), "Raquel Perez", "47591234", "uruguaya", "Saint Bois 5063", 
+		fachada.agregarInvolucrado(actualUsr, "2-5431/2015", "11/12/1992", "Raquel Perez", "47591234", "uruguaya", "Saint Bois 5063", 
 				"hija");
 
-		fachada.modificarInvolucrado(actualUsr, "2-5431/2015", "47591234", new Date(11,12,1981), "Raul Perez", "14725836", "argentino", 
+		fachada.modificarInvolucrado(actualUsr, "2-5431/2015", "47591234", "11/12/1992", "Raul Perez", "14725836", "argentino", 
 				"Guerra 5063", "hermano");
 		try {
 			assertNotEquals(null, ControladoraCaso.obtenerInvolucrado(actualUsr, "2-5431/2015", "14725836"));
@@ -423,13 +424,13 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		fachada.agregarInvolucrado(actualUsr, "2-5431/2015", new Date(11,12,1992), "Raquel Perez", "47591234", "uruguaya", "Saint Bois 5063", 
+		fachada.agregarInvolucrado(actualUsr, "2-5431/2015", "11/12/1992", "Raquel Perez", "47591234", "uruguaya", "Saint Bois 5063", 
 				"hija");
 
-		fachada.agregarInvolucrado(actualUsr, "2-5431/2015", new Date(11,12,1992), "Gerardo Perez", "78945612", "uruguaya", "Saint Bois 5063", 
+		fachada.agregarInvolucrado(actualUsr, "2-5431/2015", "11/12/1992", "Gerardo Perez", "78945612", "uruguaya", "Saint Bois 5063", 
 				"hija");
 
-		assertEquals("Duplicado", fachada.modificarInvolucrado(actualUsr, "2-5431/2015", "47591234", new Date(11,12,1981), "Raul Perez", 
+		assertEquals("Duplicado", fachada.modificarInvolucrado(actualUsr, "2-5431/2015", "47591234", "11/12/1992", "Raul Perez", 
 				"78945612", "argentino", "Guerra 5063", "hermano"));
 	}
 }

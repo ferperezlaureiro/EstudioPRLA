@@ -1,6 +1,125 @@
+app.controller("detalleCasoController", ['$scope', '$location', '$window', '$rootScope', '$http', function ($scope, $location, $window, $rootScope, $http){
+
+	$scope.$on('$viewContentLoaded', function(){
+		if($rootScope.token == undefined || $rootScope.token == ""){
+			$location.url("/login");
+		}
+
+		if($rootScope.casoADetallar == undefined || $rootScope.casoADetallar == ""){
+			$location.url("/caso");
+		}
+
+		$scope.modificandoCaso = false;
+
+		$scope.cargarDatosGenerales();
+		$scope.cargarTodosLosInvolucrados();
+	});
+
+	$scope.volver = function(){
+		$location.url("/caso");
+		$rootScope.casoADetallar = "";
+	}
+
+	$scope.cargarDatosGenerales = function(){
+		$http({
+			method: 'GET', 
+			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/obtenerCasoPorIUE?usrKey=' + $rootScope.token +'&iUE=' + $rootScope.casoADetallar
+		}).success(function(data, status, headers, config) {
+			if(data != "" && data != "No hay casos"){
+				$rootScope.casoDetallado = data;
+			}
+		}).error(function(data, status, headers, config) {
+			alert("Ha fallado la petición. Estado HTTP:"+status);
+		});
+	}
+
+	$scope.cargarTodosLosInvolucrados = function(){
+		$http({
+			method: 'GET', 
+			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/obtenerInvolucrados?usrKey=' + $rootScope.token +'&iUE=' + $rootScope.casoADetallar
+		}).success(function(data, status, headers, config) {
+			if(data != [] || data != "" || data != "No hay involucrados"){
+				$rootScope.todosInvolucrados = data;
+			}
+		}).error(function(data, status, headers, config) {
+			alert("Ha fallado la petición. Estado HTTP:"+status);
+		});
+	}
+
+	$scope.cambiarAModificar = function(){
+		$scope.modificandoCaso = true;
+	}
+
+	$scope.cancelarModificarCaso = function(){
+		$scope.modificandoCaso = false;
+	}
+	
+	$scope.modificarCaso = function(){
+		$http({
+			method: 'PUT',
+			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/modificarCaso?usrKey=' + $rootScope.token 
+																				+ '&iUEUsado='  + $rootScope.casoADetallar 
+																				+ '&iUE=' +  $rootScope.casoDetallado.iUE 
+																				+ '&juzgado=' + $rootScope.casoDetallado.juzgado 
+																				+ '&turno=' + $rootScope.casoDetallado.turno 
+																				+ '&caratulado='+ $rootScope.casoDetallado.caratulado
+		}).success(function(data, status, headers, config) {
+			$scope.modificandoCaso = false;
+			$scope.cargarDatosGenerales();
+		}).error(function(data, status, headers, config) {
+			alert("Ha fallado la petición. Estado HTTP:"+status);
+		});
+	}
+
+	$scope.mostrarAgregarInvolucrado = function(){
+
+	}
+
+	$scope.eliminarInvolucrado = function(cedula){
+		$scope.cancelarInvolucrado();
+		$http({
+			method: 'DELETE',
+			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/eliminarInvolucrado?usrKey=' + $rootScope.token 
+																				+ '&iUE=' + $rootScope.casoADetallar 
+																				+'&ciInvolucrado=' + cedula
+		}).success(function(data, status, headers, config) {
+				$scope.cargarTodosLosInvolucrados();
+		}).error(function(data, status, headers, config) {
+			alert("Ha fallado la petición. Estado HTTP:"+status);
+		});
+	}
+
+	$scope.mostrarModificarInvolucrado = function(cedula){
+
+	}
+
+	$scope.cancelarInvolucrado = function(){
+
+	}
+
+
+}]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 package logica;
 
 import static org.junit.Assert.*;
+
+import java.sql.Date;
 
 import org.junit.Test;
 
@@ -519,3 +638,4 @@ public class TestUsuario {
 				"11/12/1992"));
 	}
 }
+

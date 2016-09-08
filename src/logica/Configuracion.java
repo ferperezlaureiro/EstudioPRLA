@@ -27,7 +27,7 @@ public class Configuracion {
 		
         //Se ingresa un nuevo usuario
         Usuario u = new Usuario("Master", "Master1!", "Master", "49290325", "master@gmail.com", "099954750", "091410102", 
-				"Satint bois 5063", "Treinta y tres 1334", "123123122123", new Date(11,12,1992));
+				"Satint bois 5063", "Treinta y tres 1334", "123123122123", "11/12/1992");
 		
 		//Se guarda el nuevo usuario en la base de datos
 		s.save(u);

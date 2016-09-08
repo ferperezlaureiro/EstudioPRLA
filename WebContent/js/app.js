@@ -26,5 +26,9 @@ app.config(function($routeProvider){
 		templateUrl : "cuenta.html",
 		controller : "cuentaController"
 	})
+	.when("/detalleCaso", {
+		templateUrl : "detalleCaso.html",
+		controller : "detalleCasoController"
+	})
 	.otherwise({ reditrectTo : "/login" });
 });

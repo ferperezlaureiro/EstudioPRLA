@@ -1,6 +1,7 @@
 package logica;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.ws.rs.GET;
@@ -21,7 +22,7 @@ public class CasoService {
 	
 	@POST
     @Path("/agregarCaso")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_HTML)
 	public String agregarCaso (@QueryParam("usrKey") String usuarioActual, 
 								@QueryParam("iUE") String iUE, 
 								@QueryParam("juzgado") String juzgado, 
@@ -37,10 +38,33 @@ public class CasoService {
 		}
 		return "completado";
 	}
+
+	@POST
+    @Path("/agregarInvolucrado")
+	@Produces(MediaType.TEXT_HTML)
+	public String agregarInvolucrado (@QueryParam("usrKey") String usuarioActual,
+										@QueryParam("iUE") String iUE,
+										@QueryParam("fechaDeNacimiento") String fechaDeNacimiento,
+										@QueryParam("nombre") String nombre,
+										@QueryParam("cedula") String cedula, 
+										@QueryParam("nacionalidad") String nacionalidad,
+										@QueryParam("domicilio") String domicilio,
+										@QueryParam("clase") String clase) {
+		try {
+			if (ControladoraCaso.obtenerInvolucrado(usuarioActual, iUE, cedula) != null)
+				return "duplicado";
+			
+			ControladoraCaso.agregarInvolucrado(usuarioActual, iUE, fechaDeNacimiento, nombre, cedula, nacionalidad, domicilio, clase);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+		return "completado";
+	}
 	
 	@PUT
     @Path("/modificarCaso")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_HTML)
 	public String modificarCaso (@QueryParam("usrKey") String usuarioActual, 
 									@QueryParam("iUEUsado") String iUEUsado, 
 									@QueryParam("iUE") String iUE, 
@@ -58,7 +82,7 @@ public class CasoService {
 	
 	@POST
     @Path("/asociarUsuarioACaso")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_HTML)
 	public String asociarUsuarioACaso (@QueryParam("usrKey") String usuarioActual, 
 										@QueryParam("usuario") String usuario, 
 										@QueryParam("iUE") String iUE, 
@@ -74,7 +98,7 @@ public class CasoService {
 
 	@DELETE
     @Path("/desasociarUsuarioACaso")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_HTML)
 	public String desasociarUsuarioACaso (@QueryParam("usrKey") String usuarioActual, 
 											@QueryParam("usuario") String usuario, 
 											@QueryParam("iUE") String iUE) {
@@ -87,35 +111,13 @@ public class CasoService {
 		return "completado";
 	}
 
-	@POST
-    @Path("/agregarInvolucrado")
-	@Produces(MediaType.APPLICATION_JSON)
-	public String agregarInvolucrado (@QueryParam("usrKey") String usuarioActual,
-										@QueryParam("iUE") String iUE,
-										@QueryParam("fechaDeNacimiento") Date fechaDeNacimiento,
-										@QueryParam("nombre") String nombre,
-										@QueryParam("cedula") String cedula, 
-										@QueryParam("nacionalidad") String nacionalidad,
-										@QueryParam("domicilio") String domicilio,
-										@QueryParam("clase") String clase) {
-		try {
-			if (ControladoraCaso.obtenerInvolucrado(usuarioActual, iUE, cedula) != null)
-				return "duplicado";
-			ControladoraCaso.agregarInvolucrado(usuarioActual, iUE, fechaDeNacimiento, nombre, cedula, nacionalidad, domicilio, clase);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return e.getMessage();
-		}
-		return "completado";
-	}
-
 	@PUT
     @Path("/modificarInvolucrado")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_HTML)
 	public String modificarInvolucrado (@QueryParam("usrKey") String usuarioActual,
 										@QueryParam("iUE") String iUE,
 										@QueryParam("cedulaUsada") String cedulaUsada,
-										@QueryParam("fechaDeNacimiento") Date fechaDeNacimiento,
+										@QueryParam("fechaDeNacimiento") String fechaDeNacimiento,
 										@QueryParam("nombre") String nombre,
 										@QueryParam("cedula") String cedula, 
 										@QueryParam("nacionalidad") String nacionalidad,
@@ -132,11 +134,11 @@ public class CasoService {
 	
 	@POST
     @Path("/agregarMensaje")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_HTML)
 	public String agregarMensaje (@QueryParam("usrKey") String usuarioActual,
 									@QueryParam("iUE") String iUE,
 									@QueryParam("usuario") String usuario,
-									@QueryParam("fecha") Date fecha,
+									@QueryParam("fecha") String fecha,
 									@QueryParam("contenido") String contenido) {
 		try {
 			ControladoraCaso.agregarMensaje(usuarioActual, iUE, usuario, fecha, contenido);

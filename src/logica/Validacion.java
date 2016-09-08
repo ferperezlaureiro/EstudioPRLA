@@ -78,18 +78,19 @@ public class Validacion {
 		return emparejador.matches();
 	}
 	
-	public static boolean validarFechaDeNacimiento (Date fechaDeNacimiento) {
-		if (fechaDeNacimiento == null)
+	public static boolean validarFechaDeNacimiento (String fechaDeNacimiento) {
+		if (fechaDeNacimiento == null ||fechaDeNacimiento == "")
 			return false;
-		if (fechaDeNacimiento.after(new Date()))
-			return false;
-		return true;
+		String regex = "(([0-9]{2})+(/([0-9]{2}))+(/([1-9]{1}[0-9]{3})))";
+		Pattern patron = Pattern.compile(regex);
+		Matcher emparejador = patron.matcher(fechaDeNacimiento);
+		return emparejador.matches();
 	}
 	
 	public static boolean validarIUE(String IUE) {
 		if (IUE == null || IUE == "")
 			return true;
-		String regex = "(([0-9]{1})+(-([0-9]{4}))+(/([1-9]{1}[0-9]{1}[1-9]{1}[1-9]{1})))";
+		String regex = "(([0-9]{1})+(-([0-9]{4}))+(/([1-9]{1}[0-9]{3})))";
 		Pattern patron = Pattern.compile(regex);
 		Matcher emparejador = patron.matcher(IUE);
 		return emparejador.matches();

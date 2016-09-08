@@ -13,7 +13,7 @@ public class Involucrado implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private long idCaso;
-	private Date fechaDeNacimiento;
+	private String fechaDeNacimiento;
 	private String nombre;
 	private String cedula;
 	private String nacionalidad;
@@ -22,7 +22,7 @@ public class Involucrado implements Serializable{
 	
 	protected Involucrado() {}
 
-	public Involucrado(long idCaso, Date fechaDeNacimiento, String nombre, String cedula, String nacionalidad, String direccion,
+	public Involucrado(long idCaso, String fechaDeNacimiento, String nombre, String cedula, String nacionalidad, String direccion,
 			String clase) {
 		super();
 		this.idCaso = idCaso;
@@ -54,12 +54,12 @@ public class Involucrado implements Serializable{
 		this.idCaso = idCaso;
 	}
 
-	@Temporal(TemporalType.DATE)
-	public Date getFechaDeNacimiento() {
+	@Basic
+	public String getFechaDeNacimiento() {
 		return fechaDeNacimiento;
 	}
 	@XmlElement
-	public void setFechaDeNacimiento(Date fechaDeNacimiento) {
+	public void setFechaDeNacimiento(String fechaDeNacimiento) {
 		this.fechaDeNacimiento = fechaDeNacimiento;
 	}
 	

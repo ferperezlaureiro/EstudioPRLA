@@ -36,7 +36,7 @@ public class Fachada {
 	}
 	
 	public String AgregarUsuario(String usrKey, String usuario, String contrasenia, String nombre, String cedula, String email, String tel, 
-			String cel, String domicilio, String domicilioLaboral, String rut, Date fechaDeNacimiento) {
+			String cel, String domicilio, String domicilioLaboral, String rut, String fechaDeNacimiento) {
 		try {
 			if(ControladoraUsuario.existeUsuario(usuario))
 				return "duplicado";
@@ -49,7 +49,7 @@ public class Fachada {
 	}
 	
 	public String ModificarUsuario(String usrKey, String usuarioUsado, String usuario, String contrasenia, String nombre, String cedula, 
-			String email, String tel, String cel, String domicilio, String domicilioLaboral, String rut, Date fechaDeNacimiento) {
+			String email, String tel, String cel, String domicilio, String domicilioLaboral, String rut, String fechaDeNacimiento) {
 		try {
 			ControladoraUsuario.modificarUsuario(usrKey, usuarioUsado, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, rut, fechaDeNacimiento);
 		} catch (Exception e) {
@@ -132,7 +132,7 @@ public class Fachada {
 		return "completado";
 	}
 	
-	public String agregarInvolucrado (String usuarioActual, String iUE, Date fechaDeNacimiento, String nombre, String cedula, 
+	public String agregarInvolucrado (String usuarioActual, String iUE, String fechaDeNacimiento, String nombre, String cedula, 
 			String nacionalidad, String domicilio, String clase) {
 		try {
 			if (ControladoraCaso.obtenerInvolucrado(usuarioActual, iUE, cedula) != null)
@@ -145,7 +145,7 @@ public class Fachada {
 		return "completado";
 	}
 	
-	public String modificarInvolucrado (String usuarioActual, String iUE, String cedulaUsada, Date fechaDeNacimiento, String nombre, String cedula, 
+	public String modificarInvolucrado (String usuarioActual, String iUE, String cedulaUsada, String fechaDeNacimiento, String nombre, String cedula, 
 			String nacionalidad, String domicilio, String clase) {
 		try {
 			ControladoraCaso.modificarInvolucrado(usuarioActual, iUE, cedulaUsada, fechaDeNacimiento, nombre, cedula, nacionalidad, domicilio, clase);
@@ -156,7 +156,7 @@ public class Fachada {
 		return "completado";
 	}
 	
-	public String agregarMensaje (String usuarioActual, String iUE,  String usuario, Date fecha, String contenido) {
+	public String agregarMensaje (String usuarioActual, String iUE,  String usuario, String fecha, String contenido) {
 		try {
 			ControladoraCaso.agregarMensaje(usuarioActual, iUE, usuario, fecha, contenido);
 		} catch (Exception e) {

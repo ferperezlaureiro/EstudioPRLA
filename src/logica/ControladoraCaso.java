@@ -271,7 +271,7 @@ public class ControladoraCaso {
 		}
 	}
 	
-	public static void agregarInvolucrado(String usuarioActual, String iUE, Date fechaDeNacimiento, String nombre, String cedula, 
+	public static void agregarInvolucrado(String usuarioActual, String iUE, String fechaDeNacimiento, String nombre, String cedula, 
 			String nacionalidad, String domicilio,String clase) throws Exception {
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
@@ -300,7 +300,7 @@ public class ControladoraCaso {
 		}
 	}
 	
-	public static void validarDatosInvolucrado(String iUE, Date fechaDeNacimiento, String nombre, String cedula, 
+	public static void validarDatosInvolucrado(String iUE, String fechaDeNacimiento, String nombre, String cedula, 
 			String nacionalidad, String domicilio,String clase) throws Exception {
 		String errores = "";
 		if(!Validacion.validarIUE(iUE))
@@ -323,7 +323,7 @@ public class ControladoraCaso {
 		}
 	}
 	
-	public static void agregarMensaje(String usuarioActual, String iUE,  String usuario, Date fecha, String contenido) throws Exception {
+	public static void agregarMensaje(String usuarioActual, String iUE,  String usuario, String fecha, String contenido) throws Exception {
 		//Se valida que la sesion sea valida
 		ControladoraUsuario.validateUsrSession(usuarioActual);
 		
@@ -350,7 +350,7 @@ public class ControladoraCaso {
 		s.disconnect();
 	}
 	
-	public static void validarDatosMensaje (String iUE,  String usuario, Date fecha, String contenido) throws Exception {
+	public static void validarDatosMensaje (String iUE,  String usuario, String fecha, String contenido) throws Exception {
 		String errores = "";
 		if(!Validacion.validarIUE(iUE))
 			errores += "IUE";
@@ -442,7 +442,7 @@ public class ControladoraCaso {
 		}		
 	}
 	
-	public static void modificarInvolucrado(String usuarioActual, String iUE, String cedulaUsada, Date fechaDeNacimiento, String nombre, 
+	public static void modificarInvolucrado(String usuarioActual, String iUE, String cedulaUsada, String fechaDeNacimiento, String nombre, 
 			String cedula, String nacionalidad, String domicilio,String clase) throws Exception {
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);

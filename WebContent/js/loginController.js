@@ -7,7 +7,7 @@ app.controller("loginController", ['$scope', '$location', '$http', '$rootScope',
 				url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/login?usuario=' + $scope.usuario + '&contrasenia=' + $scope.contrasenia
 			}).success(function(data, status, headers, config) {
 				if (data != "usuario" && data != "|contrasenia" && data != "usuario|contrasenia") {
-					$rootScope.token = data;
+					$scope.tokenAux = data;
 					$scope.cargarUsuario();
 					$scope.cargarPermisos();
 				} else {
@@ -22,7 +22,7 @@ app.controller("loginController", ['$scope', '$location', '$http', '$rootScope',
 	$scope.cargarUsuario = function(){
 		$http({
 			method: 'GET', 
-			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/obtenerUsuario?usrKey=' + $rootScope.token +'&usuario=' + $scope.usuario
+			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/obtenerUsuario?usrKey=' + $scope.tokenAux +'&usuario=' + $scope.usuario
 		}).success(function(data, status, headers, config) {
 			$rootScope.currentUsr = data;
 		}).error(function(data, status, headers, config) {
@@ -33,7 +33,7 @@ app.controller("loginController", ['$scope', '$location', '$http', '$rootScope',
 	$scope.cargarPermisos = function(){
 		$http({
 			method: 'GET', 
-			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/obtenerPermisos?usrKey=' + $rootScope.token +'&usuario=' + $scope.usuario
+			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/obtenerPermisos?usrKey=' + $scope.tokenAux +'&usuario=' + $scope.usuario
 		}).success(function(data, status, headers, config) {
 			$rootScope.permisos = data;
 			$rootScope.vistasPermitidas = {usuario: '', configuracion: ''};
@@ -91,6 +91,7 @@ app.controller("loginController", ['$scope', '$location', '$http', '$rootScope',
 				        $rootScope.accionesPermitidas.obtenerTodosCasos = true;
 				}
 			}
+			$rootScope.token = $scope.tokenAux;
 			$location.url("/caso");
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);

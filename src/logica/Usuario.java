@@ -22,12 +22,12 @@ public class Usuario implements Serializable{
 	private String domicilio;
 	private String domicilioLaboral;
 	private String rut;
-	private Date fechaDeNacimiento;
+	private String fechaDeNacimiento;
 	
 	protected Usuario() {}
 	
 	public Usuario(String usuario, String contrasenia, String nombre, String cedula, String email, String tel, String cel,
-			String domicilio, String domicilioLaboral, String rut, Date fechaDeNacimiento) {
+			String domicilio, String domicilioLaboral, String rut, String fechaDeNacimiento) {
 		this.usuario = usuario;
 		this.contrasenia = contrasenia;
 		this.nombre = nombre;
@@ -145,12 +145,12 @@ public class Usuario implements Serializable{
 		this.rut = rut;
 	}
 
-	@Temporal(TemporalType.DATE)
-	public Date getFechaDeNacimiento() {
+	@Basic
+	public String getFechaDeNacimiento() {
 		return fechaDeNacimiento;
 	}
 	@XmlElement
-	public void setFechaDeNacimiento(Date fechaDeNacimiento) {
+	public void setFechaDeNacimiento(String fechaDeNacimiento) {
 		this.fechaDeNacimiento = fechaDeNacimiento;
 	}
 	

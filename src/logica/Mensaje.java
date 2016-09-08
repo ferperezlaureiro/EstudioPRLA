@@ -15,12 +15,12 @@ public class Mensaje implements Serializable{
 	private long id;
 	private long idCaso;
 	private long idUsuario;
-	private Date fecha;
+	private String fecha;
 	private String contenido;
 	
 	protected Mensaje() {}
 	
-	public Mensaje(long idCaso, long idUsuario, Date fecha, String contenido) {
+	public Mensaje(long idCaso, long idUsuario, String fecha, String contenido) {
 		super();
 		this.idCaso = idCaso;
 		this.idUsuario = idUsuario;
@@ -57,12 +57,12 @@ public class Mensaje implements Serializable{
 		this.idUsuario = idUsuario;
 	}
 
-	@Temporal(TemporalType.DATE)
-	public Date getFecha() {
+	@Basic
+	public String getFecha() {
 		return fecha;
 	}
 	@XmlElement
-	public void setFecha(Date fecha) {
+	public void setFecha(String fecha) {
 		this.fecha = fecha;
 	}
 

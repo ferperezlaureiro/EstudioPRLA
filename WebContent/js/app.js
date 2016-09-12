@@ -30,5 +30,9 @@ app.config(function($routeProvider){
 		templateUrl : "detalleCaso.html",
 		controller : "detalleCasoController"
 	})
+	.when("/detalleUsuario", {
+		templateUrl : "detalleUsuario.html",
+		controller : "detalleUsuarioController"
+	})
 	.otherwise({ reditrectTo : "/login" });
 });

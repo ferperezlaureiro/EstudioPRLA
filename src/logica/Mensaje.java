@@ -1,7 +1,6 @@
 package logica;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
@@ -16,15 +15,17 @@ public class Mensaje implements Serializable{
 	private long idCaso;
 	private long idUsuario;
 	private String fecha;
+	private String hora;
 	private String contenido;
 	
 	protected Mensaje() {}
 	
-	public Mensaje(long idCaso, long idUsuario, String fecha, String contenido) {
+	public Mensaje(long idCaso, long idUsuario, String fecha, String hora, String contenido) {
 		super();
 		this.idCaso = idCaso;
 		this.idUsuario = idUsuario;
 		this.fecha = fecha;
+		this.hora = hora;
 		this.contenido = contenido;
 	}
 	
@@ -64,6 +65,15 @@ public class Mensaje implements Serializable{
 	@XmlElement
 	public void setFecha(String fecha) {
 		this.fecha = fecha;
+	}
+
+	@Basic
+	public String getHora() {
+		return hora;
+	}
+	@XmlElement
+	public void setHora(String hora) {
+		this.hora = hora;
 	}
 
 	@Basic

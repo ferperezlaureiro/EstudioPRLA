@@ -69,20 +69,18 @@ app.controller("casoController", ['$scope', '$location', '$window', '$rootScope'
 	$scope.agregarCaso = function(){
 		$http({
 			method: 'POST',
-			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/agregarCaso?usrKey=' + $rootScope.token +'&iUE=' + 
-																							$scope.iue + '&juzgado='+ 
-																							$scope.juzgado +'&turno='+ 
-																							$scope.turno +'&caratulado='+ 
-																							$scope.caratulado
+			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/agregarCaso?usrKey=' + $rootScope.token 
+																				+ '&iUE=' + $scope.iue 
+																				+ '&juzgado=' + $scope.juzgado 
+																				+ '&turno=' + $scope.turno 
+																				+ '&caratulado=' + $scope.caratulado
 		}).success(function(data, status, headers, config) {
-			$scope.casoFormShow = false;
+			$scope.cancelarCaso();
 			if ($rootScope.accionesPermitidas.obtenerTodosCasos == true) {
 				$scope.cargarTodosLosCasos();
 			}
 
 			$scope.cargarMisCasos();
-			$scope.casoFormShow = false;
-			$scope.cancelarCaso();
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
 		});
@@ -114,13 +112,12 @@ app.controller("casoController", ['$scope', '$location', '$window', '$rootScope'
 																				+ '&turno=' + $scope.turno 
 																				+ '&caratulado='+ $scope.caratulado
 		}).success(function(data, status, headers, config) {
-			$scope.casoFormShow = false;
+			$scope.cancelarCaso();
 			if ($rootScope.accionesPermitidas.obtenerTodosCasos == true) {
 				$scope.cargarTodosLosCasos();
 			}
 
 			$scope.cargarMisCasos();
-			$scope.cancelarCaso();
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
 		});

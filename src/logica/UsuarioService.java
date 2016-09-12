@@ -1,6 +1,5 @@
 package logica;
 
-import java.sql.Date;
 import java.util.ArrayList;
 
 import javax.ws.rs.GET;
@@ -65,7 +64,56 @@ public class UsuarioService {
 	public ArrayList<Permiso> obtenerPermisos(@QueryParam("usrKey") String usrKey, 
 								  @QueryParam("usuario") String usuario) {
 		try {
-			return ControladoraPermiso.obtenerPermisoPorUsuario(usrKey, usuario);
+			return ControladoraPermiso.obtenerPermisosPorUsuario(usrKey, usuario);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@POST
+	@Path("/asignarPermiso")
+	@Produces(MediaType.TEXT_HTML)
+	public String asignarPermiso(@QueryParam("usrKey") String usrKey, 
+									@QueryParam("codePermiso") String codePermiso,
+									@QueryParam("usuario") String usuario) {
+		try {
+			boolean retorno = ControladoraPermiso.asignarPermiso(usrKey, codePermiso, usuario);
+			if(retorno)
+				return "true";
+			else
+				return "false";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "false";
+		}
+	}
+	
+	@DELETE
+	@Path("/rebocarPermiso")
+	@Produces(MediaType.TEXT_HTML)
+	public String rebocarPermiso(@QueryParam("usrKey") String usrKey, 
+									@QueryParam("codePermiso") String codePermiso, 
+									@QueryParam("usuario") String usuario) {
+		try {
+			boolean retorno = ControladoraPermiso.rebocarPermiso(usrKey, codePermiso, usuario);
+			if(retorno)
+				return "true";
+			else
+				return "false";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "false";
+		}
+	}
+
+	@GET
+    @Path("/obtenerPermisosRestantes")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Permiso> obtenerPermisosRestantes(@QueryParam("usrKey") String usrKey, 
+								  @QueryParam("usuario") String usuario) {
+		try {
+			return ControladoraPermiso.obtenerPermisosRestantesPorUsuario(usrKey, usuario);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -74,7 +122,7 @@ public class UsuarioService {
 	
 	@POST
 	@Path("/agregarUsuario")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_HTML)
 	public String AgregarUsuario(@QueryParam("usrKey") String usrKey, 
 									@QueryParam("usuario") String usuario, 
 									@QueryParam("contrasenia") String contrasenia, 
@@ -100,7 +148,7 @@ public class UsuarioService {
 	
 	@PUT
 	@Path("/modificarUsuario")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_HTML)
 	public String ModificarUsuario(@QueryParam("usrKey") String usrKey, 
 									@QueryParam("usuarioUsado") String usuarioUsado, 
 									@QueryParam("usuario") String usuario, 
@@ -125,7 +173,7 @@ public class UsuarioService {
 
 	@DELETE
 	@Path("/eliminarUsuario")
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.TEXT_HTML)
 	public String eliminarUsuario(@QueryParam("usrKey") String usrKey, 
 									@QueryParam("usuario") String usuario) {
 		

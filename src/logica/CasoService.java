@@ -1,7 +1,5 @@
 package logica;
 
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.ws.rs.GET;
@@ -10,9 +8,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -137,11 +133,9 @@ public class CasoService {
 	@Produces(MediaType.TEXT_HTML)
 	public String agregarMensaje (@QueryParam("usrKey") String usuarioActual,
 									@QueryParam("iUE") String iUE,
-									@QueryParam("usuario") String usuario,
-									@QueryParam("fecha") String fecha,
 									@QueryParam("contenido") String contenido) {
 		try {
-			ControladoraCaso.agregarMensaje(usuarioActual, iUE, usuario, fecha, contenido);
+			ControladoraCaso.agregarMensaje(usuarioActual, iUE, contenido);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
@@ -174,6 +168,48 @@ public class CasoService {
 			e.printStackTrace();
 		}
 		return casos;
+	}
+
+	@GET
+    @Path("/obtenerCasosNoAsignadosAUsuario")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Caso> obtenerCasosNoAsignadosAUsuario (@QueryParam("usrKey") String usuarioActual,
+													@QueryParam("usuario") String usuario) {
+		ArrayList<Caso> casos = null;
+		try {
+			casos = ControladoraCaso.obtenerCasosNoAsignadosAUsuario(usuarioActual, usuario);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return casos;
+	}
+
+	@GET
+    @Path("/obtenerUsuariosPorCaso")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Usuario> obtenerUsuariosPorCaso (@QueryParam("usrKey") String usuarioActual,
+													@QueryParam("iUE") String iUE) {
+		ArrayList<Usuario> usuarios = null;
+		try {
+			usuarios = ControladoraCaso.obtenerUsuariosPorCaso(usuarioActual, iUE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return usuarios;
+	}
+
+	@GET
+    @Path("/obtenerUsuariosNoAsignadosACaso")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Usuario> obtenerUsuariosNoAsignadosACaso (@QueryParam("usrKey") String usuarioActual,
+													@QueryParam("iUE") String iUE) {
+		ArrayList<Usuario> usuarios = null;
+		try {
+			usuarios = ControladoraCaso.obtenerUsuariosNoAsignadosACaso(usuarioActual, iUE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return usuarios;
 	}
 
 	@GET

@@ -1,6 +1,5 @@
 package logica;
 
-import java.sql.Date;
 import java.util.ArrayList;
 
 public class Fachada {
@@ -156,9 +155,9 @@ public class Fachada {
 		return "completado";
 	}
 	
-	public String agregarMensaje (String usuarioActual, String iUE,  String usuario, String fecha, String contenido) {
+	public String agregarMensaje (String usuarioActual, String iUE, String contenido) {
 		try {
-			ControladoraCaso.agregarMensaje(usuarioActual, iUE, usuario, fecha, contenido);
+			ControladoraCaso.agregarMensaje(usuarioActual, iUE, contenido);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();

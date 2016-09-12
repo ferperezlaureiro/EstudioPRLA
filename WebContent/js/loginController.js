@@ -4,7 +4,8 @@ app.controller("loginController", ['$scope', '$location', '$http', '$rootScope',
 		if($scope.usuario != "" && $scope.usuario != undefined && $scope.contrasenia != "" && $scope.contrasenia != undefined){
 			$http({
 				method: 'GET', 
-				url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/login?usuario=' + $scope.usuario + '&contrasenia=' + $scope.contrasenia
+				url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/login?usuario=' + $scope.usuario 
+																				+ '&contrasenia=' + $scope.contrasenia
 			}).success(function(data, status, headers, config) {
 				if (data != "usuario" && data != "|contrasenia" && data != "usuario|contrasenia") {
 					$scope.tokenAux = data;
@@ -22,7 +23,8 @@ app.controller("loginController", ['$scope', '$location', '$http', '$rootScope',
 	$scope.cargarUsuario = function(){
 		$http({
 			method: 'GET', 
-			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/obtenerUsuario?usrKey=' + $scope.tokenAux +'&usuario=' + $scope.usuario
+			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/obtenerUsuario?usrKey=' + $scope.tokenAux 
+																					+ '&usuario=' + $scope.usuario
 		}).success(function(data, status, headers, config) {
 			$rootScope.currentUsr = data;
 		}).error(function(data, status, headers, config) {
@@ -33,13 +35,14 @@ app.controller("loginController", ['$scope', '$location', '$http', '$rootScope',
 	$scope.cargarPermisos = function(){
 		$http({
 			method: 'GET', 
-			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/obtenerPermisos?usrKey=' + $scope.tokenAux +'&usuario=' + $scope.usuario
+			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/obtenerPermisos?usrKey=' + $scope.tokenAux 
+																					+ '&usuario=' + $scope.usuario
 		}).success(function(data, status, headers, config) {
 			$rootScope.permisos = data;
 			$rootScope.vistasPermitidas = {usuario: '', configuracion: ''};
 			$rootScope.accionesPermitidas = {usuarioAgregar: '', usuarioModificar : '', usuarioBorrar : '', casoAgregar : '', casoEliminar : '', casoModificar : '', 
-				involucradoAgregar : '', involucradoModificar : '', involucradoBorrar : '', asignarPermiso : '', rebocarPermiso : '', asociarUsuario : '', 
-				desasociarUsuario : '', obtenerTodosCasos : ''};
+				involucradoAgregar : '', involucradoModificar : '', involucradoBorrar : '', asignarRebocarPermiso : '', asociarDesasociarUsuario : '', 
+				obtenerTodosCasos : '', obtenerCasosPorUsuario : '', obtenerUsuariosPorCaso : ''};
 			for(var i in data){
 				switch (data[i].code) {
 				    case "OU":
@@ -75,17 +78,11 @@ app.controller("loginController", ['$scope', '$location', '$http', '$rootScope',
 				    case "MI":
 				        $rootScope.accionesPermitidas.involucradoModificar = true;
 				        break;
-				    case "AP":
-				        $rootScope.accionesPermitidas.asignarPermiso = true;
+				    case "ARP":
+				        $rootScope.accionesPermitidas.asignarRebocarPermiso = true;
 				        break;
-				    case "RP":
-				        $rootScope.accionesPermitidas.rebocarPermiso = true;
-				        break;
-				    case "AUC":
-				        $rootScope.accionesPermitidas.asociarUsuario = true;
-				        break;
-				    case "DUC":
-				        $rootScope.accionesPermitidas.asociarUsuario = true;
+				    case "ADUC":
+				        $rootScope.accionesPermitidas.asociarDesasociarUsuario = true;
 				        break;
 				    case "OTC":
 				        $rootScope.accionesPermitidas.obtenerTodosCasos = true;

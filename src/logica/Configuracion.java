@@ -1,7 +1,5 @@
 package logica;
 
-import java.sql.Date;
-
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -26,7 +24,7 @@ public class Configuracion {
         s.beginTransaction();
 		
         //Se ingresa un nuevo usuario
-        Usuario u = new Usuario("Master", "Master1!", "Master", "49290325", "master@gmail.com", "099954750", "091410102", 
+        Usuario u = new Usuario("Master", "Master1!", "Master Perez", "49290325", "master@gmail.com", "25113149", "091410102", 
 				"Satint bois 5063", "Treinta y tres 1334", "123123122123", "11/12/1992");
 		
 		//Se guarda el nuevo usuario en la base de datos
@@ -46,13 +44,10 @@ public class Configuracion {
 		ControladoraPermiso.crearPermiso("Agregar involucrado", "AI");
 		ControladoraPermiso.crearPermiso("Eliminar involucrado", "EI");
 		ControladoraPermiso.crearPermiso("Modificar involucrado", "MI");
-		ControladoraPermiso.crearPermiso("Asignar permiso", "AP");
-		ControladoraPermiso.crearPermiso("Revocar permiso", "RP");
+		ControladoraPermiso.crearPermiso("Asignar o rebocar permiso", "ARP");
 		ControladoraPermiso.crearPermiso("Obtener usuarios", "OU");
 		ControladoraPermiso.crearPermiso("Obtener todos los casos", "OTC");
-		ControladoraPermiso.crearPermiso("Asociar usuario a caso", "AUC");
-		ControladoraPermiso.crearPermiso("Desasociar usuario a caso", "DUC");
-		ControladoraPermiso.crearPermiso("Obtener casos por usuario", "OCU");
+		ControladoraPermiso.crearPermiso("Asociar desasociar usuario a caso", "ADUC");
 		ControladoraPermiso.crearPermiso("Configurar", "CON");
 	}
 	
@@ -66,13 +61,10 @@ public class Configuracion {
 		asignarPermisoAP("AI", "Master");
 		asignarPermisoAP("EI", "Master");
 		asignarPermisoAP("MI", "Master");
-		asignarPermisoAP("AP", "Master");
-		asignarPermisoAP("RP", "Master");
+		asignarPermisoAP("ARP", "Master");
 		asignarPermisoAP("OU", "Master");
 		asignarPermisoAP("OTC", "Master");
-		asignarPermisoAP("AUC", "Master");
-		asignarPermisoAP("DUC", "Master");
-		asignarPermisoAP("OCU", "Master");
+		asignarPermisoAP("ADUC", "Master");
 		asignarPermisoAP("CON", "Master");
 	}
 	

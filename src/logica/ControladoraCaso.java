@@ -1,7 +1,7 @@
 package logica;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -37,9 +37,6 @@ public class ControladoraCaso {
 	public static ArrayList<Caso> obtenerCasosPorUsuario (String usuarioActual, String usuario) throws Exception {
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
-		
-		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("OCU", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
 
 		Usuario u = ControladoraUsuario.buscarUsuario(usuarioActual, usuario);
 		
@@ -59,6 +56,87 @@ public class ControladoraCaso {
         	for (Object o: list)
         		casos.add((Caso)o);
         	return casos;
+        } else
+        	throw new Exception ("No hay casos");
+	}
+
+
+	public static ArrayList<Caso> obtenerCasosNoAsignadosAUsuario (String usuarioActual, String usuario) throws Exception {
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
+
+		Usuario u = ControladoraUsuario.buscarUsuario(usuarioActual, usuario);
+		
+		if (u == null)
+			throw new Exception("Usuario no encontrado");
+		
+		Session s = HibernateUtil.getSession();
+        Query query = s.createQuery("from Caso where id not in(select U.idCaso from UsuarioAsociadoACaso as U where U.idUsuario = :idUsuario)");
+        query.setParameter("idUsuario", u.getId());
+        List list = query.list();
+
+        s.disconnect();
+        
+        if (!list.isEmpty()) {
+        	ArrayList<Caso> casos = new ArrayList<Caso>();
+        	for (Object o: list)
+        		casos.add((Caso)o);
+        	return casos;
+        } else
+        	throw new Exception ("No hay casos");
+	}
+
+	public static ArrayList<Usuario> obtenerUsuariosPorCaso(String usuarioActual, String iUE) throws Exception {
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
+
+		Caso c = obtenerCasoPorIUE(usuarioActual, iUE);
+		
+		if (c == null)
+			throw new Exception("Caso no encontrado");
+		
+		Session s = HibernateUtil.getSession();
+		
+        Query query = s.createQuery("select U from Usuario as U, UsuarioAsociadoACaso as UA where U.id = UA.idUsuario and UA.idCaso = :idCaso");
+        query.setParameter("idCaso", c.getId());
+        List list = query.list();
+
+        s.disconnect();
+        
+        if (!list.isEmpty()) {
+        	ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+        	for (Object o: list)
+        		usuarios.add((Usuario)o);
+        	return usuarios;
+        } else
+        	throw new Exception ("No hay casos");
+	}
+
+	public static ArrayList<Usuario> obtenerUsuariosNoAsignadosACaso(String usuarioActual, String iUE) throws Exception {
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
+		
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("ADUC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+
+		Caso c = obtenerCasoPorIUE(usuarioActual, iUE);
+		
+		if (c == null)
+			throw new Exception("Caso no encontrado");
+		
+		Session s = HibernateUtil.getSession();
+		
+        Query query = s.createQuery("from Usuario where id not in (select UA.idUsuario from UsuarioAsociadoACaso as UA where UA.idCaso = :idCaso)");
+        query.setParameter("idCaso", c.getId());
+        List list = query.list();
+
+        s.disconnect();
+        
+        if (!list.isEmpty()) {
+        	ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+        	for (Object o: list)
+        		usuarios.add((Usuario)o);
+        	return usuarios;
         } else
         	throw new Exception ("No hay casos");
 	}
@@ -323,13 +401,14 @@ public class ControladoraCaso {
 		}
 	}
 	
-	public static void agregarMensaje(String usuarioActual, String iUE,  String usuario, String fecha, String contenido) throws Exception {
+	public static void agregarMensaje(String usuarioActual, String iUE, String contenido) throws Exception {
 		//Se valida que la sesion sea valida
-		ControladoraUsuario.validateUsrSession(usuarioActual);
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
-		validarDatosMensaje(iUE, usuario, fecha, contenido);
+		validarDatosMensaje(iUE, contenido);
 		
-		if (!ControladoraUsuario.existeUsuario(usuario))
+		Usuario usuario = ControladoraUsuario.buscarUsuario(usuarioActual, usr);
+		if (usuario == null)
 			throw new Exception("Usuario no encontrado");
 		
 		Caso c = obtenerCasoPorIUE(usuarioActual, iUE);
@@ -340,8 +419,17 @@ public class ControladoraCaso {
 		//Se obtiene y empieza la session
 		Session s = HibernateUtil.getSession();
         s.beginTransaction();
-
-        Mensaje m = new Mensaje(c.getId(), ControladoraUsuario.buscarUsuario(usuarioActual, usuario).getId(), fecha, contenido);
+        
+        Calendar hoy = Calendar.getInstance();
+		String fecha = "" + hoy.get(Calendar.DAY_OF_MONTH) + "/" + (hoy.get(Calendar.MONTH)+1)  + "/" + hoy.get(Calendar.YEAR);
+		
+		String hora = "";
+		if(hoy.get(Calendar.MINUTE)<10){
+			hora = "" + hoy.get(Calendar.HOUR_OF_DAY) + ":0" + hoy.get(Calendar.MINUTE);
+		} else{
+			hora = "" + hoy.get(Calendar.HOUR_OF_DAY) + ":" + hoy.get(Calendar.MINUTE);
+		}
+        Mensaje m = new Mensaje(c.getId(), usuario.getId(), fecha, hora, contenido);
 		
 		//Se guarda el nuevo involucrado en la base de datos
 		s.save(m);
@@ -350,14 +438,10 @@ public class ControladoraCaso {
 		s.disconnect();
 	}
 	
-	public static void validarDatosMensaje (String iUE,  String usuario, String fecha, String contenido) throws Exception {
+	public static void validarDatosMensaje (String iUE, String contenido) throws Exception {
 		String errores = "";
 		if(!Validacion.validarIUE(iUE))
 			errores += "IUE";
-		if(!Validacion.validarUsuario(usuario))
-			errores += "|usuario";
-		if(!Validacion.validarFechaDeNacimiento(fecha))
-			errores += "|fecha";
 		if(!Validacion.validarContenidoMensaje(contenido))
 			errores += "|contenido";
 		
@@ -371,7 +455,7 @@ public class ControladoraCaso {
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("AUC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		ControladoraPermiso.tienePermiso("ADUC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
         
 		Usuario u = ControladoraUsuario.buscarUsuario(usuarioActual, usuario);
 		
@@ -648,7 +732,7 @@ public class ControladoraCaso {
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("DUC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		ControladoraPermiso.tienePermiso("ADUC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
         
 		Usuario u = ControladoraUsuario.buscarUsuario(usuarioActual, usuario);
 		

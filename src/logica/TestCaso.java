@@ -3,8 +3,6 @@ package logica;
 
 import static org.junit.Assert.*;
 
-import java.sql.Date;
-
 import org.junit.Test;
 
 public class TestCaso {
@@ -47,9 +45,9 @@ public class TestCaso {
 				"hija");
 		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", "11/12/1992", "Maria Perez", "49290325", "uruguaya", "Saint Bois 5063", 
 				"hija");
-		fachada.agregarMensaje(actualUsr, "2-1451/2015", "Master", "11/12/1992", "Mensaje de prueba");
-		fachada.agregarMensaje(actualUsr, "2-1451/2015", "Master", "11/12/1992", "Mensaje de prueba");
-		fachada.agregarMensaje(actualUsr, "2-1451/2015", "Master", "11/12/1992", "Mensaje de prueba");
+		fachada.agregarMensaje(actualUsr, "2-1451/2015", "Mensaje de prueba");
+		fachada.agregarMensaje(actualUsr, "2-1451/2015", "Mensaje de prueba");
+		fachada.agregarMensaje(actualUsr, "2-1451/2015", "Mensaje de prueba");
 		
 		try {
 			assertEquals(true,ControladoraCaso.existeCaso(actualUsr, "2-1231/2015"));
@@ -294,29 +292,16 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, " ", "Master", "11/12/1992", "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "textoerror", "Master", "11/12/1992", "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "1234", "Master", "11/12/1992", "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "12312-12312", "Master", "11/12/1992", "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "12312/12312", "Master", "11/12/1992", "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-1234/asda", "Master", "11/12/1992", "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "q-1231/2015", "Master", "11/12/1992", "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-aaaa/2015", "Master", "11/12/1992", "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-1451/20153", "Master", "11/12/1992", "Mensaje de prueba"));
-		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-143333351/2015", "Master", "11/12/1992", "Mensaje de prueba"));
-	}
-	
-	@Test
-	public void testAgregarMensajeUsuarioIncorrecto () {
-		Fachada fachada = Fachada.getInstancia();
-		
-		String actualUsr = fachada.login("Master", "Master1!");
-
-		assertEquals("|usuario", fachada.agregarMensaje(actualUsr, "2-1459/2015", "", "11/12/1992", "Mensaje de prueba"));
-		assertEquals("|usuario", fachada.agregarMensaje(actualUsr, "2-1459/2015", " ", "11/12/1992", "Mensaje de prueba"));
-		assertEquals("|usuario", fachada.agregarMensaje(actualUsr, "2-1459/2015", "123123", "11/12/1992", "Mensaje de prueba"));
-		assertEquals("|usuario", fachada.agregarMensaje(actualUsr, "2-1459/2015", "abcdabcdabcdabcdabcdabcdabcdabcdabcd", 
-				"11/12/1992", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, " ", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "textoerror", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "1234", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "12312-12312", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "12312/12312", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-1234/asda", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "q-1231/2015", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-aaaa/2015", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-1451/20153", "Mensaje de prueba"));
+		assertEquals("IUE", fachada.agregarMensaje(actualUsr, "2-143333351/2015", "Mensaje de prueba"));
 	}
 	
 	@Test
@@ -325,9 +310,9 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		assertEquals("|contenido", fachada.agregarMensaje(actualUsr, "2-1459/2015", "Master", "11/12/1992", ""));
-		assertEquals("|contenido", fachada.agregarMensaje(actualUsr, "2-1459/2015", "Master", "11/12/1992", " "));
-		assertEquals("|contenido", fachada.agregarMensaje(actualUsr, "2-1459/2015", "Master", "11/12/1992", null));
+		assertEquals("|contenido", fachada.agregarMensaje(actualUsr, "2-1459/2015", ""));
+		assertEquals("|contenido", fachada.agregarMensaje(actualUsr, "2-1459/2015", " "));
+		assertEquals("|contenido", fachada.agregarMensaje(actualUsr, "2-1459/2015", null));
 	}
 	
 	@Test

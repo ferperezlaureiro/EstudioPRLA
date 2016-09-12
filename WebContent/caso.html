@@ -20,38 +20,40 @@
 		        	</div>
 		      	</nav>
 			</div> 
-			<table class="table"> 
-				<thead> 
-					<tr> 
-						<th>IUE</th> 
-						<th>Juzgado</th> 
-						<th>Turno</th> 
-						<th>Caratulado</th> 
-						<th>Suscrito</th> 
-						<th ng-hide="accionesPermitidas.casoEliminar == ''">Eliminar</th> 
-						<th ng-hide="accionesPermitidas.casoModificar == ''">Modificar</th>
-						<th>Detalle</th>
-					</tr> 
-				</thead> 
-				<tbody> 
-					<tr ng-repeat="caso in todosCasos"> 
-						<td>{{caso.iUE}}</td> 
-						<td>{{caso.juzgado}}</td> 
-						<td>{{caso.turno}}</td> 
-						<td>{{caso.caratulado}}</td> 
-						<td>{{caso.suscrito}}</td> 
-						<td ng-hide="accionesPermitidas.casoEliminar == ''"">
-							<button class="btn glyphicon glyphicon-trash" type="button" ng-click="eliminarCaso(caso.iUE)"></button>
-						</td> 
-						<td ng-hide="accionesPermitidas.casoModificar == ''">
-							<button class="btn glyphicon glyphicon-edit" type="button" ng-click="mostrarModificarCaso(todosCasos, caso.iUE)"></button>
-						</td> 
-						<td>
-							<button class="btn glyphicon glyphicon-eye-open" type="button" ng-click="detalleCaso(caso.iUE)"></button>
-						</td> 
-					</tr> 
-				</tbody> 
-			</table> 
+			<div class="table-responsive">
+				<table class="table"> 
+					<thead> 
+						<tr> 
+							<th>IUE</th> 
+							<th>Juzgado</th> 
+							<th>Turno</th> 
+							<th>Caratulado</th> 
+							<th>Suscrito</th> 
+							<th ng-hide="accionesPermitidas.casoEliminar == ''">Eliminar</th> 
+							<th ng-hide="accionesPermitidas.casoModificar == ''">Modificar</th>
+							<th>Detalle</th>
+						</tr> 
+					</thead> 
+					<tbody> 
+						<tr ng-repeat="caso in todosCasos"> 
+							<td>{{caso.iUE}}</td> 
+							<td>{{caso.juzgado}}</td> 
+							<td>{{caso.turno}}</td> 
+							<td>{{caso.caratulado}}</td> 
+							<td>{{caso.suscrito}}</td> 
+							<td ng-hide="accionesPermitidas.casoEliminar == ''"">
+								<button class="btn glyphicon glyphicon-trash" type="button" ng-click="eliminarCaso(caso.iUE)"></button>
+							</td> 
+							<td ng-hide="accionesPermitidas.casoModificar == ''">
+								<button class="btn glyphicon glyphicon-edit" type="button" ng-click="mostrarModificarCaso(todosCasos, caso.iUE)"></button>
+							</td> 
+							<td>
+								<button class="btn glyphicon glyphicon-eye-open" type="button" ng-click="detalleCaso(caso.iUE)"></button>
+							</td> 
+						</tr> 
+					</tbody> 
+				</table> 
+			</div>
 		</div>
 		<div class="panel panel-default" ng-show="accionesPermitidas.obtenerTodosCasos != '' && todosCasos == ''">
 			<nav class="navbar-default">
@@ -80,50 +82,43 @@
 		          		<div class="navbar-header">
 		            		<span class="navbar-brand" href="#">Mis Casos</span>
 		          		</div>
-		          		<div id="navbar" class="navbar-collapse">
-		            		<ul class="nav navbar-nav">
-		              
-		            		</ul>
-		            		<ul class="nav navbar-nav navbar-right">
-		              			<li>
-		              			</li>
-		            		</ul>
-		          		</div>
 		        	</div>
 		      	</nav>
 			</div>
-			<table class="table"> 
-				<thead> 
-					<tr> 
-						<th>IUE</th> 
-						<th>Juzgado</th> 
-						<th>Turno</th> 
-						<th>Caratulado</th> 
-						<th>Suscrito</th> 
-						<th ng-hide="accionesPermitidas.casoEliminar == ''">Eliminar</th> 
-						<th ng-hide="accionesPermitidas.casoModificar == ''">Modificar</th>
-						<th>Detalle</th>
-					</tr> 
-				</thead> 
-				<tbody> 
-					<tr ng-repeat="caso in misCasos"> 
-						<td>{{caso.iUE}}</td> 
-						<td>{{caso.juzgado}}</td> 
-						<td>{{caso.turno}}</td> 
-						<td>{{caso.caratulado}}</td> 
-						<td>{{caso.suscrito}}</td> 
-						<td ng-hide="accionesPermitidas.casoEliminar == ''"">
-							<button class="btn glyphicon glyphicon-trash" type="button" ng-click="eliminarCaso(caso.iUE)"></button>
-						</td> 
-						<td ng-hide="accionesPermitidas.casoModificar == ''">
-							<button class="btn glyphicon glyphicon-edit" type="button" ng-click="mostrarModificarCaso(misCasos, caso.iUE)"></button>
-						</td> 
-						<td>
-							<button class="btn glyphicon glyphicon-eye-open" type="button" ng-click="detalleCaso(caso.iUE)"></button>
-						</td> 
-					</tr> 
-				</tbody> 
-			</table> 
+			<div class="table-responsive">
+				<table class="table table-striped"> 
+					<thead> 
+						<tr> 
+							<th>IUE</th> 
+							<th>Juzgado</th> 
+							<th>Turno</th> 
+							<th>Caratulado</th> 
+							<th ng-hide="accionesPermitidas.casoModificar == ''">Suscrito</th> 
+							<th ng-hide="accionesPermitidas.casoEliminar == ''">Eliminar</th> 
+							<th ng-hide="accionesPermitidas.casoModificar == ''">Modificar</th>
+							<th>Detalle</th>
+						</tr> 
+					</thead> 
+					<tbody> 
+						<tr ng-repeat="caso in misCasos"> 
+							<td>{{caso.iUE}}</td> 
+							<td>{{caso.juzgado}}</td> 
+							<td>{{caso.turno}}</td> 
+							<td>{{caso.caratulado}}</td> 
+							<td ng-hide="accionesPermitidas.casoModificar == ''">{{caso.suscrito}}</td> 
+							<td ng-hide="accionesPermitidas.casoEliminar == ''"">
+								<button class="btn glyphicon glyphicon-trash" type="button" ng-click="eliminarCaso(caso.iUE)"></button>
+							</td> 
+							<td ng-hide="accionesPermitidas.casoModificar == ''">
+								<button class="btn glyphicon glyphicon-edit" type="button" ng-click="mostrarModificarCaso(misCasos, caso.iUE)"></button>
+							</td> 
+							<td>
+								<button class="btn glyphicon glyphicon-eye-open" type="button" ng-click="detalleCaso(caso.iUE)"></button>
+							</td> 
+						</tr> 
+					</tbody> 
+				</table> 
+			</div>
 		</div>
 
 		<div class="panel panel-default" ng-show="misCasos == ''">

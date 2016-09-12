@@ -19,10 +19,11 @@
 		<script type="text/javascript" src="js/cuentaController.js"></script>
 		<script type="text/javascript" src="js/loginController.js"></script>
 		<script type="text/javascript" src="js/detalleCasoController.js"></script>
+		<script type="text/javascript" src="js/detalleUsuarioController.js"></script>
 	</head>
 	<body ng-app="app">
 		
-		<nav class="navbar navbar-default navbar-fixed-top" ng-controller="indexController" ng-hide="token == undefined || token == ''">
+		<nav class="navbar navbar-inverse navbar-fixed-top" ng-controller="indexController" ng-hide="token == undefined || token == ''">
 			<div class="container">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -31,7 +32,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="#">Estudio PRLA</a>
+					<a class="navbar-brand" href="#/caso">Estudio PRLA</a>
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">

@@ -41,7 +41,7 @@ public class ControladoraPermiso {
         	return (Permiso)list.get(0);
 	}
 	
-	public static ArrayList<Permiso> obtenerPermisoPorUsuario(String usuarioActual, String usuario) throws Exception{
+	public static ArrayList<Permiso> obtenerPermisosPorUsuario(String usuarioActual, String usuario) throws Exception{
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
@@ -66,6 +66,30 @@ public class ControladoraPermiso {
         }
 	}
 	
+	public static ArrayList<Permiso> obtenerPermisosRestantesPorUsuario(String usuarioActual, String usuario) throws Exception{
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
+		
+		Session s = HibernateUtil.getSession();
+		
+		Usuario u = ControladoraUsuario.buscarUsuario(usuarioActual, usuario);
+
+        Query query = s.createQuery("from Permiso where id not in(select PU.idPermiso from PermisoUsuario as PU where PU.idUsuario = :idU)");
+        query.setParameter("idU", u.getId());
+        List list = query.list();
+
+        s.disconnect();
+        
+        if (list.isEmpty())
+        	return null;
+        else {
+        	ArrayList<Permiso> retorno = new ArrayList<Permiso>();
+        	for (Object o: list)
+        		retorno.add((Permiso)o);
+        	return retorno;
+        }
+	}
+	
 	public static void tienePermiso(String codePermiso, Long idUsuario) throws Exception{
         Permiso p = obtenerPermisoPorCode(codePermiso);
         
@@ -74,7 +98,7 @@ public class ControladoraPermiso {
 
 		Session s = HibernateUtil.getSession();
 		
-        Query query = s.createQuery("from PermisoUsuario where idPermiso = :idP and idUsuario = :idU ");
+        Query query = s.createQuery("from PermisoUsuario where idPermiso = :idP and idUsuario = :idU");
         query.setParameter("idP", p.getId());
         query.setParameter("idU", idUsuario);
 
@@ -109,7 +133,7 @@ public class ControladoraPermiso {
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("AP", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		ControladoraPermiso.tienePermiso("ARP", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
 		
 		Usuario u = ControladoraUsuario.buscarUsuario(usuarioActual, usuario);
 		if(u == null)
@@ -135,24 +159,26 @@ public class ControladoraPermiso {
 	//FIN SECCION ALTAS
 
 	//PRINCIPIO SECCION BAJAS
-	public static boolean rebocarPermiso(String usuarioActual, String codePermiso, Long idUsuario) throws Exception{
+	public static boolean rebocarPermiso(String usuarioActual, String codePermiso, String usuario) throws Exception{
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("RP", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		ControladoraPermiso.tienePermiso("ARP", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
 		
         Permiso p = obtenerPermisoPorCode(codePermiso);
         
         if (p == null)
         	return false;
+        
+        Usuario usrRebocar = ControladoraUsuario.buscarUsuario(usuarioActual, usuario);
 
 		Session s = HibernateUtil.getSession();
         s.beginTransaction();
 		
-        Query query = s.createQuery("from PermisoUsuario where idPermiso = :idP and idUsuario = :idU ");
+        Query query = s.createQuery("from PermisoUsuario where idPermiso = :idP and idUsuario = :idU");
         query.setParameter("idP", p.getId());
-        query.setParameter("idU", idUsuario);
+        query.setParameter("idU", usrRebocar.getId());
 
         if (query.list().isEmpty()) {
             s.disconnect();

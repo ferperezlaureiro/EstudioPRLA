@@ -57,7 +57,7 @@ public class ControladoraCaso {
         		casos.add((Caso)o);
         	return casos;
         } else
-        	throw new Exception ("No hay casos");
+        	throw new Exception ("No hay casos asignados a este usuario");
 	}
 
 
@@ -83,7 +83,7 @@ public class ControladoraCaso {
         		casos.add((Caso)o);
         	return casos;
         } else
-        	throw new Exception ("No hay casos");
+        	throw new Exception ("Todos los casos estan asignados a este usuario");
 	}
 
 	public static ArrayList<Usuario> obtenerUsuariosPorCaso(String usuarioActual, String iUE) throws Exception {
@@ -109,7 +109,7 @@ public class ControladoraCaso {
         		usuarios.add((Usuario)o);
         	return usuarios;
         } else
-        	throw new Exception ("No hay casos");
+        	throw new Exception ("No hay usuarios asignados a este caso");
 	}
 
 	public static ArrayList<Usuario> obtenerUsuariosNoAsignadosACaso(String usuarioActual, String iUE) throws Exception {
@@ -138,7 +138,7 @@ public class ControladoraCaso {
         		usuarios.add((Usuario)o);
         	return usuarios;
         } else
-        	throw new Exception ("No hay casos");
+        	throw new Exception ("Todos los usuarios estan asignados a este caso");
 	}
 
 	public static Caso obtenerCasoPorIUE (String usuarioActual, String iUE) throws Exception {
@@ -181,8 +181,6 @@ public class ControladoraCaso {
 	}
 	
 	public static ArrayList<Mensaje> obtenerConversacion (String usuarioActual, String iUE) throws Exception {
-		ArrayList<Mensaje> mensajes = new ArrayList<>();
-		
 		//Se valida que la sesion sea valida
 		ControladoraUsuario.validateUsrSession(usuarioActual);
 		
@@ -201,13 +199,17 @@ public class ControladoraCaso {
             s.disconnect();
             
             if(!list.isEmpty()) {
+            	ArrayList<Mensaje> mensajes = new ArrayList<Mensaje>();
             	for(Object o: list) {
             		mensajes.add((Mensaje)o);
             	}
+            	return mensajes;
+            } else {
+            	throw new Exception("No hay mensajes para este caso");
             }
+        } else {
+        	throw new Exception("Caso no encontrado");
         }
-		
-        return mensajes;
 	}
 	
 	public static ArrayList<Involucrado> obtenerInvolucrados (String usuarioActual, String iUE) throws Exception {
@@ -235,10 +237,33 @@ public class ControladoraCaso {
             	for(Object o: list) {
             		involucrados.add((Involucrado)o);
             	}
+            	return involucrados;
+            } else {
+            	throw new Exception("No hay involucrados para este caso");
             }
+        } else {
+        	throw new Exception("Caso no encontrado");
         }
+	}
+	
 
-        return involucrados;
+	
+	public static boolean existeInvolucrado (String usuarioActual, String iUE, String cedula) throws Exception{
+		Caso c = obtenerCasoPorIUE(usuarioActual, iUE);
+        
+		Session s = HibernateUtil.getSession();
+		
+        Query query = s.createQuery("from Involucrado where idCaso = :idCaso and cedula = :cedula");
+        query.setParameter("idCaso", c.getId());
+        query.setParameter("cedula", cedula);
+        List list = query.list();
+
+        s.disconnect();
+        
+        if (!list.isEmpty())
+        	return true;
+        else
+        	return false;
 	}
 	
 	public static Involucrado obtenerInvolucrado (String usuarioActual, String iUE, String cedula) throws Exception {
@@ -256,16 +281,14 @@ public class ControladoraCaso {
             List list = query.list();
 
             s.disconnect();
-
-            Involucrado i = null;
             
             if (!list.isEmpty())
-            	i = (Involucrado)list.get(0);
-            
-            return i;
-		}
-		
-		return null;
+            	return (Involucrado)list.get(0);
+            else
+            	throw new Exception("Involucrado no encontrado");
+		} else {
+        	throw new Exception("Caso no encontrado");
+        }
 	}
 	
 	public static void notificarMovimientos(String usuarioActual) throws Exception {
@@ -311,12 +334,15 @@ public class ControladoraCaso {
 	//FIN SECCION CONSULTAS
 	
 	//PRINCIPIO SECCION INSERCIONES
-	public static void agregarCaso(String usuarioActual, String iUE, String juzgado, int turno, String caratulado) throws Exception {
+	public static String agregarCaso(String usuarioActual, String iUE, String juzgado, int turno, String caratulado) throws Exception {
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
 		ControladoraPermiso.tienePermiso("AC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		
+		if (existeCaso(usuarioActual, iUE))
+			throw new Exception("duplicado");
 		
 		//Se valida que los datos sean validos
 		validarDatosCaso(iUE, juzgado, turno, caratulado);
@@ -332,6 +358,8 @@ public class ControladoraCaso {
 		s.getTransaction().commit();
 
         s.disconnect();
+        
+        return "completado";
 	}
 	
 	private static void validarDatosCaso(String iUE, String juzgado, int turno, String caratulado) throws Exception{
@@ -349,13 +377,17 @@ public class ControladoraCaso {
 		}
 	}
 	
-	public static void agregarInvolucrado(String usuarioActual, String iUE, String fechaDeNacimiento, String nombre, String cedula, 
+	public static String agregarInvolucrado(String usuarioActual, String iUE, String fechaDeNacimiento, String nombre, String cedula, 
 			String nacionalidad, String domicilio,String clase) throws Exception {
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
 		ControladoraPermiso.tienePermiso("AI", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		
+		//Se valida que el involucrado no este duplicado
+		if (existeInvolucrado(usuarioActual, iUE, cedula))
+			throw new Exception("duplicado");
 		
 		//Se valida que los datos sean validos
 		validarDatosInvolucrado(iUE, fechaDeNacimiento, nombre, cedula, nacionalidad, domicilio, clase);
@@ -375,6 +407,10 @@ public class ControladoraCaso {
 			s.getTransaction().commit();	
 
 	        s.disconnect();	
+	        
+	        return "completado";
+		} else {
+			throw new Exception("Caso no encontrado");
 		}
 	}
 	
@@ -401,7 +437,7 @@ public class ControladoraCaso {
 		}
 	}
 	
-	public static void agregarMensaje(String usuarioActual, String iUE, String contenido) throws Exception {
+	public static String agregarMensaje(String usuarioActual, String iUE, String contenido) throws Exception {
 		//Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
@@ -412,7 +448,6 @@ public class ControladoraCaso {
 			throw new Exception("Usuario no encontrado");
 		
 		Caso c = obtenerCasoPorIUE(usuarioActual, iUE);
-
 		if(c == null)
 			throw new Exception("Caso no encontrado");	
 		
@@ -436,6 +471,8 @@ public class ControladoraCaso {
 		s.getTransaction().commit();	
 		
 		s.disconnect();
+		
+		return "completado";
 	}
 	
 	public static void validarDatosMensaje (String iUE, String contenido) throws Exception {
@@ -450,7 +487,7 @@ public class ControladoraCaso {
 		}
 	}
 	
-	public static void asociarUsuarioACaso (String usuarioActual, String usuario, String iUE, String tipo) throws Exception {
+	public static String asociarUsuarioACaso (String usuarioActual, String usuario, String iUE, String tipo) throws Exception {
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
@@ -480,12 +517,14 @@ public class ControladoraCaso {
 		s.getTransaction().commit();	
 		
 		s.disconnect();
+		
+		return "completado";
 	}
 	//FIN SECCION INSERCIONES
 	
 	//PRINCIPIO SECCION MODIFICACIONES
 
-	public static void modificarCaso(String usuarioActual, String iUEUsado, String iUE, String juzgado, int turno, String caratulado) throws Exception {
+	public static String modificarCaso(String usuarioActual, String iUEUsado, String iUE, String juzgado, int turno, String caratulado) throws Exception {
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
@@ -523,10 +562,12 @@ public class ControladoraCaso {
 			s.getTransaction().commit();
 
 	        s.disconnect();
+	        
+	        return "completado";
 		}		
 	}
 	
-	public static void modificarInvolucrado(String usuarioActual, String iUE, String cedulaUsada, String fechaDeNacimiento, String nombre, 
+	public static String modificarInvolucrado(String usuarioActual, String iUE, String cedulaUsada, String fechaDeNacimiento, String nombre, 
 			String cedula, String nacionalidad, String domicilio,String clase) throws Exception {
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
@@ -581,9 +622,11 @@ public class ControladoraCaso {
 		s.getTransaction().commit();
 		
 		s.disconnect();
+		
+		return "completado";
 	}
 	
-	public static void suscribirCaso (String usuarioActual, String iUE) throws Exception{
+	public static String suscribirCaso (String usuarioActual, String iUE) throws Exception{
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
@@ -606,9 +649,11 @@ public class ControladoraCaso {
 		s.getTransaction().commit();
 
         s.disconnect();
+        
+        return "completado";
 	}
 	
-	public static void dessuscribirCaso (String usuarioActual, String iUE) throws Exception{
+	public static String dessuscribirCaso (String usuarioActual, String iUE) throws Exception{
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
@@ -631,11 +676,13 @@ public class ControladoraCaso {
 		s.getTransaction().commit();
 
         s.disconnect();
+        
+        return "completado";
 	}
 	//FIN SECCION MODIFICACIONES
 	
 	//PRINCIPIO SECCION BAJAS
-	public static void eliminarCaso(String usuarioActual, String iUE) throws Exception{
+	public static String eliminarCaso(String usuarioActual, String iUE) throws Exception{
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
@@ -652,49 +699,86 @@ public class ControladoraCaso {
 		
         s.beginTransaction();
         
-        eliminarInvolucradosPorCaso(usuarioActual, c.getId());
-        eliminarMensajesPorCaso(usuarioActual, c.getId());
+        eliminarInvolucradosPorCaso(c.getId());
+        eliminarMensajesPorCaso(c.getId());
+        eliminarAsignaciones(c.getId());
         
         s.delete(c); 
         
 		s.getTransaction().commit();
 		
 		s.disconnect();
+		
+		return "completado";
 	}
 	
-	private static void eliminarInvolucradosPorCaso(String usuarioActual, long idCaso) {
+	private static void eliminarAsignaciones(long idCaso){
 		//Se obtiene y empieza la session
 		Session s = HibernateUtil.getSession();
 
+        s.beginTransaction();
+        
+        Query query = s.createQuery("from UsuarioAsociadoACaso where idCaso = :idCaso");
+        query.setParameter("idCaso", idCaso);
+        List list = query.list();
+		UsuarioAsociadoACaso u = null;
+		if(!list.isEmpty()) {
+	        for(Object o : list){
+	        	u = (UsuarioAsociadoACaso)o;
+		        s.delete(u); 
+	        }
+		}
+        
+		s.getTransaction().commit();
+		
+		s.disconnect();
+	}
+	
+	private static void eliminarInvolucradosPorCaso(long idCaso) {
+		//Se obtiene y empieza la session
+		Session s = HibernateUtil.getSession();
+
+        s.beginTransaction();
+        
         Query query = s.createQuery("from Involucrado where idCaso = :idCaso");
         query.setParameter("idCaso", idCaso);
         List list = query.list();
-		
+		Involucrado i = null;
 		if(!list.isEmpty()) {
 	        for(Object o : list){
-		        s.delete((Involucrado)o); 
+	        	i = (Involucrado)o;
+		        s.delete(i); 
 	        }
-		}	
+		}
+        
+		s.getTransaction().commit();
+		
 		s.disconnect();
 	}
 	
-	private static void eliminarMensajesPorCaso(String usuarioActual, long idCaso) {
+	private static void eliminarMensajesPorCaso(long idCaso) {
 		//Se obtiene y empieza la session
 		Session s = HibernateUtil.getSession();
 
+        s.beginTransaction();
+        
         Query query = s.createQuery("from Mensaje where idCaso = :idCaso");
         query.setParameter("idCaso", idCaso);
         List list = query.list();
-		
-		if(list.isEmpty()) {
+		Mensaje m = null;
+		if(!list.isEmpty()) {
 	        for(Object o : list){
-		        s.delete((Mensaje)o); 
+	        	m = (Mensaje)o;
+		        s.delete(m); 
 	        }
-		}	
+		}
+        
+		s.getTransaction().commit();
+		
 		s.disconnect();
 	}
 	
-	public static void eliminarInvolucrado(String usuarioActual, String iUE, String ciInvolucrado) throws Exception{
+	public static String eliminarInvolucrado(String usuarioActual, String iUE, String ciInvolucrado) throws Exception{
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
@@ -725,9 +809,11 @@ public class ControladoraCaso {
 		s.getTransaction().commit();
 		
 		s.disconnect();
+		
+		return "completado";
 	}
 	
-	public static void desasociarUsuarioACaso (String usuarioActual, String usuario, String iUE) throws Exception {
+	public static String desasociarUsuarioACaso (String usuarioActual, String usuario, String iUE) throws Exception {
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
@@ -763,6 +849,8 @@ public class ControladoraCaso {
 		s.getTransaction().commit();	
 		
 		s.disconnect();
+		
+		return "completado";
 	}
 	//FIN SECCION BAJAS
 }

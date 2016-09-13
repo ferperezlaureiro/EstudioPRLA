@@ -116,8 +116,11 @@
 		              
 		            		</ul>
 		            		<ul class="nav navbar-nav navbar-right">
-		              			<li ng-hide="accionesPermitidas.asociarDesasociarUsuario == ''">
+		              			<li ng-hide="accionesPermitidas.asociarDesasociarUsuario == '' || casosDisponibles == ''">
 		              				<button class="btn btn-default navbar-btn" type="button" ng-click="mostrarAsignarCaso()">Asignar Caso</button>
+		              			</li>
+		              			<li ng-hide="casosDisponibles != ''">
+		              				<span>No hay casos disponibles para asignar.</span>
 		              			</li>
 		            		</ul>
 		          		</div>
@@ -209,8 +212,11 @@
 		              
 		            		</ul>
 		            		<ul class="nav navbar-nav navbar-right">
-		              			<li ng-hide="accionesPermitidas.asignarRebocarPermiso == ''">
+		              			<li ng-hide="accionesPermitidas.asignarRebocarPermiso == '' || permisosRestantes == ''">
 		              				<button class="btn btn-default navbar-btn" type="button" ng-click="mostrarAsignarPermiso()">Asignar Permiso</button>
+		              			</li>
+		              			<li ng-hide="permisosRestantes != ''">
+		              				<span>El usuario tiene asignados todos los permisos</span>
 		              			</li>
 		            		</ul>
 		          		</div>

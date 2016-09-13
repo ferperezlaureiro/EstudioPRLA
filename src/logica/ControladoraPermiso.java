@@ -8,7 +8,7 @@ import org.hibernate.Session;
 
 public class ControladoraPermiso {
 	//PRINCIPIO SECCION CONSULTAS
-	public static ArrayList<Permiso> obtenerPermisos() {
+	public static ArrayList<Permiso> obtenerPermisos() throws Exception{
 		Session s = HibernateUtil.getSession();
 		
         Query query = s.createQuery("from Permiso");
@@ -17,7 +17,7 @@ public class ControladoraPermiso {
         s.disconnect();
         
         if(!list.isEmpty())
-        	return null;
+        	throw new Exception("No hay permisos registrados");
         
         ArrayList<Permiso> permisos = new ArrayList<Permiso>();
         for(Object o : list)
@@ -26,7 +26,7 @@ public class ControladoraPermiso {
         return permisos;
 	}
 	
-	public static Permiso obtenerPermisoPorCode(String codePermiso) {
+	public static Permiso obtenerPermisoPorCode(String codePermiso){
 		Session s = HibernateUtil.getSession();
 		
         Query query = s.createQuery("from Permiso where code = :code ");
@@ -57,7 +57,7 @@ public class ControladoraPermiso {
         s.disconnect();
         
         if (list.isEmpty())
-        	return null;
+        	throw new Exception("No tiene permisos asignados");
         else {
         	ArrayList<Permiso> retorno = new ArrayList<Permiso>();
         	for (Object o: list)
@@ -81,7 +81,7 @@ public class ControladoraPermiso {
         s.disconnect();
         
         if (list.isEmpty())
-        	return null;
+        	throw new Exception("No tiene permisos restantes");
         else {
         	ArrayList<Permiso> retorno = new ArrayList<Permiso>();
         	for (Object o: list)
@@ -92,7 +92,6 @@ public class ControladoraPermiso {
 	
 	public static void tienePermiso(String codePermiso, Long idUsuario) throws Exception{
         Permiso p = obtenerPermisoPorCode(codePermiso);
-        
         if (p == null)
         	throw new Exception("Accion no permitida");
 
@@ -110,9 +109,9 @@ public class ControladoraPermiso {
 	//FIN SECCION CONSULTAS
 
 	//PRINCIPIO SECCION ALTAS
-	public static boolean crearPermiso (String nombre, String code) {
+	public static String crearPermiso (String nombre, String code) {
 		if(obtenerPermisoPorCode(code) != null)
-			return false;
+			return "Permiso ya registrado";
 		
 		//Se obtiene y empieza la session
 		Session s = HibernateUtil.getSession();
@@ -125,25 +124,23 @@ public class ControladoraPermiso {
 		s.getTransaction().commit();
 		s.disconnect();
 		
-		return true;
+		return "completado";
 	}
 	
-	public static boolean asignarPermiso(String usuarioActual, String codePermiso, String usuario) throws Exception{
+	public static String asignarPermiso(String usuarioActual, String codePermiso, String usuario) throws Exception{
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("ARP", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		tienePermiso("ARP", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
 		
 		Usuario u = ControladoraUsuario.buscarUsuario(usuarioActual, usuario);
 		if(u == null)
-			return false;
+        	throw new Exception("Usuario no encontrado");
 		
 		Permiso p = obtenerPermisoPorCode(codePermiso);
 		if(p == null)
-			return false;
-		
-		tienePermiso(codePermiso, u.getId());
+			throw new Exception("Codigo no existe");
 		
 		Session s = HibernateUtil.getSession();
         s.beginTransaction();
@@ -154,24 +151,25 @@ public class ControladoraPermiso {
         s.getTransaction().commit();
         s.disconnect();
         
-        return true;
+        return "completado";
 	}
 	//FIN SECCION ALTAS
 
 	//PRINCIPIO SECCION BAJAS
-	public static boolean rebocarPermiso(String usuarioActual, String codePermiso, String usuario) throws Exception{
+	public static String rebocarPermiso(String usuarioActual, String codePermiso, String usuario) throws Exception{
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("ARP", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		tienePermiso("ARP", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
 		
         Permiso p = obtenerPermisoPorCode(codePermiso);
-        
         if (p == null)
-        	return false;
+        	throw new Exception("Codigo no existe");
         
         Usuario usrRebocar = ControladoraUsuario.buscarUsuario(usuarioActual, usuario);
+        if (usrRebocar == null)
+        	throw new Exception("Usuario no encontrado");
 
 		Session s = HibernateUtil.getSession();
         s.beginTransaction();
@@ -182,7 +180,7 @@ public class ControladoraPermiso {
 
         if (query.list().isEmpty()) {
             s.disconnect();
-        	return false;
+        	return ("Permiso no asignado al usuario");
         }
         
         PermisoUsuario pU = (PermisoUsuario) query.list().get(0);
@@ -191,7 +189,7 @@ public class ControladoraPermiso {
         s.getTransaction().commit();
         s.disconnect();
         
-        return true;
+        return "completado";
 	}
 	//FIN SECCION BAJAS
 }

@@ -123,11 +123,15 @@ public class ControladoraUsuario {
 	//FIN SECCION CONSULTAS
 
 	//PRINCIPIO SECCION ALTAS
-	public static void AgregarUsuario(String usuarioActual, String usuario, String contrasenia, String nombre, String cedula, String email, 
+	public static String AgregarUsuario(String usuarioActual, String usuario, String contrasenia, String nombre, String cedula, String email, 
 			String tel, String cel, String domicilio, String domicilioLaboral, String rut, String fechaDeNacimiento) throws Exception {
         //Se valida que la sesion sea valida
 		String usr = validateUsrSession(usuarioActual);
 		
+		//Se valida que el usuario que se intenta registrar no este duplicado
+		if(ControladoraUsuario.existeUsuario(usuario))
+			throw new Exception("duplicado");
+			
 		//Se validan los permisos
 		ControladoraPermiso.tienePermiso("AU", buscarUsuarioPrivate(usr).getId());
 			
@@ -146,6 +150,8 @@ public class ControladoraUsuario {
 		s.getTransaction().commit();
         
 		s.disconnect();
+		
+		return "completado";
 	}
 	
 	private static void validarDatosUsuario (String usuario, String contrasenia, String nombre, String cedula, String email, String tel, String cel, 
@@ -200,7 +206,57 @@ public class ControladoraUsuario {
 		
 		//Se validan los permisos
 		ControladoraPermiso.tienePermiso("MU", buscarUsuarioPrivate(usr).getId());
+
         
+        return modificarUsuarioPrivado(usuarioActual, usuarioUsado, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, 
+        		rut, fechaDeNacimiento);
+		
+	}
+	
+	public static String modificarMiCuenta(String usuarioActual, String usuario, String contrasenia, String nombre, 
+			String cedula, String email, String tel, String cel, String domicilio, String domicilioLaboral, String rut, 
+			String fechaDeNacimiento) throws Exception{
+		//Se valida que la sesion sea valida
+		String usr = validateUsrSession(usuarioActual);
+        
+        return modificarUsuarioPrivado(usuarioActual, usr, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, 
+        		rut, fechaDeNacimiento);
+		
+	}
+	
+	public static String modificarContrasenia(String usuarioActual, String contrasenia) throws Exception{
+		//Se valida que la sesion sea valida
+		String usr = validateUsrSession(usuarioActual);
+		
+		Usuario u = buscarUsuarioPrivate(usr);
+		
+		if(u == null) {
+			return "not found";
+		} else {
+			//Se valida que los datos sean validos
+
+			if(!Validacion.validarContrasenia(contrasenia))
+				throw new Exception("contrasenia");
+			
+			u.setContrasenia(contrasenia);
+	        
+			//Se obtiene y empieza la session
+			Session s = HibernateUtil.getSession();
+	        s.beginTransaction();
+	        
+	        s.update(u); 
+	        
+			s.getTransaction().commit();
+	        
+			s.disconnect();
+			
+			return "completado";
+		}
+	}
+	
+	private static String modificarUsuarioPrivado(String usuarioActual, String usuarioUsado, String usuario, String contrasenia, String nombre, 
+			String cedula, String email, String tel, String cel, String domicilio, String domicilioLaboral, String rut, 
+			String fechaDeNacimiento) throws Exception{
         Usuario u = buscarUsuarioPrivate(usuarioUsado);
 		
 		if (u == null) {
@@ -220,7 +276,9 @@ public class ControladoraUsuario {
 				}
 			}
 			
-			u.setContrasenia(contrasenia);
+			if(usuarioUsado != validateUsrSession(usuarioActual)){
+				u.setContrasenia(contrasenia);
+			}
 			u.setNombre(nombre);
 			u.setCedula(cedula);
 			u.setEmail(email);

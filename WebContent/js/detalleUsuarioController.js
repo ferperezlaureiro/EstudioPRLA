@@ -54,8 +54,10 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/obtenerCasosPorUsuario?usrKey=' + $rootScope.token 
 																						+ '&usuario=' + $rootScope.usuarioADetallar
 		}).success(function(data, status, headers, config) {
-			if(data != [] || data != "" || data != "No hay casos"){
+			if(data != [] && data != "" && data != "No hay casos"){
 				$rootScope.casosAsignados = data;
+			} else {
+				$rootScope.casosAsignados = '';
 			}
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
@@ -68,8 +70,10 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/obtenerCasosNoAsignadosAUsuario?usrKey=' + $rootScope.token 
 																									+ '&usuario=' + $rootScope.usuarioADetallar
 		}).success(function(data, status, headers, config) {
-			if(data != [] || data != "" || data != "No hay casos"){
+			if(data != [] && data != "" && data != "No hay casos"){
 				$rootScope.casosDisponibles = data;
+			} else {
+				$rootScope.casosDisponibles = '';
 			}
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
@@ -82,7 +86,11 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/obtenerPermisos?usrKey=' + $rootScope.token 
 																						+'&usuario=' + $rootScope.usuarioADetallar
 		}).success(function(data, status, headers, config) {
-			$rootScope.permisosOtorgados = data;
+			if(data != [] && data != ""){
+				$rootScope.permisosOtorgados = data;
+			} else {
+				$rootScope.permisosOtorgados = '';
+			}
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
 		});
@@ -94,7 +102,11 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/obtenerPermisosRestantes?usrKey=' + $rootScope.token 
 																								+'&usuario=' + $rootScope.usuarioADetallar
 		}).success(function(data, status, headers, config) {
-			$rootScope.permisosRestantes = data;
+			if(data != [] && data != ""){
+				$rootScope.permisosRestantes = data;	
+			} else {
+				$rootScope.permisosRestantes = '';
+			}
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
 		});
@@ -185,6 +197,7 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 			$scope.cargarCasosDisponibles();
 			$scope.cargarCasosAsignados();
 			$scope.cancelarAsignarCaso();
+			$scope.cancelarAsignarPermiso();
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
 		});
@@ -202,6 +215,7 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 			}
 			$scope.cargarPermisosRestantes();
 			$scope.cargarPermisos();
+			$scope.cancelarAsignarCaso();
 			$scope.cancelarAsignarPermiso();
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
@@ -306,7 +320,7 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 		$http({
 			method: 'POST',
 			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/asignarPermiso?usrKey=' + $rootScope.token 
-																					+ '&codePermiso=' + $scope.permisoSeleccionado.codePermiso 
+																					+ '&codePermiso=' + $scope.permisoSeleccionado.code 
 																					+ '&usuario=' +  $rootScope.usuarioADetallar
 		}).success(function(data, status, headers, config) {
 			if($scope.usuarioADetallar == $rootScope.currentUsr.usuario){

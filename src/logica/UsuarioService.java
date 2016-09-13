@@ -33,15 +33,12 @@ public class UsuarioService {
 	@GET
     @Path("/obtenerUsuarios")
 	@Produces(MediaType.APPLICATION_JSON)
-	@SuppressWarnings("finally")
 	public ArrayList<Usuario> obtenerUsuarios(@QueryParam("usrKey") String usrKey) {
-		ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
 		try {
-			usuarios = ControladoraUsuario.obtenerUsuarios(usrKey);
+			return ControladoraUsuario.obtenerUsuarios(usrKey);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			return usuarios;
+			return null;
 		}
 	}
 
@@ -78,14 +75,10 @@ public class UsuarioService {
 									@QueryParam("codePermiso") String codePermiso,
 									@QueryParam("usuario") String usuario) {
 		try {
-			boolean retorno = ControladoraPermiso.asignarPermiso(usrKey, codePermiso, usuario);
-			if(retorno)
-				return "true";
-			else
-				return "false";
+			return ControladoraPermiso.asignarPermiso(usrKey, codePermiso, usuario);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "false";
+			return e.getMessage();
 		}
 	}
 	
@@ -96,14 +89,10 @@ public class UsuarioService {
 									@QueryParam("codePermiso") String codePermiso, 
 									@QueryParam("usuario") String usuario) {
 		try {
-			boolean retorno = ControladoraPermiso.rebocarPermiso(usrKey, codePermiso, usuario);
-			if(retorno)
-				return "true";
-			else
-				return "false";
+			return ControladoraPermiso.rebocarPermiso(usrKey, codePermiso, usuario);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "false";
+			return e.getMessage();
 		}
 	}
 
@@ -136,14 +125,11 @@ public class UsuarioService {
 									@QueryParam("rut") String rut, 
 									@QueryParam("fechaDeNacimiento") String fechaDeNacimiento) {
 		try {
-			if(ControladoraUsuario.existeUsuario(usuario))
-				return "duplicado";
-			ControladoraUsuario.AgregarUsuario(usrKey, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, rut, fechaDeNacimiento);
+			return ControladoraUsuario.AgregarUsuario(usrKey, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, rut, fechaDeNacimiento);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
-		return "completado";
 	}
 	
 	@PUT
@@ -163,12 +149,47 @@ public class UsuarioService {
 									@QueryParam("rut") String rut, 
 									@QueryParam("fechaDeNacimiento") String fechaDeNacimiento) {
 		try {
-			ControladoraUsuario.modificarUsuario(usrKey, usuarioUsado, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, rut, fechaDeNacimiento);
+			return ControladoraUsuario.modificarUsuario(usrKey, usuarioUsado, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, rut, fechaDeNacimiento);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
-		return "completado";
+	}
+	
+	@PUT
+	@Path("/modificarMiCuenta")
+	@Produces(MediaType.TEXT_HTML)
+	public String ModificarMiCuenta(@QueryParam("usrKey") String usrKey, 
+									@QueryParam("usuario") String usuario, 
+									@QueryParam("contrasenia") String contrasenia, 
+									@QueryParam("nombre") String nombre, 
+									@QueryParam("cedula") String cedula, 
+									@QueryParam("email") String email, 
+									@QueryParam("tel") String tel, 
+									@QueryParam("cel") String cel, 
+									@QueryParam("domicilio") String domicilio, 
+									@QueryParam("domicilioLaboral") String domicilioLaboral, 
+									@QueryParam("rut") String rut, 
+									@QueryParam("fechaDeNacimiento") String fechaDeNacimiento) {
+		try {
+			return ControladoraUsuario.modificarMiCuenta(usrKey, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, rut, fechaDeNacimiento);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
+	}
+	
+	@PUT
+	@Path("/modificarContrasenia")
+	@Produces(MediaType.TEXT_HTML)
+	public String ModificarContrasenia(@QueryParam("usrKey") String usrKey, 
+									@QueryParam("contrasenia") String contrasenia) {
+		try {
+			return ControladoraUsuario.modificarContrasenia(usrKey, contrasenia);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return e.getMessage();
+		}
 	}
 
 	@DELETE

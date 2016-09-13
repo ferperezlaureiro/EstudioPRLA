@@ -24,6 +24,8 @@ app.controller("casoController", ['$scope', '$location', '$window', '$rootScope'
 		}).success(function(data, status, headers, config) {
 			if(data.length != 0 && data != "" && data != "No hay casos"){
 				$rootScope.todosCasos = data;
+			} else {
+				$rootScope.todosCasos = '';
 			}
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
@@ -37,6 +39,8 @@ app.controller("casoController", ['$scope', '$location', '$window', '$rootScope'
 		}).success(function(data, status, headers, config) {
 			if(data.length != 0 && data != "" && data != "No hay casos"){
 				$rootScope.misCasos = data;
+			} else {
+				$rootScope.misCasos = '';
 			}
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);

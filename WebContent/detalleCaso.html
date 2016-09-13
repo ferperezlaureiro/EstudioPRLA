@@ -210,8 +210,11 @@
 		              
 		            		</ul>
 		            		<ul class="nav navbar-nav navbar-right">
-		              			<li ng-hide="accionesPermitidas.asociarDesasociarUsuario == ''">
+		              			<li ng-hide="accionesPermitidas.asociarDesasociarUsuario == '' || usuariosDisponibles == ''">
 		              				<button class="btn btn-default navbar-btn" type="button" ng-click="mostrarAsignarUsuario()">Asignar Usuario</button>
+		              			</li>
+		              			<li ng-hide="usuariosDisponibles != ''">
+		              				<span>No hay usuarios disponibles para asignar.</span>
 		              			</li>
 		            		</ul>
 		          		</div>

@@ -25,14 +25,11 @@ public class CasoService {
 								@QueryParam("turno") int turno, 
 								@QueryParam("caratulado") String caratulado) {
 		try {
-			if (ControladoraCaso.existeCaso(usuarioActual, iUE))
-				return "duplicado";
-			ControladoraCaso.agregarCaso(usuarioActual, iUE, juzgado, turno, caratulado);
+			return ControladoraCaso.agregarCaso(usuarioActual, iUE, juzgado, turno, caratulado);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
-		return "completado";
 	}
 
 	@POST
@@ -47,15 +44,11 @@ public class CasoService {
 										@QueryParam("domicilio") String domicilio,
 										@QueryParam("clase") String clase) {
 		try {
-			if (ControladoraCaso.obtenerInvolucrado(usuarioActual, iUE, cedula) != null)
-				return "duplicado";
-			
-			ControladoraCaso.agregarInvolucrado(usuarioActual, iUE, fechaDeNacimiento, nombre, cedula, nacionalidad, domicilio, clase);
+			return ControladoraCaso.agregarInvolucrado(usuarioActual, iUE, fechaDeNacimiento, nombre, cedula, nacionalidad, domicilio, clase);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
-		return "completado";
 	}
 	
 	@PUT
@@ -68,12 +61,11 @@ public class CasoService {
 									@QueryParam("turno") int turno, 
 									@QueryParam("caratulado") String caratulado) {
 		try {
-			ControladoraCaso.modificarCaso(usuarioActual, iUEUsado, iUE, juzgado, turno, caratulado);
+			return ControladoraCaso.modificarCaso(usuarioActual, iUEUsado, iUE, juzgado, turno, caratulado);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
-		return "completado";
 	}
 	
 	@POST
@@ -84,12 +76,11 @@ public class CasoService {
 										@QueryParam("iUE") String iUE, 
 										@QueryParam("tipo") String tipo) {
 		try {
-			ControladoraCaso.asociarUsuarioACaso(usuarioActual, usuario, iUE, tipo);
+			return ControladoraCaso.asociarUsuarioACaso(usuarioActual, usuario, iUE, tipo);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
-		return "completado";
 	}
 
 	@DELETE
@@ -99,12 +90,11 @@ public class CasoService {
 											@QueryParam("usuario") String usuario, 
 											@QueryParam("iUE") String iUE) {
 		try {
-			ControladoraCaso.desasociarUsuarioACaso(usuarioActual, usuario, iUE);
+			return ControladoraCaso.desasociarUsuarioACaso(usuarioActual, usuario, iUE);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
-		return "completado";
 	}
 
 	@PUT
@@ -120,12 +110,11 @@ public class CasoService {
 										@QueryParam("domicilio") String domicilio,
 										@QueryParam("clase") String clase) {
 		try {
-			ControladoraCaso.modificarInvolucrado(usuarioActual, iUE, cedulaUsada, fechaDeNacimiento, nombre, cedula, nacionalidad, domicilio, clase);
+			return ControladoraCaso.modificarInvolucrado(usuarioActual, iUE, cedulaUsada, fechaDeNacimiento, nombre, cedula, nacionalidad, domicilio, clase);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
-		return "completado";
 	}
 	
 	@POST
@@ -135,25 +124,23 @@ public class CasoService {
 									@QueryParam("iUE") String iUE,
 									@QueryParam("contenido") String contenido) {
 		try {
-			ControladoraCaso.agregarMensaje(usuarioActual, iUE, contenido);
+			return ControladoraCaso.agregarMensaje(usuarioActual, iUE, contenido);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
-		return "completado";
 	}
 
 	@GET
     @Path("/obtenerCasos")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<Caso> obtenerCasos (@QueryParam("usrKey") String usuarioActual) {
-		ArrayList<Caso> casos = null;
 		try {
-			casos = ControladoraCaso.obtenerCasos(usuarioActual);
+			return ControladoraCaso.obtenerCasos(usuarioActual);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} 
-		return casos;
+			return null;
+		}
 	}
 
 	@GET
@@ -161,13 +148,12 @@ public class CasoService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<Caso> obtenerCasosPorUsuario (@QueryParam("usrKey") String usuarioActual,
 													@QueryParam("usuario") String usuario) {
-		ArrayList<Caso> casos = null;
 		try {
-			casos = ControladoraCaso.obtenerCasosPorUsuario(usuarioActual, usuario);
+			return ControladoraCaso.obtenerCasosPorUsuario(usuarioActual, usuario);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
-		return casos;
 	}
 
 	@GET
@@ -175,13 +161,12 @@ public class CasoService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<Caso> obtenerCasosNoAsignadosAUsuario (@QueryParam("usrKey") String usuarioActual,
 													@QueryParam("usuario") String usuario) {
-		ArrayList<Caso> casos = null;
 		try {
-			casos = ControladoraCaso.obtenerCasosNoAsignadosAUsuario(usuarioActual, usuario);
+			return ControladoraCaso.obtenerCasosNoAsignadosAUsuario(usuarioActual, usuario);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
-		return casos;
 	}
 
 	@GET
@@ -189,13 +174,12 @@ public class CasoService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<Usuario> obtenerUsuariosPorCaso (@QueryParam("usrKey") String usuarioActual,
 													@QueryParam("iUE") String iUE) {
-		ArrayList<Usuario> usuarios = null;
 		try {
-			usuarios = ControladoraCaso.obtenerUsuariosPorCaso(usuarioActual, iUE);
+			return ControladoraCaso.obtenerUsuariosPorCaso(usuarioActual, iUE);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
-		return usuarios;
 	}
 
 	@GET
@@ -203,60 +187,50 @@ public class CasoService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public ArrayList<Usuario> obtenerUsuariosNoAsignadosACaso (@QueryParam("usrKey") String usuarioActual,
 													@QueryParam("iUE") String iUE) {
-		ArrayList<Usuario> usuarios = null;
 		try {
-			usuarios = ControladoraCaso.obtenerUsuariosNoAsignadosACaso(usuarioActual, iUE);
+			return ControladoraCaso.obtenerUsuariosNoAsignadosACaso(usuarioActual, iUE);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
-		return usuarios;
 	}
 
 	@GET
     @Path("/obtenerCasoPorIUE")
 	@Produces(MediaType.APPLICATION_JSON)
-	@SuppressWarnings("finally")
 	public Caso obtenerCasoPorIUE (@QueryParam("usrKey") String usuarioActual,
 									@QueryParam("iUE") String iUE) {
-		Caso c = null;
 		try {
-			c = ControladoraCaso.obtenerCasoPorIUE(usuarioActual, iUE);
+			return ControladoraCaso.obtenerCasoPorIUE(usuarioActual, iUE);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			return c;
+			return null;
 		}
 	}
 
 	@GET
     @Path("/obtenerConversacion")
 	@Produces(MediaType.APPLICATION_JSON)
-	@SuppressWarnings("finally")
 	public ArrayList<Mensaje> obtenerConversacion (@QueryParam("usrKey") String usuarioActual,
 													@QueryParam("iUE") String iUE) {
-		ArrayList<Mensaje> mensajes = new ArrayList<Mensaje>();
 		try {
-			mensajes = ControladoraCaso.obtenerConversacion(usuarioActual, iUE);
+			return ControladoraCaso.obtenerConversacion(usuarioActual, iUE);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			return mensajes;
+			return null;
 		}
 	}
 
 	@GET
     @Path("/obtenerInvolucrados")
 	@Produces(MediaType.APPLICATION_JSON)
-	@SuppressWarnings("finally")
 	public ArrayList<Involucrado> obtenerInvolucrados (@QueryParam("usrKey") String usuarioActual,
 														@QueryParam("iUE") String iUE) {
-		ArrayList<Involucrado> involucrados = new ArrayList<Involucrado>();
 		try {
-			involucrados = ControladoraCaso.obtenerInvolucrados(usuarioActual, iUE);
+			return ControladoraCaso.obtenerInvolucrados(usuarioActual, iUE);
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
-			return involucrados;
+			return null;
 		}
 	}
 
@@ -266,12 +240,11 @@ public class CasoService {
 	public String eliminarCaso (@QueryParam("usrKey") String usuarioActual,
 								@QueryParam("iUE") String iUE) {
 		try {
-			ControladoraCaso.eliminarCaso(usuarioActual, iUE);
+			return ControladoraCaso.eliminarCaso(usuarioActual, iUE);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
-		return "completado";
 	}
 
 	@DELETE
@@ -281,12 +254,11 @@ public class CasoService {
 										@QueryParam("iUE") String iUE,
 										@QueryParam("ciInvolucrado") String ciInvolucrado) {
 		try {
-			ControladoraCaso.eliminarInvolucrado(usuarioActual, iUE, ciInvolucrado);
+			return ControladoraCaso.eliminarInvolucrado(usuarioActual, iUE, ciInvolucrado);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
 		}
-		return "completado";
 	}
 	
 	@OPTIONS

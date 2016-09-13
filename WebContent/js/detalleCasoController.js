@@ -16,6 +16,7 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 		$scope.cargarDatosGenerales();
 		$scope.cargarTodosLosInvolucrados();
 		$scope.cargarUsuariosPorIUE();
+		$scope.cargarUsuariosDisponiblesPorIUE();
 	});
 
 	$scope.volver = function(){
@@ -46,8 +47,10 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/obtenerInvolucrados?usrKey=' + $rootScope.token 
 																						+ '&iUE=' + $rootScope.casoADetallar
 		}).success(function(data, status, headers, config) {
-			if(data != [] || data != "" || data != "No hay involucrados"){
+			if(data != [] && data != "" && data != "No hay involucrados"){
 				$rootScope.todosInvolucrados = data;
+			} else {
+				$rootScope.todosInvolucrados = '';
 			}
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
@@ -91,6 +94,7 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 																				+ '&ciInvolucrado=' + cedula
 		}).success(function(data, status, headers, config) {
 				$scope.cargarTodosLosInvolucrados();
+				$scope.cancelarInvolucrado();
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
 		});
@@ -184,10 +188,12 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/obtenerUsuariosPorCaso?usrKey=' + $rootScope.token 
 																						+ '&iUE=' + $rootScope.casoADetallar
 		}).success(function(data, status, headers, config) {
-			if(data != [] || data != "" || data != "No hay usuarios"){
+			if(data != [] && data != "" && data != "No hay usuarios"){
 				$rootScope.usuariosAsignados = data;
-				$scope.cargarMensajes();
+			} else {
+				$rootScope.usuariosAsignados = '';
 			}
+			$scope.cargarMensajes();
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
 		});
@@ -199,8 +205,10 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/obtenerUsuariosNoAsignadosACaso?usrKey=' + $rootScope.token 
 																									+ '&iUE=' + $rootScope.casoADetallar
 		}).success(function(data, status, headers, config) {
-			if(data != [] || data != "" || data != "No hay usuarios"){
+			if(data != [] && data != "" && data != "No hay usuarios"){
 				$rootScope.usuariosDisponibles = data;
+			} else {
+				$rootScope.usuariosDisponibles = '';
 			}
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
@@ -214,7 +222,9 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 																						+ '&usuario=' + usuario 
 																						+ '&iUE=' + $rootScope.casoADetallar
 		}).success(function(data, status, headers, config) {
-				$scope.cargarUsuariosPorIUE();
+			$scope.cargarUsuariosPorIUE();
+			$scope.cargarUsuariosDisponiblesPorIUE();
+			$scope.cancelarAsginarUsuario();
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
 		});
@@ -236,6 +246,7 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 																						+ '&tipo=' + $scope.tipo
 		}).success(function(data, status, headers, config) {
 			$scope.cargarUsuariosPorIUE();
+			$scope.cargarUsuariosDisponiblesPorIUE();
 			$scope.cancelarAsginarUsuario();
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
@@ -248,8 +259,10 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/obtenerConversacion?usrKey=' + $rootScope.token 
 																						+ '&iUE=' + $rootScope.casoADetallar
 		}).success(function(data, status, headers, config) {
-			if(data != [] || data != "" || data != "No hay mensajes"){
+			if(data != [] && data != "" && data != "No hay mensajes"){
 				$rootScope.mensajes = data;
+			} else {
+				$rootScope.mensajes = '';
 			}
 			for(var i in $rootScope.usuariosAsignados){
 				for(var x in $rootScope.mensajes){

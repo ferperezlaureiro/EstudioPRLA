@@ -116,7 +116,7 @@ app.controller("usuarioController", ['$scope', '$location', '$window', '$rootSco
 																					+ '&fechaDeNacimiento=' + $scope.fechaDeNacimiento
 		}).success(function(data, status, headers, config) {
 			if(data == "completado"){
-				if($scope.usuarioUsado == $rootScope.currentUsr.usuario){
+				if($scope.usuarioUsado != $scope.usuario){
 					$scope.reLoggear($scope.usuario, $scope.contrasenia);
 				} else {
 					$scope.cancelarUsuario();

@@ -140,11 +140,11 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 																						+ '&fechaDeNacimiento=' + $rootScope.usuarioDetallado.fechaDeNacimiento
 		}).success(function(data, status, headers, config) {
 			if(data == "completado"){
-				if($scope.usuarioADetallar == $rootScope.currentUsr.usuario){
+				if($scope.usuarioADetallar != $rootScope.usuarioDetallado.usuario){
 					$scope.reLoggear($rootScope.usuarioDetallado.usuario, $rootScope.usuarioDetallado.contrasenia);
 				} else {
 					$rootScope.usuarioADetallar =  $rootScope.usuarioDetallado.usuario;
-					$scope.modificandoUsuario = false;
+					$scope.cancelarModificarUsuario();
 					$scope.cargarDatosGenerales();
 				}
 			}
@@ -180,7 +180,7 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 		}).success(function(data, status, headers, config) {
 			$rootScope.currentUsr = data;
 			$rootScope.usuarioADetallar =  $rootScope.usuarioDetallado.usuario;
-			$scope.modificandoUsuario = false;
+			$scope.cancelarModificarUsuario();
 			$scope.cargarDatosGenerales();
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);

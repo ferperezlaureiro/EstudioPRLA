@@ -132,7 +132,8 @@ public class ControladoraPermiso {
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		tienePermiso("ARP", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		Usuario usrActual = ControladoraUsuario.buscarUsuario(usuarioActual, usr);
+		tienePermiso("ARP", usrActual.getId());
 		
 		Usuario u = ControladoraUsuario.buscarUsuario(usuarioActual, usuario);
 		if(u == null)
@@ -151,6 +152,8 @@ public class ControladoraPermiso {
         s.getTransaction().commit();
         s.disconnect();
         
+		ControladoraAuditoria.agregarAccion("Asignar permiso " + codePermiso + " a " + usuario, usrActual.getId());
+        
         return "completado";
 	}
 	//FIN SECCION ALTAS
@@ -161,7 +164,8 @@ public class ControladoraPermiso {
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		tienePermiso("ARP", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		Usuario usrActual = ControladoraUsuario.buscarUsuario(usuarioActual, usr);
+		tienePermiso("ARP", usrActual.getId());
 		
         Permiso p = obtenerPermisoPorCode(codePermiso);
         if (p == null)
@@ -188,6 +192,8 @@ public class ControladoraPermiso {
         s.delete(pU);
         s.getTransaction().commit();
         s.disconnect();
+        
+		ControladoraAuditoria.agregarAccion("Rebocar permiso " + codePermiso + " a " + usuario, usrActual.getId());
         
         return "completado";
 	}

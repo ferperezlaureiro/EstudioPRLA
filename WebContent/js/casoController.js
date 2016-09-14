@@ -78,6 +78,7 @@ app.controller("casoController", ['$scope', '$location', '$window', '$rootScope'
 																				+ '&juzgado=' + $scope.juzgado 
 																				+ '&turno=' + $scope.turno 
 																				+ '&caratulado=' + $scope.caratulado
+																				+ '&suscrito=' + $scope.suscrito
 		}).success(function(data, status, headers, config) {
 			$scope.cancelarCaso();
 			if ($rootScope.accionesPermitidas.obtenerTodosCasos == true) {
@@ -99,6 +100,7 @@ app.controller("casoController", ['$scope', '$location', '$window', '$rootScope'
 				$scope.juzgado = casos[i].juzgado;
 				$scope.turno = casos[i].turno;
 				$scope.caratulado = casos[i].caratulado;
+				$scope.suscrito = casos[i].suscrito;
 			}
 		}
 		$scope.botonAgregarCaso = false;
@@ -115,6 +117,7 @@ app.controller("casoController", ['$scope', '$location', '$window', '$rootScope'
 																				+ '&juzgado=' + $scope.juzgado 
 																				+ '&turno=' + $scope.turno 
 																				+ '&caratulado='+ $scope.caratulado
+																				+ '&suscrito=' + $scope.suscrito
 		}).success(function(data, status, headers, config) {
 			$scope.cancelarCaso();
 			if ($rootScope.accionesPermitidas.obtenerTodosCasos == true) {
@@ -137,6 +140,7 @@ app.controller("casoController", ['$scope', '$location', '$window', '$rootScope'
 		$scope.turno = "";
 		$scope.caratulado = "";
 		$rootScope.casoADetallar = "";
+		$scope.suscrito = false;
 	}
 
 	$scope.detalleCaso = function(IUE){

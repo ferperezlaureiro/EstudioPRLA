@@ -89,11 +89,11 @@ public class Fachada {
 	// CONTROLADORA USUARIO
 	
 	// CONTROLADORA CASO
-	public String agregarCaso (String usuarioActual, String iUE, String juzgado, int turno, String caratulado) {
+	public String agregarCaso (String usuarioActual, String iUE, String juzgado, int turno, String caratulado, boolean suscrito) {
 		try {
 			if (ControladoraCaso.existeCaso(usuarioActual, iUE))
 				return "duplicado";
-			ControladoraCaso.agregarCaso(usuarioActual, iUE, juzgado, turno, caratulado);
+			ControladoraCaso.agregarCaso(usuarioActual, iUE, juzgado, turno, caratulado, suscrito);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
@@ -101,9 +101,9 @@ public class Fachada {
 		return "completado";
 	}
 	
-	public String modificarCaso (String usuarioActual, String iUEUsado, String iUE, String juzgado, int turno, String caratulado) {
+	public String modificarCaso (String usuarioActual, String iUEUsado, String iUE, String juzgado, int turno, String caratulado, boolean suscrito) {
 		try {
-			ControladoraCaso.modificarCaso(usuarioActual, iUEUsado, iUE, juzgado, turno, caratulado);
+			ControladoraCaso.modificarCaso(usuarioActual, iUEUsado, iUE, juzgado, turno, caratulado, suscrito);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();

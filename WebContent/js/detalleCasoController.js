@@ -76,6 +76,7 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 																				+ '&juzgado=' + $rootScope.casoDetallado.juzgado 
 																				+ '&turno=' + $rootScope.casoDetallado.turno 
 																				+ '&caratulado=' + $rootScope.casoDetallado.caratulado
+																				+ '&suscrito=' + $rootScope.casoDetallado.suscrito
 		}).success(function(data, status, headers, config) {
 			$rootScope.casoADetallar =  $rootScope.casoDetallado.iUE;
 			$scope.modificandoCaso = false;

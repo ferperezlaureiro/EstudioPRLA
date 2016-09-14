@@ -23,9 +23,10 @@ public class CasoService {
 								@QueryParam("iUE") String iUE, 
 								@QueryParam("juzgado") String juzgado, 
 								@QueryParam("turno") int turno, 
-								@QueryParam("caratulado") String caratulado) {
+								@QueryParam("caratulado") String caratulado,
+								@QueryParam("suscrito") boolean suscrito) {
 		try {
-			return ControladoraCaso.agregarCaso(usuarioActual, iUE, juzgado, turno, caratulado);
+			return ControladoraCaso.agregarCaso(usuarioActual, iUE, juzgado, turno, caratulado, suscrito);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
@@ -59,9 +60,10 @@ public class CasoService {
 									@QueryParam("iUE") String iUE, 
 									@QueryParam("juzgado") String juzgado, 
 									@QueryParam("turno") int turno, 
-									@QueryParam("caratulado") String caratulado) {
+									@QueryParam("caratulado") String caratulado,
+									@QueryParam("suscrito") boolean suscrito) {
 		try {
-			return ControladoraCaso.modificarCaso(usuarioActual, iUEUsado, iUE, juzgado, turno, caratulado);
+			return ControladoraCaso.modificarCaso(usuarioActual, iUEUsado, iUE, juzgado, turno, caratulado, suscrito);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();

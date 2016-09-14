@@ -132,8 +132,9 @@ public class ControladoraUsuario {
 		if(ControladoraUsuario.existeUsuario(usuario))
 			throw new Exception("duplicado");
 			
+		Usuario usrActual = buscarUsuarioPrivate(usr);
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("AU", buscarUsuarioPrivate(usr).getId());
+		ControladoraPermiso.tienePermiso("AU", usrActual.getId());
 			
 		//Se valida que los datos sean validos
 		validarDatosUsuario(usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, fechaDeNacimiento);
@@ -150,6 +151,8 @@ public class ControladoraUsuario {
 		s.getTransaction().commit();
         
 		s.disconnect();
+		
+		ControladoraAuditoria.agregarAccion("Agregar Usuario " + usuario,usrActual.getId());
 		
 		return "completado";
 	}
@@ -297,6 +300,9 @@ public class ControladoraUsuario {
 			s.getTransaction().commit();
 	        
 			s.disconnect();
+			if(usuarioUsado != validateUsrSession(usuarioActual)){
+				ControladoraAuditoria.agregarAccion("Modificar Usuario " + usuario,buscarUsuarioPrivate(validateUsrSession(usuarioActual)).getId());
+			}
 			
 			return "completado";
 		}	
@@ -327,6 +333,8 @@ public class ControladoraUsuario {
 			s.getTransaction().commit();
 	        
 			s.disconnect();
+
+			ControladoraAuditoria.agregarAccion("Eliminar Usuario " + usuario,buscarUsuarioPrivate(usr).getId());
 			
 			return "completado";
 		}	

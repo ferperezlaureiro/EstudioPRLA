@@ -28,5 +28,6 @@
 		<mapping class="logica.Permiso" />
 		<mapping class="logica.PermisoUsuario" />
 		<mapping class="logica.UsuarioAsociadoACaso" />
+		<mapping class="logica.Auditoria" />
 	</session-factory>
 </hibernate-configuration>

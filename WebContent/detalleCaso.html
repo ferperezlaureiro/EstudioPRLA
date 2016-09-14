@@ -64,8 +64,7 @@
 				</li>
 				<li class="list-group-item" ng-hide="accionesPermitidas.casoModificar == ''">
 					<span>Suscripto: </span>
-					<span ng-hide="modificandoCaso">{{casoDetallado.suscrito}}</span>
-					<input type="text" class="form-control" id="suscrito" placeholder="Ingresar suscrito" ng-model="casoDetallado.suscrito" ng-hide="!modificandoCaso">
+					<input type="checkbox" class="checkbox" id="suscrito" placeholder="Ingresar suscrito"  ng-disabled="!modificandoCaso" ng-model="casoDetallado.suscrito">
 				</li>
 			</ul>
 			<button class="btn btn-default navbar-btn" type="button" ng-click="modificarCaso()" ng-hide="!modificandoCaso">Aplicar Modificacion</button>

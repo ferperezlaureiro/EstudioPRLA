@@ -67,6 +67,18 @@ public class UsuarioService {
 			return null;
 		}
 	}
+
+	@GET
+    @Path("/obtenerAcciones")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Auditoria> obtenerAcciones(@QueryParam("usrKey") String usrKey) {
+		try {
+			return ControladoraAuditoria.obtenerAcciones(usrKey);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 	@POST
 	@Path("/asignarPermiso")

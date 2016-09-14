@@ -301,7 +301,10 @@ public class ControladoraCaso {
 		List list = query.list();
 		
 		if (!list.isEmpty()) {
-			ArrayList<Caso> casosSuscriptos = (ArrayList<Caso>) list;
+			ArrayList<Caso> casosSuscriptos = new ArrayList<Caso>();
+			for(Object o : list){
+				casosSuscriptos.add((Caso)o);
+			}
 			
 			String[] aux = null;
 			ArrayList<Usuario> usuarios = null;
@@ -334,12 +337,13 @@ public class ControladoraCaso {
 	//FIN SECCION CONSULTAS
 	
 	//PRINCIPIO SECCION INSERCIONES
-	public static String agregarCaso(String usuarioActual, String iUE, String juzgado, int turno, String caratulado) throws Exception {
+	public static String agregarCaso(String usuarioActual, String iUE, String juzgado, int turno, String caratulado, boolean suscrito) throws Exception {
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("AC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		Usuario usrActual = ControladoraUsuario.buscarUsuario(usuarioActual, usr);
+		ControladoraPermiso.tienePermiso("AC", usrActual.getId());
 		
 		if (existeCaso(usuarioActual, iUE))
 			throw new Exception("duplicado");
@@ -351,13 +355,15 @@ public class ControladoraCaso {
 		Session s = HibernateUtil.getSession();
         s.beginTransaction();
 
-        Caso c = new Caso(iUE, juzgado, turno, caratulado);
+        Caso c = new Caso(iUE, juzgado, turno, caratulado, suscrito);
 		
 		//Se guarda el nuevo caso en la base de datos
 		s.save(c);
 		s.getTransaction().commit();
 
         s.disconnect();
+
+		ControladoraAuditoria.agregarAccion("Caso creado " + iUE, usrActual.getId());
         
         return "completado";
 	}
@@ -383,7 +389,8 @@ public class ControladoraCaso {
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("AI", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		Usuario usrActual = ControladoraUsuario.buscarUsuario(usuarioActual, usr);
+		ControladoraPermiso.tienePermiso("AI", usrActual.getId());
 		
 		//Se valida que el involucrado no este duplicado
 		if (existeInvolucrado(usuarioActual, iUE, cedula))
@@ -407,6 +414,8 @@ public class ControladoraCaso {
 			s.getTransaction().commit();	
 
 	        s.disconnect();	
+
+			ControladoraAuditoria.agregarAccion("Involucrado agregado " + cedula, usrActual.getId());
 	        
 	        return "completado";
 		} else {
@@ -492,7 +501,8 @@ public class ControladoraCaso {
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("ADUC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		Usuario usrActual = ControladoraUsuario.buscarUsuario(usuarioActual, usr);
+		ControladoraPermiso.tienePermiso("ADUC", usrActual.getId());
         
 		Usuario u = ControladoraUsuario.buscarUsuario(usuarioActual, usuario);
 		
@@ -518,18 +528,22 @@ public class ControladoraCaso {
 		
 		s.disconnect();
 		
+		ControladoraAuditoria.agregarAccion("Usuario " + usuario + " agregado a caso " + iUE, usrActual.getId());
+		
 		return "completado";
 	}
 	//FIN SECCION INSERCIONES
 	
 	//PRINCIPIO SECCION MODIFICACIONES
 
-	public static String modificarCaso(String usuarioActual, String iUEUsado, String iUE, String juzgado, int turno, String caratulado) throws Exception {
+	public static String modificarCaso(String usuarioActual, String iUEUsado, String iUE, String juzgado, int turno, String caratulado, 
+										boolean suscrito) throws Exception {
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("MC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		Usuario usrActual = ControladoraUsuario.buscarUsuario(usuarioActual, usr);
+		ControladoraPermiso.tienePermiso("MC", usrActual.getId());
 		
 		Caso c = obtenerCasoPorIUE(usuarioActual, iUEUsado);
 		
@@ -552,6 +566,7 @@ public class ControladoraCaso {
 			c.setJuzgado(juzgado);
 			c.setTurno(turno);
 			c.setCaratulado(caratulado);
+			c.setSuscrito(suscrito);
 
 			//Se obtiene y empieza la session
 			Session s = HibernateUtil.getSession();
@@ -562,6 +577,8 @@ public class ControladoraCaso {
 			s.getTransaction().commit();
 
 	        s.disconnect();
+			
+			ControladoraAuditoria.agregarAccion("Caso modificado " + iUE, usrActual.getId());
 	        
 	        return "completado";
 		}		
@@ -573,7 +590,8 @@ public class ControladoraCaso {
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("MI", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		Usuario usrActual = ControladoraUsuario.buscarUsuario(usuarioActual, usr);
+		ControladoraPermiso.tienePermiso("MI", usrActual.getId());
 
 		//Se valida que los datos sean validos
 		validarDatosInvolucrado(iUE, fechaDeNacimiento, nombre, cedula, nacionalidad, domicilio, clase);
@@ -622,6 +640,8 @@ public class ControladoraCaso {
 		s.getTransaction().commit();
 		
 		s.disconnect();
+		
+		ControladoraAuditoria.agregarAccion("Involucrado " + cedula + " del caso " + iUE + " modificado", usrActual.getId());
 		
 		return "completado";
 	}
@@ -687,7 +707,8 @@ public class ControladoraCaso {
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("EC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		Usuario usrActual = ControladoraUsuario.buscarUsuario(usuarioActual, usr);
+		ControladoraPermiso.tienePermiso("EC", usrActual.getId());
 	        
 	    Caso c = obtenerCasoPorIUE(usuarioActual, iUE);
 		
@@ -708,6 +729,8 @@ public class ControladoraCaso {
 		s.getTransaction().commit();
 		
 		s.disconnect();
+		
+		ControladoraAuditoria.agregarAccion("Eliminado caso " + iUE, usrActual.getId());
 		
 		return "completado";
 	}
@@ -783,7 +806,8 @@ public class ControladoraCaso {
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("EI", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		Usuario usrActual = ControladoraUsuario.buscarUsuario(usuarioActual, usr);
+		ControladoraPermiso.tienePermiso("EI", usrActual.getId());
 	        
 	    Caso c = obtenerCasoPorIUE(usuarioActual, iUE);
 		
@@ -810,6 +834,8 @@ public class ControladoraCaso {
 		
 		s.disconnect();
 		
+		ControladoraAuditoria.agregarAccion("Eliminado involucrado " + ciInvolucrado + " de caso " + iUE, usrActual.getId());
+		
 		return "completado";
 	}
 	
@@ -818,7 +844,8 @@ public class ControladoraCaso {
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
 		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("ADUC", ControladoraUsuario.buscarUsuario(usuarioActual, usr).getId());
+		Usuario usrActual = ControladoraUsuario.buscarUsuario(usuarioActual, usr);
+		ControladoraPermiso.tienePermiso("ADUC", usrActual.getId());
         
 		Usuario u = ControladoraUsuario.buscarUsuario(usuarioActual, usuario);
 		
@@ -849,6 +876,8 @@ public class ControladoraCaso {
 		s.getTransaction().commit();	
 		
 		s.disconnect();
+		
+		ControladoraAuditoria.agregarAccion("Desasociar usuario " + usuario + " de caso " + iUE, usrActual.getId());
 		
 		return "completado";
 	}

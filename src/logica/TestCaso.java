@@ -13,9 +13,9 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		fachada.agregarCaso(actualUsr, "2-1231/2015", "familia", 12, "Juan Pedro");
-		fachada.agregarCaso(actualUsr, "2-1451/2015", "familia", 12, "Juan Pedro");
-		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro");
+		fachada.agregarCaso(actualUsr, "2-1231/2015", "familia", 12, "Juan Pedro", false);
+		fachada.agregarCaso(actualUsr, "2-1451/2015", "familia", 12, "Juan Pedro", false);
+		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro", false);
 		
 		try {
 			assertEquals(true,ControladoraCaso.existeCaso(actualUsr, "2-1231/2015"));
@@ -36,9 +36,9 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		fachada.agregarCaso(actualUsr, "2-1231/2015", "familia", 12, "Juan Pedro");
-		fachada.agregarCaso(actualUsr, "2-1451/2015", "familia", 12, "Juan Pedro");
-		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro");
+		fachada.agregarCaso(actualUsr, "2-1231/2015", "familia", 12, "Juan Pedro", false);
+		fachada.agregarCaso(actualUsr, "2-1451/2015", "familia", 12, "Juan Pedro", false);
+		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro", false);
 		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", "11/12/1992", "Hernesto Perez", "49290325", "uruguayo", "Saint Bois 5063", 
 				"hijo");
 		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", "11/12/1992", "Raquel Perez", "49290325", "uruguaya", "Saint Bois 5063", 
@@ -74,7 +74,7 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		fachada.agregarCaso(actualUsr, "2-1451/2015", "familia", 12, "Juan Pedro");
+		fachada.agregarCaso(actualUsr, "2-1451/2015", "familia", 12, "Juan Pedro", false);
 
 		fachada.agregarInvolucrado(actualUsr, "2-1451/2015", "11/12/1992", "Hernesto Perez", "49290325", "uruguayo", "Saint Bois 5063", 
 				"hijo");
@@ -102,9 +102,9 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 		
-		fachada.agregarCaso(actualUsr, "2-1231/2015", "familia", 12, "Juan Pedro");
-		fachada.agregarCaso(actualUsr, "2-1451/2015", "familia", 12, "Juan Pedro");
-		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro");
+		fachada.agregarCaso(actualUsr, "2-1231/2015", "familia", 12, "Juan Pedro", false);
+		fachada.agregarCaso(actualUsr, "2-1451/2015", "familia", 12, "Juan Pedro", false);
+		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro", false);
 		
 		try {
 			assertEquals(true,ControladoraCaso.existeCaso(actualUsr, "2-1231/2015"));
@@ -121,9 +121,9 @@ public class TestCaso {
 
 		String actualUsr = fachada.login("Master", "Master1!");
 		
-		fachada.agregarCaso(actualUsr, "2-1231/2015", "familia", 12, "Juan Pedro");
-		fachada.agregarCaso(actualUsr, "2-1451/2015", "familia", 12, "Juan Pedro");
-		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro");
+		fachada.agregarCaso(actualUsr, "2-1231/2015", "familia", 12, "Juan Pedro", false);
+		fachada.agregarCaso(actualUsr, "2-1451/2015", "familia", 12, "Juan Pedro", false);
+		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro", false);
 		
 		assertEquals("completado", fachada.asociarUsuarioACaso(actualUsr, "Master", "2-5431/2015", "profecional"));
 		assertNotEquals(null, fachada.obtenerCasosPorUsuario(actualUsr, "Master"));
@@ -150,16 +150,16 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		assertEquals("IUE",fachada.agregarCaso(actualUsr, " ", "familia", 12, "Juan Pedro"));
-		assertEquals("IUE",fachada.agregarCaso(actualUsr, "textoerror", "familia", 12, "Juan Pedro"));
-		assertEquals("IUE",fachada.agregarCaso(actualUsr, "1234", "familia", 12, "Juan Pedro"));
-		assertEquals("IUE",fachada.agregarCaso(actualUsr, "12312-12312", "familia", 12, "Juan Pedro"));
-		assertEquals("IUE",fachada.agregarCaso(actualUsr, "12312/12312", "familia", 12, "Juan Pedro"));
-		assertEquals("IUE",fachada.agregarCaso(actualUsr, "2-1234/asda", "familia", 12, "Juan Pedro"));
-		assertEquals("IUE",fachada.agregarCaso(actualUsr, "q-1231/2015", "familia", 12, "Juan Pedro"));
-		assertEquals("IUE",fachada.agregarCaso(actualUsr, "2-aaaa/2015", "familia", 12, "Juan Pedro"));
-		assertEquals("IUE",fachada.agregarCaso(actualUsr, "2-1451/20153", "familia", 12, "Juan Pedro"));
-		assertEquals("IUE",fachada.agregarCaso(actualUsr, "2-143333351/2015", "familia", 12, "Juan Pedro"));
+		assertEquals("IUE",fachada.agregarCaso(actualUsr, " ", "familia", 12, "Juan Pedro", false));
+		assertEquals("IUE",fachada.agregarCaso(actualUsr, "textoerror", "familia", 12, "Juan Pedro", false));
+		assertEquals("IUE",fachada.agregarCaso(actualUsr, "1234", "familia", 12, "Juan Pedro", false));
+		assertEquals("IUE",fachada.agregarCaso(actualUsr, "12312-12312", "familia", 12, "Juan Pedro", false));
+		assertEquals("IUE",fachada.agregarCaso(actualUsr, "12312/12312", "familia", 12, "Juan Pedro", false));
+		assertEquals("IUE",fachada.agregarCaso(actualUsr, "2-1234/asda", "familia", 12, "Juan Pedro", false));
+		assertEquals("IUE",fachada.agregarCaso(actualUsr, "q-1231/2015", "familia", 12, "Juan Pedro", false));
+		assertEquals("IUE",fachada.agregarCaso(actualUsr, "2-aaaa/2015", "familia", 12, "Juan Pedro", false));
+		assertEquals("IUE",fachada.agregarCaso(actualUsr, "2-1451/20153", "familia", 12, "Juan Pedro", false));
+		assertEquals("IUE",fachada.agregarCaso(actualUsr, "2-143333351/2015", "familia", 12, "Juan Pedro", false));
 	}
 	
 	@Test
@@ -168,13 +168,13 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		assertEquals("|juzgado",fachada.agregarCaso(actualUsr, "2-1459/2015", " ", 12, "Juan Pedro"));
-		assertEquals("|juzgado",fachada.agregarCaso(actualUsr, "2-1459/2015", "2123123", 12, "Juan Pedro"));
-		assertEquals("|juzgado",fachada.agregarCaso(actualUsr, "2-1459/2015", "123123error", 12, "Juan Pedro"));
-		assertEquals("|juzgado",fachada.agregarCaso(actualUsr, "2-1459/2015", "error123123", 12, "Juan Pedro"));
-		assertEquals("|juzgado",fachada.agregarCaso(actualUsr, "2-1459/2015", "error!", 12, "Juan Pedro"));
-		assertEquals("|juzgado",fachada.agregarCaso(actualUsr, "2-1459/2015", "!error", 12, "Juan Pedro"));
-		assertEquals("|juzgado",fachada.agregarCaso(actualUsr, "2-1459/2015", "error error error", 12, "Juan Pedro"));
+		assertEquals("|juzgado",fachada.agregarCaso(actualUsr, "2-1459/2015", " ", 12, "Juan Pedro", false));
+		assertEquals("|juzgado",fachada.agregarCaso(actualUsr, "2-1459/2015", "2123123", 12, "Juan Pedro", false));
+		assertEquals("|juzgado",fachada.agregarCaso(actualUsr, "2-1459/2015", "123123error", 12, "Juan Pedro", false));
+		assertEquals("|juzgado",fachada.agregarCaso(actualUsr, "2-1459/2015", "error123123", 12, "Juan Pedro", false));
+		assertEquals("|juzgado",fachada.agregarCaso(actualUsr, "2-1459/2015", "error!", 12, "Juan Pedro", false));
+		assertEquals("|juzgado",fachada.agregarCaso(actualUsr, "2-1459/2015", "!error", 12, "Juan Pedro", false));
+		assertEquals("|juzgado",fachada.agregarCaso(actualUsr, "2-1459/2015", "error error error", 12, "Juan Pedro", false));
 	}
 	
 	@Test
@@ -183,8 +183,8 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		assertEquals("|turno",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", -1, "Juan Pedro"));
-		assertEquals("|turno",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 444, "Juan Pedro"));
+		assertEquals("|turno",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", -1, "Juan Pedro", false));
+		assertEquals("|turno",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 444, "Juan Pedro", false));
 	}
 	
 	@Test
@@ -193,13 +193,13 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		assertEquals("|caratulado",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 12, " "));
-		assertEquals("|caratulado",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 12, "Juan 123123"));
-		assertEquals("|caratulado",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 12, "123213 !!!"));
-		assertEquals("|caratulado",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 12, "123213"));
-		assertEquals("|caratulado",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 12, "!!!!!!"));
-		assertEquals("|caratulado",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 12, "!!!!!! Pedro"));
-		assertEquals("|caratulado",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 12, "Juan !!!!!!"));
+		assertEquals("|caratulado",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 12, " ", false));
+		assertEquals("|caratulado",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 12, "Juan 123123", false));
+		assertEquals("|caratulado",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 12, "123213 !!!", false));
+		assertEquals("|caratulado",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 12, "123213", false));
+		assertEquals("|caratulado",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 12, "!!!!!!", false));
+		assertEquals("|caratulado",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 12, "!!!!!! Pedro", false));
+		assertEquals("|caratulado",fachada.agregarCaso(actualUsr, "2-1459/2015", "familia", 12, "Juan !!!!!!", false));
 	}
 	
 	@Test
@@ -321,9 +321,9 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro");
+		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro", false);
 
-		fachada.modificarCaso(actualUsr, "2-5431/2015", "2-5431/2015", "civil", 11, "Andres Pedro");
+		fachada.modificarCaso(actualUsr, "2-5431/2015", "2-5431/2015", "civil", 11, "Andres Pedro", false);
 		try {
 			Caso c = ControladoraCaso.obtenerCasoPorIUE(actualUsr, "2-5431/2015");
 			
@@ -341,9 +341,9 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro");
+		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro", false);
 
-		fachada.modificarCaso(actualUsr, "2-5431/2015", "2-5031/2015", "civil", 11, "Andres Pedro");
+		fachada.modificarCaso(actualUsr, "2-5431/2015", "2-5031/2015", "civil", 11, "Andres Pedro", false);
 		try {
 			assertNotEquals(null, ControladoraCaso.obtenerCasoPorIUE(actualUsr, "2-5031/2015"));
 		} catch (Exception e) {
@@ -357,9 +357,9 @@ public class TestCaso {
 		
 		String actualUsr = fachada.login("Master", "Master1!");
 
-		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro");
+		fachada.agregarCaso(actualUsr, "2-5431/2015", "familia", 12, "Juan Pedro", false);
 
-		assertEquals("Duplicado", fachada.modificarCaso(actualUsr, "2-5431/2015", "2-1231/2015", "civil", 11, "Andres Pedro"));
+		assertEquals("Duplicado", fachada.modificarCaso(actualUsr, "2-5431/2015", "2-1231/2015", "civil", 11, "Andres Pedro", false));
 	}
 	
 	@Test

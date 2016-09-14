@@ -19,6 +19,7 @@ public class HibernateUtil {
             configuration.addPackage("models").addAnnotatedClass(Permiso.class);
             configuration.addPackage("models").addAnnotatedClass(PermisoUsuario.class);
             configuration.addPackage("models").addAnnotatedClass(UsuarioAsociadoACaso.class);
+            configuration.addPackage("models").addAnnotatedClass(Auditoria.class);
     		configuration.configure("hibernate.cfg.xml");
     		sessionFactory = configuration.buildSessionFactory();
         } catch (Throwable ex) {

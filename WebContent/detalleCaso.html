@@ -49,8 +49,9 @@
 				</li>
 				<li class="list-group-item">
 					<span>Juzgado: </span>
-					<span ng-hide="modificandoCaso">{{casoDetallado.juzgado}}</span>
-					<input type="text" class="form-control" id="juzgado" placeholder="Ingresar juzgado" ng-model="casoDetallado.juzgado" ng-hide="!modificandoCaso">
+					<span ng-hide="modificandoCaso">{{casoDetallado.juzgado.juzgado}}</span>
+					<select class="form-control" id="juzgado" ng-options="juzgado.juzgado for juzgado in juzgados" ng-model="casoDetallado.juzgado" ng-hide="!modificandoCaso">
+					</select>
 				</li>
 				<li class="list-group-item">
 					<span>Turno: </span>
@@ -268,8 +269,11 @@
 	              
 	            		</ul>
 	            		<ul class="nav navbar-nav navbar-right">
-	              			<li ng-hide="accionesPermitidas.asociarDesasociarUsuario == ''">
+	              			<li ng-hide="accionesPermitidas.asociarDesasociarUsuario == '' || usuariosDisponibles == ''">
 	              				<button class="btn btn-default navbar-btn" type="button" ng-click="mostrarAsignarUsuario()">Asignar Usuario</button>
+	              			</li>
+	              			<li ng-show="usuariosDisponibles == ''">
+	              				<span>No hay usuarios disponibles para asignar.</span>
 	              			</li>
 	            		</ul>
 	          		</div>
@@ -291,7 +295,8 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="tipo">Tipo:</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="tipo" placeholder="Ingresar tipo" ng-model="tipo">
+					<select class="form-control" id="tipo" ng-options="tipo.tipo for tipo in tiposAsignacion" ng-model="tipo">
+					</select>
 				</div>
 			</div>
 			<div class="form-group">
@@ -316,13 +321,13 @@
 			</div> 
 			<div class="panel-body">
 				<div class="list-group">
-					<div class="list-group-item" ng-repeat="mensaje in mensajes">
+					<div class="list-group-item" ng-repeat="mensaje in mensajes" ng-class="{'li-mensaje-notificacion' : mensaje.infoMensaje}">
 						<h4 class="list-group-item-heading">
 							<span class="glyphicon glyphicon-time"></span>
 							{{mensaje.usuarioString}} 
 							<small>{{mensaje.fecha}}, {{mensaje.hora}}</small>
 						</h4>
-						<p class="list-group-item-text">{{mensaje.contenido}}</p>
+						<span class="list-group-item-text" ng-html-compile="mensaje.contenido"></span>
 					</div>
 				</div>
 				<h4>Agregar un mensaje</h4>

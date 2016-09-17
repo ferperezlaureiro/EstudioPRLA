@@ -77,25 +77,30 @@ app.controller("usuarioController", ['$scope', '$location', '$window', '$rootSco
 
 	$scope.MostrarModificarUsuario = function(usuario){
 		$scope.cancelarUsuario();
-		$scope.botonAgregarUsuario = false;
-		$scope.botonModificarUsuario = true;
-		for(var i in $rootScope.usuarios){
-			if($rootScope.usuarios[i].usuario == usuario){
-				$scope.usuarioUsado = $rootScope.usuarios[i].usuario;
-				$scope.usuario = $rootScope.usuarios[i].usuario;
-				$scope.contrasenia = $rootScope.usuarios[i].contrasenia;
-				$scope.nombre = $rootScope.usuarios[i].nombre;
-				$scope.cedula = $rootScope.usuarios[i].cedula;
-				$scope.email = $rootScope.usuarios[i].email;
-				$scope.tel = $rootScope.usuarios[i].tel;
-				$scope.cel = $rootScope.usuarios[i].cel;
-				$scope.domicilio = $rootScope.usuarios[i].domicilio;
-				$scope.domicilioLaboral = $rootScope.usuarios[i].domicilioLaboral;
-				$scope.rut = $rootScope.usuarios[i].rut;
-				$scope.fechaDeNacimiento = $rootScope.usuarios[i].fechaDeNacimiento;
+		if(usuario == $rootScope.currentUsr.usuario){
+			alert("No puedes modificar el usuario actual, hazlo desde la seccion Mi Cuenta");
+		} else {
+			$scope.botonAgregarUsuario = false;
+			$scope.botonModificarUsuario = true;
+			for(var i in $rootScope.usuarios){
+				if($rootScope.usuarios[i].usuario == usuario){
+					$scope.usuarioUsado = $rootScope.usuarios[i].usuario;
+					$scope.usuario = $rootScope.usuarios[i].usuario;
+					$scope.contraseniaUsada = $rootScope.usuarios[i].contrasenia;
+					$scope.contrasenia = $rootScope.usuarios[i].contrasenia;
+					$scope.nombre = $rootScope.usuarios[i].nombre;
+					$scope.cedula = $rootScope.usuarios[i].cedula;
+					$scope.email = $rootScope.usuarios[i].email;
+					$scope.tel = $rootScope.usuarios[i].tel;
+					$scope.cel = $rootScope.usuarios[i].cel;
+					$scope.domicilio = $rootScope.usuarios[i].domicilio;
+					$scope.domicilioLaboral = $rootScope.usuarios[i].domicilioLaboral;
+					$scope.rut = $rootScope.usuarios[i].rut;
+					$scope.fechaDeNacimiento = $rootScope.usuarios[i].fechaDeNacimiento;
+				}
 			}
+			$scope.usuarioFormShow = true;
 		}
-		$scope.usuarioFormShow = true;
 	}
 
 	$scope.modificarUsuario = function(){
@@ -116,7 +121,8 @@ app.controller("usuarioController", ['$scope', '$location', '$window', '$rootSco
 																					+ '&fechaDeNacimiento=' + $scope.fechaDeNacimiento
 		}).success(function(data, status, headers, config) {
 			if(data == "completado"){
-				if($scope.usuarioUsado != $scope.usuario){
+				if(($scope.usuarioUsado != $scope.usuario || $scope.contraseniaUsada != $scope.contrasenia) 
+					&& $scope.usuarioUsado == $rootScope.currentUsr.usuario){
 					$scope.reLoggear($scope.usuario, $scope.contrasenia);
 				} else {
 					$scope.cancelarUsuario();

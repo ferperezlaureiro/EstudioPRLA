@@ -53,7 +53,10 @@ public class ControladoraUsuario {
 		//Se obtiene y empieza la session
 		Session s = HibernateUtil.getSession();
 
-        Query query = s.createQuery("select U from Usuario as U, UsuarioAsociadoACaso as UA where UA.idCaso = :idCaso and UA.tipo = 'profesional' or UA.tipo = 'funcionario'");
+        Query query = s.createQuery("select U "
+        							+ "from Usuario as U, UsuarioAsociadoACaso as UA "
+        							+ "where UA.idCaso = :idCaso "
+        							+ "and UA.tipo in ('profesional', 'funcionario')");
         query.setParameter("idCaso", idCaso);
         List list = query.list();
         
@@ -191,7 +194,12 @@ public class ControladoraUsuario {
 		
 		String usuarioActualDesencriptado = Utilidades.Desencriptar(usuarioActual);
 		String[] parts = usuarioActualDesencriptado.split("-"); 
-		String result = login(parts[0], parts[2]);
+		String result = "";
+		try{
+			result = login(parts[0], parts[2]);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		if (result == "usuario" || result == "contrasenia")
 			throw new Exception("Session error");
 		
@@ -200,33 +208,6 @@ public class ControladoraUsuario {
 	//FIN SECCION ALTAS
 	
 	//PRINCIPIO SECCION MODIFICACIONES
-	public static String modificarUsuario(String usuarioActual, String usuarioUsado, String usuario, String contrasenia, String nombre, 
-			String cedula, String email, String tel, String cel, String domicilio, String domicilioLaboral, String rut, 
-			String fechaDeNacimiento) throws Exception{
-		
-		//Se valida que la sesion sea valida
-		String usr = validateUsrSession(usuarioActual);
-		
-		//Se validan los permisos
-		ControladoraPermiso.tienePermiso("MU", buscarUsuarioPrivate(usr).getId());
-
-        
-        return modificarUsuarioPrivado(usuarioActual, usuarioUsado, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, 
-        		rut, fechaDeNacimiento);
-		
-	}
-	
-	public static String modificarMiCuenta(String usuarioActual, String usuario, String contrasenia, String nombre, 
-			String cedula, String email, String tel, String cel, String domicilio, String domicilioLaboral, String rut, 
-			String fechaDeNacimiento) throws Exception{
-		//Se valida que la sesion sea valida
-		String usr = validateUsrSession(usuarioActual);
-        
-        return modificarUsuarioPrivado(usuarioActual, usr, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, 
-        		rut, fechaDeNacimiento);
-		
-	}
-	
 	public static String modificarContrasenia(String usuarioActual, String contrasenia) throws Exception{
 		//Se valida que la sesion sea valida
 		String usr = validateUsrSession(usuarioActual);
@@ -256,6 +237,33 @@ public class ControladoraUsuario {
 			return "completado";
 		}
 	}
+	public static String modificarUsuario(String usuarioActual, String usuarioUsado, String usuario, String contrasenia, String nombre, 
+			String cedula, String email, String tel, String cel, String domicilio, String domicilioLaboral, String rut, 
+			String fechaDeNacimiento) throws Exception{
+		
+		//Se valida que la sesion sea valida
+		String usr = validateUsrSession(usuarioActual);
+		
+		//Se validan los permisos
+		ControladoraPermiso.tienePermiso("MU", buscarUsuarioPrivate(usr).getId());
+
+        
+        return modificarUsuarioPrivado(usuarioActual, usuarioUsado, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, 
+        		rut, fechaDeNacimiento);
+		
+	}
+	
+	public static String modificarMiCuenta(String usuarioActual, String usuario, String contrasenia, String nombre, 
+			String cedula, String email, String tel, String cel, String domicilio, String domicilioLaboral, String rut, 
+			String fechaDeNacimiento) throws Exception{
+		//Se valida que la sesion sea valida
+		String usr = validateUsrSession(usuarioActual);
+        
+        return modificarUsuarioPrivado(usuarioActual, usr, usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, 
+        		rut, fechaDeNacimiento);
+		
+	}
+	
 	
 	private static String modificarUsuarioPrivado(String usuarioActual, String usuarioUsado, String usuario, String contrasenia, String nombre, 
 			String cedula, String email, String tel, String cel, String domicilio, String domicilioLaboral, String rut, 
@@ -279,7 +287,9 @@ public class ControladoraUsuario {
 				}
 			}
 			
-			if(usuarioUsado != validateUsrSession(usuarioActual)){
+			String usr = validateUsrSession(usuarioActual);
+			
+			if(usuarioUsado != usr){
 				u.setContrasenia(contrasenia);
 			}
 			u.setNombre(nombre);
@@ -300,10 +310,9 @@ public class ControladoraUsuario {
 			s.getTransaction().commit();
 	        
 			s.disconnect();
-			if(usuarioUsado != validateUsrSession(usuarioActual)){
-				ControladoraAuditoria.agregarAccion("Modificar Usuario " + usuario,buscarUsuarioPrivate(validateUsrSession(usuarioActual)).getId());
+			if(!usuarioUsado.equals(usr)){
+				ControladoraAuditoria.agregarAccion("Modificar Usuario " + usuario,buscarUsuarioPrivate(usr).getId());
 			}
-			
 			return "completado";
 		}	
 		

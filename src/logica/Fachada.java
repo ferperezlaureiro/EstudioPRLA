@@ -157,7 +157,7 @@ public class Fachada {
 	
 	public String agregarMensaje (String usuarioActual, String iUE, String contenido) {
 		try {
-			ControladoraCaso.agregarMensaje(usuarioActual, iUE, contenido);
+			ControladoraCaso.agregarMensaje(usuarioActual, iUE, contenido, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();

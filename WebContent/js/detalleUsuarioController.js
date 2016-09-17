@@ -72,6 +72,7 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 		}).success(function(data, status, headers, config) {
 			if(data != [] && data != "" && data != "No hay casos"){
 				$rootScope.casosDisponibles = data;
+				$scope.casoSeleccionado = $rootScope.casosDisponibles[0];
 			} else {
 				$rootScope.casosDisponibles = '';
 			}
@@ -104,6 +105,7 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 		}).success(function(data, status, headers, config) {
 			if(data != [] && data != ""){
 				$rootScope.permisosRestantes = data;	
+				$scope.permisoSeleccionado = $rootScope.permisosRestantes[0];
 			} else {
 				$rootScope.permisosRestantes = '';
 			}
@@ -140,7 +142,8 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 																						+ '&fechaDeNacimiento=' + $rootScope.usuarioDetallado.fechaDeNacimiento
 		}).success(function(data, status, headers, config) {
 			if(data == "completado"){
-				if($scope.usuarioADetallar != $rootScope.usuarioDetallado.usuario){
+				if(($scope.usuarioADetallar != $rootScope.usuarioDetallado.usuario || $rootScope.currentUsr.contrasenia != $rootScope.usuarioDetallado.contrasenia) 
+					&& $scope.usuarioADetallar == $rootScope.currentUsr.usuario){
 					$scope.reLoggear($rootScope.usuarioDetallado.usuario, $rootScope.usuarioDetallado.contrasenia);
 				} else {
 					$rootScope.usuarioADetallar =  $rootScope.usuarioDetallado.usuario;
@@ -241,6 +244,9 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 				    case "CON":
 				        $rootScope.vistasPermitidas.configuracion = true;
 				        break;
+				    case "OM":
+				        $rootScope.vistasPermitidas.movimientos = true;
+				        break;
 				    case "AU":
 				        $rootScope.accionesPermitidas.usuarioAgregar = true;
 				        break;
@@ -290,6 +296,7 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 		$scope.cancelarAsignarPermiso();
 		$scope.cargarCasosDisponibles();
 		$scope.asignarCasoFormShow = true;
+		$scope.tipo = $rootScope.tiposAsignacion[0];
 	}
 
 	$scope.mostrarAsignarPermiso = function(){
@@ -306,7 +313,7 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/asociarUsuarioACaso?usrKey=' + $rootScope.token 
 																						+ '&usuario=' +  $rootScope.usuarioADetallar
 																						+ '&iUE=' + $scope.casoSeleccionado.iUE 
-																						+ '&tipo=' + $scope.tipo
+																						+ '&tipo=' + $scope.tipo.tipo
 		}).success(function(data, status, headers, config) {
 			$scope.cargarCasosAsignados();
 			$scope.cargarCasosDisponibles();

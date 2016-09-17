@@ -48,6 +48,7 @@ public class Configuracion {
 		ControladoraPermiso.crearPermiso("Obtener usuarios", "OU");
 		ControladoraPermiso.crearPermiso("Obtener todos los casos", "OTC");
 		ControladoraPermiso.crearPermiso("Asociar desasociar usuario a caso", "ADUC");
+		ControladoraPermiso.crearPermiso("Obtener Movimientos", "OM");
 		ControladoraPermiso.crearPermiso("Configurar", "CON");
 	}
 	
@@ -65,6 +66,7 @@ public class Configuracion {
 		asignarPermisoAP("OU", "Master");
 		asignarPermisoAP("OTC", "Master");
 		asignarPermisoAP("ADUC", "Master");
+		asignarPermisoAP("OM", "Master");
 		asignarPermisoAP("CON", "Master");
 	}
 	

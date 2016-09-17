@@ -1,4 +1,8 @@
 eclipse.preferences.version=1
+encoding//src/consultaDecretowsdl_pkg/ConsultaDecretowsdl.java=UTF-8
+encoding//src/consultaDecretowsdl_pkg/ConsultaDecretowsdlBindingStub.java=UTF-8
+encoding//src/consultaDecretowsdl_pkg/ConsultaDecretowsdlLocator.java=UTF-8
+encoding//src/consultaDecretowsdl_pkg/ConsultaDecretowsdlPortType.java=UTF-8
 encoding//src/consultaIUEwsdl_pkg/ConsultaIUEwsdl.java=UTF-8
 encoding//src/consultaIUEwsdl_pkg/ConsultaIUEwsdlBindingStub.java=UTF-8
 encoding//src/consultaIUEwsdl_pkg/ConsultaIUEwsdlLocator.java=UTF-8

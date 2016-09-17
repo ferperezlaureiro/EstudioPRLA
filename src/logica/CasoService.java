@@ -124,9 +124,10 @@ public class CasoService {
 	@Produces(MediaType.TEXT_HTML)
 	public String agregarMensaje (@QueryParam("usrKey") String usuarioActual,
 									@QueryParam("iUE") String iUE,
-									@QueryParam("contenido") String contenido) {
+									@QueryParam("contenido") String contenido,
+									@QueryParam("infoMensaje") boolean infoMensaje) {
 		try {
-			return ControladoraCaso.agregarMensaje(usuarioActual, iUE, contenido);
+			return ControladoraCaso.agregarMensaje(usuarioActual, iUE, contenido, infoMensaje);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();
@@ -152,6 +153,19 @@ public class CasoService {
 													@QueryParam("usuario") String usuario) {
 		try {
 			return ControladoraCaso.obtenerCasosPorUsuario(usuarioActual, usuario);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@GET
+    @Path("/obtenerCasosSuscritosPorUsuario")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Caso> obtenerCasosSuscritosPorUsuario (@QueryParam("usrKey") String usuarioActual,
+															@QueryParam("usuario") String usuario) {
+		try {
+			return ControladoraCaso.obtenerCasosSuscritosPorUsuario(usuarioActual, usuario);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -230,6 +244,20 @@ public class CasoService {
 														@QueryParam("iUE") String iUE) {
 		try {
 			return ControladoraCaso.obtenerInvolucrados(usuarioActual, iUE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	@GET
+	@Path("/obtenerMovimientos")
+	@Produces(MediaType.APPLICATION_JSON)
+	public ArrayList<Movimiento> obtenerMovimientos(@QueryParam("usrKey") String usuarioActual,
+													@QueryParam("fechaInicio") String fechaInicio,
+													@QueryParam("fechaFin") String fechaFin){
+		try {
+			return ControladoraCaso.notificarYObtenerMovimientos(usuarioActual, fechaInicio, fechaFin);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

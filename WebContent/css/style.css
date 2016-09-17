@@ -58,3 +58,7 @@ footer {
   }
   .row.content {height: auto;}
 }
+
+.li-mensaje-notificacion{
+  color: #3175b0;
+}

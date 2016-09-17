@@ -1,5 +1,6 @@
 package logica;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -7,7 +8,10 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import consultaIUEwsdl.ConsultaMain;
+import consultaDecretowsdl.ConsultaDecretowsdlPortTypeProxy;
+import consultaIUEwsdl.ConsultaIUEwsdlPortTypeProxy;
+import consultaIUEwsdl_pkg.Giro;
+import consultaIUEwsdl_pkg.Resultado;
 
 public class ControladoraCaso {
 	//PRINCIPIO SECCION CONSULTAS
@@ -32,6 +36,33 @@ public class ControladoraCaso {
         	return casos;
         } else
         	throw new Exception ("No hay casos");
+	}
+
+	public static ArrayList<Caso> obtenerCasosSuscritosPorUsuario (String usuarioActual, String usuario) throws Exception {
+        //Se valida que la sesion sea valida
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
+
+		Usuario u = ControladoraUsuario.buscarUsuario(usuarioActual, usuario);
+		
+		if (u == null)
+			throw new Exception("Usuario no encontrado");
+		
+		Session s = HibernateUtil.getSession();
+		
+        Query query = s.createQuery("select C from Caso as C, UsuarioAsociadoACaso as U "
+        							+ "where U.idCaso = C.id and C.suscrito = true and U.idUsuario = :idUsuario");
+        query.setParameter("idUsuario", u.getId());
+        List list = query.list();
+
+        s.disconnect();
+        
+        if (!list.isEmpty()) {
+        	ArrayList<Caso> casos = new ArrayList<Caso>();
+        	for (Object o: list)
+        		casos.add((Caso)o);
+        	return casos;
+        } else
+        	throw new Exception ("No hay casos asignados a este usuario");
 	}
 
 	public static ArrayList<Caso> obtenerCasosPorUsuario (String usuarioActual, String usuario) throws Exception {
@@ -291,14 +322,25 @@ public class ControladoraCaso {
         }
 	}
 	
-	public static void notificarMovimientos(String usuarioActual) throws Exception {
+	public static ArrayList<Movimiento> notificarYObtenerMovimientos(String usuarioActual, String fechaInicio, String fechaFin) throws Exception {
 		//Se valida que la sesion sea valida
-		ControladoraUsuario.validateUsrSession(usuarioActual);
+		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 
 		Session s = HibernateUtil.getSession();
 		
-		Query query = s.createQuery("from Caso where suscrito = true");
+		Usuario usrOjct = ControladoraUsuario.buscarUsuario(usuarioActual, usr);
+		
+
+		//Se obtienen los casos que esten suscritos a notificaciones y que el usuario este asignado como funcionario o profecional
+        Query query = s.createQuery("select C "
+        							+ "from Caso as C, UsuarioAsociadoACaso as UA "
+        							+ "where UA.idCaso = C.id and UA.idUsuario = :idUsuario "
+        							+ "and C.suscrito = true "
+        							+ "and UA.tipo in ('profesional', 'funcionario')");
+        query.setParameter("idUsuario", usrOjct.getId());
 		List list = query.list();
+		
+		ArrayList<Movimiento> retorno = new ArrayList<Movimiento>();
 		
 		if (!list.isEmpty()) {
 			ArrayList<Caso> casosSuscriptos = new ArrayList<Caso>();
@@ -306,38 +348,71 @@ public class ControladoraCaso {
 				casosSuscriptos.add((Caso)o);
 			}
 			
-			String[] aux = null;
-			ArrayList<Usuario> usuarios = null;
-			String[] mensage = null;
+			ArrayList<Movimiento> movimientosCaso = new ArrayList<Movimiento>();
+			ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+			int index = 0;
 			
 			for (Caso caso : casosSuscriptos) {
-				aux = ConsultaMain.TieneMovimiento(caso.getIUE());
-				if (aux != null) {
+				movimientosCaso = getMovimientos(caso.getIUE(), fechaInicio, fechaFin);
+				if (movimientosCaso != null && !movimientosCaso.isEmpty()) {
 					usuarios = ControladoraUsuario.obtenerNotificados(caso.getId());
-					if (usuarios != null) {
-						for (Usuario u : usuarios) {
-							for (int i = 0; i<aux.length; i++) {
-								mensage = aux[i].split("&");
-								ConsultaMain.SendMail(u.getEmail(), 
-														"Nuevo movimiento (" + mensage[2] + ") de " + 
-														caso.getCaratulado(),
-														"IUE: " + caso.getIUE() + "</br>" + 
-														"Caratulado: " + caso.getCaratulado() + "</br>" +
-														"Tipo de movimiento: " + mensage[2] + "</br>" +
-														"Decreto: " + mensage[0] + "</br>" + 
-														"Vencimiento: " + mensage[3] + "</br>" + 
-														"Fecha: " + mensage[1]);
+					if (usuarios != null && !usuarios.isEmpty()) {
+						for (Movimiento m: movimientosCaso) {
+							for (Usuario u : usuarios) {
+								//Utilidades.SendMail(u.getEmail(), 
+								//					"Nuevo movimiento (" + m.getSede() + ") de " + caso.getCaratulado(),
+								//					"IUE: " + caso.getIUE() + "</br>" + 
+								//					"Caratulado: " + caso.getCaratulado() + "</br>" +
+								//					"Tipo de movimiento: " + m.getTipo() + "</br>" +
+								//					"Decreto: " + m.getDecreto() + "</br>" + 
+								//					"Vencimiento: " + m.getVencimiento() + "</br>" + 
+								//					"Fecha: " + m.getFecha());
 							}
+							if(!m.getDecreto().isEmpty()){
+								m.setDecreto(getDecreto(caso.getIUE(), m.getDecreto()));
+							}
+							m.setIndex(index);
+							retorno.add(m);
+							index++;
 						}
 					}
 				}
 			}
+			return retorno;
+		} else {
+			throw new Exception("No hay casos suscriptos para este usuario");
+		}
+	}
+	
+	private static String getDecreto(String iue, String nro_decreto) throws RemoteException{
+		ConsultaDecretowsdlPortTypeProxy consultaDecreto = new ConsultaDecretowsdlPortTypeProxy();
+		return (nro_decreto + "&%" + consultaDecreto.consultaDecreto(iue, nro_decreto));
+	}
+	
+	private static ArrayList<Movimiento> getMovimientos(String IUE, String fechaInicio, String fechaFin) {
+		ConsultaIUEwsdlPortTypeProxy consulta = new ConsultaIUEwsdlPortTypeProxy();
+		ArrayList<Movimiento> movimientosCaso = new ArrayList<Movimiento>();
+		try {
+			Resultado resultado = consulta.consultaIUE(IUE);
+			Giro[] movimientos = resultado.getMovimientos();
+			for (int i = 0; i < movimientos.length; i++) {
+				if (Utilidades.estaDentroDeFechas(fechaInicio, movimientos[i].getFecha(), fechaFin) ) {
+					Movimiento m = new Movimiento(movimientos[i].getDecreto(), movimientos[i].getFecha(), movimientos[i].getTipo(),
+													movimientos[i].getVencimiento(), movimientos[i].getSede(), IUE);
+					movimientosCaso.add(m);
+				}
+			}
+			return movimientosCaso;
+		} catch (RemoteException e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 	//FIN SECCION CONSULTAS
 	
 	//PRINCIPIO SECCION INSERCIONES
-	public static String agregarCaso(String usuarioActual, String iUE, String juzgado, int turno, String caratulado, boolean suscrito) throws Exception {
+	public static String agregarCaso(String usuarioActual, String iUE, String juzgado, int turno, String caratulado, 
+										boolean suscrito) throws Exception {
         //Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
@@ -446,7 +521,7 @@ public class ControladoraCaso {
 		}
 	}
 	
-	public static String agregarMensaje(String usuarioActual, String iUE, String contenido) throws Exception {
+	public static String agregarMensaje(String usuarioActual, String iUE, String contenido, boolean infoMensaje) throws Exception {
 		//Se valida que la sesion sea valida
 		String usr = ControladoraUsuario.validateUsrSession(usuarioActual);
 		
@@ -473,7 +548,7 @@ public class ControladoraCaso {
 		} else{
 			hora = "" + hoy.get(Calendar.HOUR_OF_DAY) + ":" + hoy.get(Calendar.MINUTE);
 		}
-        Mensaje m = new Mensaje(c.getId(), usuario.getId(), fecha, hora, contenido);
+        Mensaje m = new Mensaje(c.getId(), usuario.getId(), fecha, hora, contenido, infoMensaje);
 		
 		//Se guarda el nuevo involucrado en la base de datos
 		s.save(m);

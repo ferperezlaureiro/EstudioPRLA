@@ -68,6 +68,7 @@ app.controller("casoController", ['$scope', '$location', '$window', '$rootScope'
 		$scope.botonAgregarCaso = true;
 		$scope.botonModificarCaso = false;
 		$scope.casoFormShow = true;
+		$scope.juzgado = $rootScope.juzgados[0];
 	}
 
 	$scope.agregarCaso = function(){
@@ -75,7 +76,7 @@ app.controller("casoController", ['$scope', '$location', '$window', '$rootScope'
 			method: 'POST',
 			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/agregarCaso?usrKey=' + $rootScope.token 
 																				+ '&iUE=' + $scope.iue 
-																				+ '&juzgado=' + $scope.juzgado 
+																				+ '&juzgado=' + $scope.juzgado.juzgado 
 																				+ '&turno=' + $scope.turno 
 																				+ '&caratulado=' + $scope.caratulado
 																				+ '&suscrito=' + $scope.suscrito
@@ -97,7 +98,12 @@ app.controller("casoController", ['$scope', '$location', '$window', '$rootScope'
 			if(casos[i].iUE == iue){
 				$scope.iueUsado = casos[i].iUE;
 				$scope.iue = casos[i].iUE;
-				$scope.juzgado = casos[i].juzgado;
+				for(var x in $rootScope.juzgados){
+					if($rootScope.juzgados[x].juzgado == casos[i].juzgado){
+						$scope.juzgado = $rootScope.juzgados[x];
+						break;
+					}
+				}
 				$scope.turno = casos[i].turno;
 				$scope.caratulado = casos[i].caratulado;
 				$scope.suscrito = casos[i].suscrito;
@@ -114,7 +120,7 @@ app.controller("casoController", ['$scope', '$location', '$window', '$rootScope'
 			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/modificarCaso?usrKey=' + $rootScope.token 
 																				+ '&iUEUsado='  + $scope.iueUsado 
 																				+ '&iUE=' +  $scope.iue 
-																				+ '&juzgado=' + $scope.juzgado 
+																				+ '&juzgado=' + $scope.juzgado.juzgado 
 																				+ '&turno=' + $scope.turno 
 																				+ '&caratulado='+ $scope.caratulado
 																				+ '&suscrito=' + $scope.suscrito

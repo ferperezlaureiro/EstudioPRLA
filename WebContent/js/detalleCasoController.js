@@ -35,6 +35,12 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 		}).success(function(data, status, headers, config) {
 			if(data != "" && data != "No hay casos"){
 				$rootScope.casoDetallado = data;
+				for(var x in $rootScope.juzgados){
+					if($rootScope.juzgados[x].juzgado == $rootScope.casoDetallado.juzgado){
+						$rootScope.casoDetallado.juzgado = $rootScope.juzgados[x];
+						break;
+					}
+				}
 			}
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
@@ -73,7 +79,7 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/modificarCaso?usrKey=' + $rootScope.token 
 																				+ '&iUEUsado='  + $rootScope.casoADetallar 
 																				+ '&iUE=' +  $rootScope.casoDetallado.iUE 
-																				+ '&juzgado=' + $rootScope.casoDetallado.juzgado 
+																				+ '&juzgado=' + $rootScope.casoDetallado.juzgado.juzgado
 																				+ '&turno=' + $rootScope.casoDetallado.turno 
 																				+ '&caratulado=' + $rootScope.casoDetallado.caratulado
 																				+ '&suscrito=' + $rootScope.casoDetallado.suscrito
@@ -208,6 +214,7 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 		}).success(function(data, status, headers, config) {
 			if(data != [] && data != "" && data != "No hay usuarios"){
 				$rootScope.usuariosDisponibles = data;
+				$scope.usuarioSeleccionado = $rootScope.usuariosDisponibles[0];
 			} else {
 				$rootScope.usuariosDisponibles = '';
 			}
@@ -236,6 +243,7 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 		$scope.cancelarInvolucrado();
 		$scope.cargarUsuariosDisponiblesPorIUE();
 		$scope.asignarUsuarioFormShow = true;
+		$scope.tipo = $rootScope.tiposAsignacion[0];
 	}
 
 	$scope.asignarUsuario = function(){
@@ -244,7 +252,7 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/asociarUsuarioACaso?usrKey=' + $rootScope.token 
 																						+ '&usuario=' +  $scope.usuarioSeleccionado.usuario
 																						+ '&iUE=' + $rootScope.casoADetallar 
-																						+ '&tipo=' + $scope.tipo
+																						+ '&tipo=' + $scope.tipo.tipo
 		}).success(function(data, status, headers, config) {
 			$scope.cargarUsuariosPorIUE();
 			$scope.cargarUsuariosDisponiblesPorIUE();
@@ -283,6 +291,7 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/agregarMensaje?usrKey=' + $rootScope.token 
 																					+ '&iUE=' + $rootScope.casoADetallar 
 																					+ '&contenido=' + $scope.contenido
+																					+ '&infoMensaje=' + false
 		}).success(function(data, status, headers, config) {
 			$scope.contenido = "";
 			$scope.cargarMensajes();

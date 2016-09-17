@@ -7,7 +7,8 @@ app.controller("loginController", ['$scope', '$location', '$http', '$rootScope',
 				url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/login?usuario=' + $scope.usuario 
 																				+ '&contrasenia=' + $scope.contrasenia
 			}).success(function(data, status, headers, config) {
-				if (data != "usuario" && data != "|contrasenia" && data != "usuario|contrasenia") {
+				if (data != "usuario" && data != "|contrasenia" && data != "usuario|contrasenia" 
+					&& data != "contrasenia incorrecta" && data != "usuario no encontrado") {
 					$scope.tokenAux = data;
 					$scope.cargarUsuario();
 					$scope.cargarPermisos();
@@ -39,7 +40,7 @@ app.controller("loginController", ['$scope', '$location', '$http', '$rootScope',
 																					+ '&usuario=' + $scope.usuario
 		}).success(function(data, status, headers, config) {
 			$rootScope.permisos = data;
-			$rootScope.vistasPermitidas = {usuario: '', configuracion: ''};
+			$rootScope.vistasPermitidas = {usuario: '', configuracion: '', movimiento: ''};
 			$rootScope.accionesPermitidas = {usuarioAgregar: '', usuarioModificar : '', usuarioBorrar : '', casoAgregar : '', casoEliminar : '', casoModificar : '', 
 				involucradoAgregar : '', involucradoModificar : '', involucradoBorrar : '', asignarRebocarPermiso : '', asociarDesasociarUsuario : '', 
 				obtenerTodosCasos : '', obtenerCasosPorUsuario : '', obtenerUsuariosPorCaso : ''};
@@ -50,6 +51,9 @@ app.controller("loginController", ['$scope', '$location', '$http', '$rootScope',
 				        break;
 				    case "CON":
 				        $rootScope.vistasPermitidas.configuracion = true;
+				        break;
+				    case "OM":
+				        $rootScope.vistasPermitidas.movimiento = true;
 				        break;
 				    case "AU":
 				        $rootScope.accionesPermitidas.usuarioAgregar = true;

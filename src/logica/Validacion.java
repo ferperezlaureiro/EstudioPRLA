@@ -89,7 +89,7 @@ public class Validacion {
 	public static boolean validarIUE(String IUE) {
 		if (IUE == null || IUE == "")
 			return true;
-		String regex = "(([0-9]{1})+(-([0-9]{4}))+(/([1-9]{1}[0-9]{3})))";
+		String regex = "(([0-9]{1})+(-([0-9]{5}))+(/([1-9]{1}[0-9]{3})))";
 		Pattern patron = Pattern.compile(regex);
 		Matcher emparejador = patron.matcher(IUE);
 		return emparejador.matches();
@@ -130,7 +130,7 @@ public class Validacion {
 	public static boolean validarTipoUsuario (String tipo) {
 		if (tipo == null || tipo == "")
 			return false;
-		if (tipo.equals("profecional") || tipo.equals("funcionario") || tipo.equals("cliente"))
+		if (tipo.equals("profesional") || tipo.equals("funcionario") || tipo.equals("cliente"))
 			return true;
 		return false;
 	}

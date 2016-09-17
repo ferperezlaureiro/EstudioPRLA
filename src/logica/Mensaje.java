@@ -17,16 +17,18 @@ public class Mensaje implements Serializable{
 	private String fecha;
 	private String hora;
 	private String contenido;
+	private boolean infoMensaje;
 	
 	protected Mensaje() {}
 	
-	public Mensaje(long idCaso, long idUsuario, String fecha, String hora, String contenido) {
+	public Mensaje(long idCaso, long idUsuario, String fecha, String hora, String contenido, boolean infoMesaje) {
 		super();
 		this.idCaso = idCaso;
 		this.idUsuario = idUsuario;
 		this.fecha = fecha;
 		this.hora = hora;
 		this.contenido = contenido;
+		this.infoMensaje = infoMesaje;
 	}
 	
 
@@ -76,12 +78,21 @@ public class Mensaje implements Serializable{
 		this.hora = hora;
 	}
 
-	@Basic
+	@Column(columnDefinition="TEXT")
 	public String getContenido() {
 		return contenido;
 	}
 	@XmlElement
 	public void setContenido(String contenido) {
 		this.contenido = contenido;
+	}
+
+	@Basic
+	public boolean getInfoMensaje() {
+		return infoMensaje;
+	}
+	@XmlElement
+	public void setInfoMensaje(boolean infoMensaje) {
+		this.infoMensaje = infoMensaje;
 	}
 }

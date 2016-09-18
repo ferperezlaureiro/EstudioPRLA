@@ -378,7 +378,7 @@ public class TestCaso {
 			
 			assertEquals("Raul Perez", i.getNombre());
 			assertEquals("uruguayo", i.getNacionalidad());
-			assertEquals("Chapicuy 5063", i.getDireccion());
+			assertEquals("Chapicuy 5063", i.getDomicilio());
 			assertEquals("hijo", i.getClase());
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -19,6 +19,15 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 		$scope.cargarUsuariosDisponiblesPorIUE();
 	});
 
+	$scope.open1 = function() {
+		$scope.fechaNacimientoPopUp.opened = true;
+	};
+
+	$scope.dateOptions = {
+		formatYear: 'yy',
+		startingDay: 1
+	};
+
 	$scope.volver = function(){
 		$location.url("/caso");
 		$rootScope.casoADetallar = "";
@@ -114,14 +123,27 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 		$scope.botonAgregarInvolucrado = true;
 		$scope.botonModificarInvolucrado = false;
 		$scope.involucradoFormShow = true;
+		$scope.fechaNacimientoPopUp = {opened : false};
+		$scope.dtFechaDeNacimiento = new Date();
 	}
 	
 	$scope.agregarInvolucrado = function(){
+		var fecha = "";
+		var day = parseInt($scope.dtFechaDeNacimiento.getDate());
+		if(day<10)
+			fecha += "0" + day;
+		else
+			fecha += day;
+		var month = parseInt($scope.dtFechaDeNacimiento.getMonth())+1;
+		if (month<10)
+			fecha += "/0" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
+		else
+			fecha += "/" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
 		$http({
 			method: 'POST',
 			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/agregarInvolucrado?usrKey=' + $rootScope.token 
 																					+ '&iUE=' + $rootScope.casoADetallar 
-																					+ '&fechaDeNacimiento=' + $scope.fechaDeNacimiento 
+																					+ '&fechaDeNacimiento=' + fecha 
 																					+ '&nombre=' + $scope.nombre 
 																					+ '&cedula=' + $scope.cedula
 																					+ '&nacionalidad=' + $scope.nacionalidad
@@ -149,6 +171,11 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 				$scope.nacionalidad = $rootScope.todosInvolucrados[i].nacionalidad;
 				$scope.domicilio = $rootScope.todosInvolucrados[i].domicilio;
 				$scope.clase = $rootScope.todosInvolucrados[i].clase;
+				$scope.dtFechaDeNacimiento = new Date();
+				var fecha = $scope.fechaDeNacimiento.split("/");
+				$scope.dtFechaDeNacimiento.setDate(fecha[0]);
+				$scope.dtFechaDeNacimiento.setMonth(fecha[1]-1);
+				$scope.dtFechaDeNacimiento.setFullYear(fecha[2]);
 			}
 		}
 		$scope.botonAgregarInvolucrado = false;
@@ -157,12 +184,23 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 	}
 	
 	$scope.modificarInvolucrado = function(){
+		var fecha = "";
+		var day = parseInt($scope.dtFechaDeNacimiento.getDate());
+		if(day<10)
+			fecha += "0" + day;
+		else
+			fecha += day;
+		var month = parseInt($scope.dtFechaDeNacimiento.getMonth())+1;
+		if (month<10)
+			fecha += "/0" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
+		else
+			fecha += "/" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
 		$http({
 			method: 'PUT',
 			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/modificarInvolucrado?usrKey=' + $rootScope.token 
 																						+ '&iUE=' +  $rootScope.casoADetallar 
 																						+ '&cedulaUsada=' + $scope.cedulaUsada 
-																						+ '&fechaDeNacimiento=' + $scope.fechaDeNacimiento 
+																						+ '&fechaDeNacimiento=' + fecha 
 																						+ '&nombre='+ $scope.nombre 
 																						+ '&cedula='+ $scope.cedula
 																						+ '&nacionalidad=' + $scope.nacionalidad

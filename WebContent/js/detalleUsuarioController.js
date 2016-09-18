@@ -12,13 +12,22 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 			$location.url("/usuario");
 		}
 
-
+		
 		$scope.cargarDatosGenerales();
 		$scope.cargarCasosAsignados();
 		$scope.cargarCasosDisponibles();
 		$scope.cargarPermisos();
 		$scope.cargarPermisosRestantes();
 	});
+
+	$scope.open1 = function() {
+		$scope.fechaNacimientoPopUp.opened = true;
+	};
+
+	$scope.dateOptions = {
+		formatYear: 'yy',
+		startingDay: 1
+	};
 
 	$scope.volver = function(){
 		$location.url("/usuario");
@@ -42,6 +51,11 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 		}).success(function(data, status, headers, config) {
 			if(data != "" && data != "No hay usuarios"){
 				$rootScope.usuarioDetallado = data;
+				$scope.dtFechaDeNacimiento = new Date();
+				var fecha = $rootScope.usuarioDetallado.fechaDeNacimiento.split("/");
+				$scope.dtFechaDeNacimiento.setDate(fecha[0]);
+				$scope.dtFechaDeNacimiento.setMonth(fecha[1]-1);
+				$scope.dtFechaDeNacimiento.setFullYear(fecha[2]);
 			}
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
@@ -118,6 +132,7 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 		$scope.cancelarAsignarCaso();
 		$scope.cancelarAsignarPermiso();
 		$scope.modificandoUsuario = true;
+		$scope.fechaNacimientoPopUp = {opened : false};
 	}
 
 	$scope.cancelarModificarUsuario = function(){
@@ -125,6 +140,17 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 	}
 
 	$scope.modificarUsuario = function(){
+		var fecha = "";
+		var day = parseInt($scope.dtFechaDeNacimiento.getDate());
+		if(day<10)
+			fecha += "0" + day;
+		else
+			fecha += day;
+		var month = parseInt($scope.dtFechaDeNacimiento.getMonth())+1;
+		if (month<10)
+			fecha += "/0" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
+		else
+			fecha += "/" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
 		$http({
 			method: 'PUT',
 			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/modificarUsuario?usrKey=' + $rootScope.token 
@@ -139,7 +165,7 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 																						+ '&domicilio=' + $rootScope.usuarioDetallado.domicilio
 																						+ '&domicilioLaboral=' + $rootScope.usuarioDetallado.domicilioLaboral
 																						+ '&rut=' + $rootScope.usuarioDetallado.rut
-																						+ '&fechaDeNacimiento=' + $rootScope.usuarioDetallado.fechaDeNacimiento
+																						+ '&fechaDeNacimiento=' + fecha
 		}).success(function(data, status, headers, config) {
 			if(data == "completado"){
 				if(($scope.usuarioADetallar != $rootScope.usuarioDetallado.usuario || $rootScope.currentUsr.contrasenia != $rootScope.usuarioDetallado.contrasenia) 

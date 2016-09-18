@@ -14,6 +14,15 @@ app.controller("usuarioController", ['$scope', '$location', '$window', '$rootSco
 		$scope.cargarUsuarios();
 	});
 
+	$scope.open1 = function() {
+		$scope.fechaNacimientoPopUp.opened = true;
+	};
+
+	$scope.dateOptions = {
+		formatYear: 'yy',
+		startingDay: 1
+	};
+
 	$scope.cargarUsuarios = function(){
 		$http({
 			method: 'GET', 
@@ -50,9 +59,22 @@ app.controller("usuarioController", ['$scope', '$location', '$window', '$rootSco
 		$scope.botonAgregarUsuario = true;
 		$scope.botonModificarUsuario = false;
 		$scope.usuarioFormShow = true;
+		$scope.fechaNacimientoPopUp = {opened : false};
+		$scope.dtFechaDeNacimiento = new Date();
 	}
 
 	$scope.agregarUsuario = function(){
+		var fecha = "";
+		var day = parseInt($scope.dtFechaDeNacimiento.getDate());
+		if(day<10)
+			fecha += "0" + day;
+		else
+			fecha += day;
+		var month = parseInt($scope.dtFechaDeNacimiento.getMonth())+1;
+		if (month<10)
+			fecha += "/0" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
+		else
+			fecha += "/" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
 		$http({
 			method: 'POST',
 			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/agregarUsuario?usrKey=' + $rootScope.token 
@@ -66,7 +88,7 @@ app.controller("usuarioController", ['$scope', '$location', '$window', '$rootSco
 																					+ '&domicilio=' + $scope.domicilio
 																					+ '&domicilioLaboral=' + $scope.domicilioLaboral
 																					+ '&rut=' + $scope.rut
-																					+ '&fechaDeNacimiento=' + $scope.fechaDeNacimiento
+																					+ '&fechaDeNacimiento=' + fecha
 		}).success(function(data, status, headers, config) {
 			$scope.cancelarUsuario();
 			$scope.cargarUsuarios();
@@ -97,6 +119,11 @@ app.controller("usuarioController", ['$scope', '$location', '$window', '$rootSco
 					$scope.domicilioLaboral = $rootScope.usuarios[i].domicilioLaboral;
 					$scope.rut = $rootScope.usuarios[i].rut;
 					$scope.fechaDeNacimiento = $rootScope.usuarios[i].fechaDeNacimiento;
+					$scope.dtFechaDeNacimiento = new Date();
+					var fecha = $scope.fechaDeNacimiento.split("/");
+					$scope.dtFechaDeNacimiento.setDate(fecha[0]);
+					$scope.dtFechaDeNacimiento.setMonth(fecha[1]-1);
+					$scope.dtFechaDeNacimiento.setFullYear(fecha[2]);
 				}
 			}
 			$scope.usuarioFormShow = true;
@@ -104,6 +131,17 @@ app.controller("usuarioController", ['$scope', '$location', '$window', '$rootSco
 	}
 
 	$scope.modificarUsuario = function(){
+		var fecha = "";
+		var day = parseInt($scope.dtFechaDeNacimiento.getDate());
+		if(day<10)
+			fecha += "0" + day;
+		else
+			fecha += day;
+		var month = parseInt($scope.dtFechaDeNacimiento.getMonth())+1;
+		if (month<10)
+			fecha += "/0" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
+		else
+			fecha += "/" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
 		$http({
 			method: 'PUT',
 			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/modificarUsuario?usrKey=' + $rootScope.token 
@@ -118,7 +156,7 @@ app.controller("usuarioController", ['$scope', '$location', '$window', '$rootSco
 																					+ '&domicilio=' + $scope.domicilio
 																					+ '&domicilioLaboral=' + $scope.domicilioLaboral
 																					+ '&rut=' + $scope.rut
-																					+ '&fechaDeNacimiento=' + $scope.fechaDeNacimiento
+																					+ '&fechaDeNacimiento=' + fecha
 		}).success(function(data, status, headers, config) {
 			if(data == "completado"){
 				if(($scope.usuarioUsado != $scope.usuario || $scope.contraseniaUsada != $scope.contrasenia) 

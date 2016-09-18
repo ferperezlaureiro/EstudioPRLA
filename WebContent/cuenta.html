@@ -26,53 +26,60 @@
 			<ul class="list-group">
 				<li class="list-group-item">
 					<span>Usuario: </span>
-					<span ng-hide="modificandoCaso">{{miCuenta.usuario}}</span>
+					<span ng-hide="modificandoUsuario">{{miCuenta.usuario}}</span>
 					<input type="text" class="form-control" id="usuario" placeholder="Ingresar Usuario" ng-model="miCuenta.usuario" ng-hide="!modificandoUsuario">
 				</li>
 				<li class="list-group-item">
 					<span>Nombre: </span>
-					<span ng-hide="modificandoCaso">{{miCuenta.nombre}}</span>
+					<span ng-hide="modificandoUsuario">{{miCuenta.nombre}}</span>
 					<input type="text" class="form-control" id="nombre" placeholder="Ingresar Nombre" ng-model="miCuenta.nombre" ng-hide="!modificandoUsuario">
 				</li>
 				<li class="list-group-item">
 					<span>Cedula: </span>
-					<span ng-hide="modificandoCaso">{{miCuenta.cedula}}</span>
+					<span ng-hide="modificandoUsuario">{{miCuenta.cedula}}</span>
 					<input type="text" class="form-control" id="cedula" placeholder="Ingresar Cedula" ng-model="miCuenta.cedula" ng-hide="!modificandoUsuario">
 				</li>
 				<li class="list-group-item">
 					<span>Email: </span>
-					<span ng-hide="modificandoCaso">{{miCuenta.email}}</span>
+					<span ng-hide="modificandoUsuario">{{miCuenta.email}}</span>
 					<input type="text" class="form-control" id="email" placeholder="Ingresar Email" ng-model="miCuenta.email" ng-hide="!modificandoUsuario">
 				</li>
 				<li class="list-group-item">
 					<span>Tel: </span>
-					<span ng-hide="modificandoCaso">{{miCuenta.tel}}</span>
+					<span ng-hide="modificandoUsuario">{{miCuenta.tel}}</span>
 					<input type="text" class="form-control" id="tel" placeholder="Ingresar Tel" ng-model="miCuenta.tel" ng-hide="!modificandoUsuario">
 				</li>
 				<li class="list-group-item">
 					<span>Cel: </span>
-					<span ng-hide="modificandoCaso">{{miCuenta.cel}}</span>
+					<span ng-hide="modificandoUsuario">{{miCuenta.cel}}</span>
 					<input type="text" class="form-control" id="cel" placeholder="Ingresar Cel" ng-model="miCuenta.cel" ng-hide="!modificandoUsuario">
 				</li>
 				<li class="list-group-item">
 					<span>Domicilio: </span>
-					<span ng-hide="modificandoCaso">{{miCuenta.domicilio}}</span>
+					<span ng-hide="modificandoUsuario">{{miCuenta.domicilio}}</span>
 					<input type="text" class="form-control" id="domicilio" placeholder="Ingresar Domicilio" ng-model="miCuenta.domicilio" ng-hide="!modificandoUsuario">
 				</li>
 				<li class="list-group-item">
 					<span>Domicilio Laboral: </span>
-					<span ng-hide="modificandoCaso">{{miCuenta.domicilioLaboral}}</span>
+					<span ng-hide="modificandoUsuario">{{miCuenta.domicilioLaboral}}</span>
 					<input type="text" class="form-control" id="domicilioLaboral" placeholder="Ingresar Domicilio Laboral" ng-model="miCuenta.domicilioLaboral" ng-hide="!modificandoUsuario">
 				</li>
 				<li class="list-group-item">
 					<span>Rut: </span>
-					<span ng-hide="modificandoCaso">{{miCuenta.rut}}</span>
+					<span ng-hide="modificandoUsuario">{{miCuenta.rut}}</span>
 					<input type="text" class="form-control" id="rut" placeholder="Ingresar Rut" ng-model="miCuenta.rut" ng-hide="!modificandoUsuario">
 				</li>
 				<li class="list-group-item">
 					<span>Fecha de Nacimiento: </span>
-					<span ng-hide="modificandoCaso">{{miCuenta.fechaDeNacimiento}}</span>
-					<input type="text" class="form-control" id="fechaDeNacimiento" placeholder="Ingresar Fecha de Nacimiento" ng-model="miCuenta.fechaDeNacimiento" ng-hide="!modificandoUsuario">
+					<span ng-hide="modificandoUsuario">{{miCuenta.fechaDeNacimiento}}</span>
+					<div ng-hide="!modificandoUsuario">
+						<p class="input-group">
+							<input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="dtFechaDeNacimiento" is-open="fechaNacimientoPopUp.opened" datepicker-options="dateOptions" close-text="Close"/>
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+							</span>
+						</p>
+					</div>
 				</li>
 			</ul>
 			<button class="btn btn-default navbar-btn" type="button" ng-click="modificarUsuario()" ng-hide="!modificandoUsuario">Aplicar Modificacion</button>

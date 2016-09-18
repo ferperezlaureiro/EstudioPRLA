@@ -9,16 +9,73 @@ app.controller("movimientoController", ['$scope', '$location', '$window', '$root
 			$location.url("/caso");
 		}
 
+		$scope.dtFechaDesde = new Date();
+
+		$scope.dtFechaHasta = new Date();
+
+		$scope.fechaDesdePopUp = {opened : false};
+		$scope.fechaHastaPopUp = {opened : false};
 		$rootScope.movimientos = '';
 		$scope.cargarMisCasosSuscritos();
 	});
 
-	$scope.cargarMovimientos = function(fechaInicio, fechaFin){
+	$scope.open1 = function() {
+		$scope.fechaDesdePopUp.opened = true;
+		$scope.fechaHastaPopUp.opened = false;
+	};
+
+	$scope.open2 = function() {
+		$scope.fechaDesdePopUp.opened = false;
+		$scope.fechaHastaPopUp.opened = true;
+	};
+
+	$scope.dateOptionsHasta = {
+		formatYear: 'yy',
+		startingDay: 1,
+	};
+
+	$scope.dateOptionsDesde = {
+		formatYear: 'yy',
+		startingDay: 1,
+	};
+
+
+	$scope.cargarMovimientos = function(){
+		var fechaDesde = "";
+		var dayDesde = parseInt($scope.dtFechaDesde.getDate());
+		if(dayDesde<10)
+			fechaDesde += "0" + dayDesde;
+		else
+			fechaDesde += dayDesde;
+		var monthDesde = parseInt($scope.dtFechaDesde.getMonth())+1;
+		if (monthDesde<10)
+			fechaDesde += "/0" + monthDesde + "/" + $scope.dtFechaDesde.getFullYear();
+		else
+			fechaDesde += "/" + monthDesde + "/" + $scope.dtFechaDesde.getFullYear();
+
+
+		var fechaHasta = "";
+		var dayHasta = parseInt($scope.dtFechaHasta.getDate());
+		if(dayHasta<10)
+			fechaHasta += "0" + dayHasta;
+		else
+			fechaHasta += dayHasta;
+		var monthHasta = parseInt($scope.dtFechaHasta.getMonth())+1;
+		if (monthHasta<10)
+			fechaHasta += "/0" + monthHasta + "/" + $scope.dtFechaHasta.getFullYear();
+		else
+			fechaHasta += "/" + monthHasta + "/" + $scope.dtFechaHasta.getFullYear();
+
+
+		for(var z in $rootScope.misCasosSuscriptos){
+			$rootScope.misCasosSuscriptos[z].movimientos = [];
+		}
+
 		$http({
 			method: 'GET', 
 			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/obtenerMovimientos?usrKey=' + $rootScope.token
-																					+ '&fechaInicio=' + fechaInicio
-																					+ '&fechaFin=' + fechaFin
+																					+ '&fechaInicio=' + fechaDesde
+																					+ '&fechaFin=' + fechaHasta
 		}).success(function(data, status, headers, config) {
 			if(data != "" && data != []){
 				for(var i in data){

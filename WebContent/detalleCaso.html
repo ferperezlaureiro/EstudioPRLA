@@ -114,7 +114,7 @@
 							<td>{{involucrado.nombre}}</td> 
 							<td>{{involucrado.cedula}}</td> 
 							<td>{{involucrado.nacionalidad}}</td> 
-							<td>{{involucrado.direccion}}</td> 
+							<td>{{involucrado.domicilio}}</td> 
 							<td>{{involucrado.clase}}</td> 
 							<td ng-hide="accionesPermitidas.involucradoBorrar == ''"">
 								<button class="btn glyphicon glyphicon-trash" type="button" ng-click="eliminarInvolucrado(involucrado.cedula)"></button>
@@ -154,7 +154,12 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="fechaDeNacimiento">Fecha de nacimiento:</label>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" id="fechaDeNacimiento" placeholder="Ingresar fecha De nacimiento" ng-model="fechaDeNacimiento">
+					<p class="input-group">
+						<input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="dtFechaDeNacimiento" is-open="fechaNacimientoPopUp.opened" datepicker-options="dateOptions" close-text="Close"/>
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+						</span>
+					</p>
 				</div>
 			</div>
 			<div class="form-group">

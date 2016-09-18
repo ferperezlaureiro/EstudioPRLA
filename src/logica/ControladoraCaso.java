@@ -689,7 +689,7 @@ public class ControladoraCaso {
 		
         Involucrado i = (Involucrado)query.list().get(0);
 		
-        if (cedulaUsada != cedula) {
+        if (!cedulaUsada.equals(cedula)) {
     		query = s.createQuery("from Involucrado where idCaso = :idCaso and cedula = :ciInvolucrado");
             query.setParameter("idCaso", c.getId());
             query.setParameter("ciInvolucrado", cedula);
@@ -704,7 +704,7 @@ public class ControladoraCaso {
 		i.setNombre(nombre);
 		i.setCedula(cedula);
 		i.setNacionalidad(nacionalidad);
-		i.setDireccion(domicilio);
+		i.setDomicilio(domicilio);
 		i.setClase(clase);
 		
 

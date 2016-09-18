@@ -8,6 +8,15 @@ app.controller("cuentaController", ['$scope', '$location', '$window', '$rootScop
 		$scope.cargarDatosGenerales();
 	});
 
+	$scope.open1 = function() {
+		$scope.fechaNacimientoPopUp.opened = true;
+	};
+
+	$scope.dateOptions = {
+		formatYear: 'yy',
+		startingDay: 1
+	};
+
 	$scope.cargarDatosGenerales = function(){
 		$http({
 			method: 'GET', 
@@ -17,6 +26,11 @@ app.controller("cuentaController", ['$scope', '$location', '$window', '$rootScop
 			if(data != "" && data != "No hay usuarios"){
 				$scope.usuarioActual = data.usuario;
 				$rootScope.miCuenta = data;
+				$scope.dtFechaDeNacimiento = new Date();
+				var fecha = $rootScope.miCuenta.fechaDeNacimiento.split("/");
+				$scope.dtFechaDeNacimiento.setDate(fecha[0]);
+				$scope.dtFechaDeNacimiento.setMonth(fecha[1]-1);
+				$scope.dtFechaDeNacimiento.setFullYear(fecha[2]);
 			}
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
@@ -26,6 +40,7 @@ app.controller("cuentaController", ['$scope', '$location', '$window', '$rootScop
 	$scope.cambiarAModificar = function(){
 		$scope.cancelarCambiarContrasenia();
 		$scope.modificandoUsuario = true;
+		$scope.fechaNacimientoPopUp = {opened : false};
 	}
 
 	$scope.mostrarCambiarContrasenia = function(){
@@ -34,6 +49,17 @@ app.controller("cuentaController", ['$scope', '$location', '$window', '$rootScop
 	}
 
 	$scope.modificarUsuario = function(){
+		var fecha = "";
+		var day = parseInt($scope.dtFechaDeNacimiento.getDate());
+		if(day<10)
+			fecha += "0" + day;
+		else
+			fecha += day;
+		var month = parseInt($scope.dtFechaDeNacimiento.getMonth())+1;
+		if (month<10)
+			fecha += "/0" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
+		else
+			fecha += "/" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
 		$http({
 			method: 'PUT',
 			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/modificarMiCuenta?usrKey=' + $rootScope.token 
@@ -47,7 +73,7 @@ app.controller("cuentaController", ['$scope', '$location', '$window', '$rootScop
 																						+ '&domicilio=' + $rootScope.miCuenta.domicilio
 																						+ '&domicilioLaboral=' + $rootScope.miCuenta.domicilioLaboral
 																						+ '&rut=' + $rootScope.miCuenta.rut
-																						+ '&fechaDeNacimiento=' + $rootScope.miCuenta.fechaDeNacimiento
+																						+ '&fechaDeNacimiento=' + fecha
 		}).success(function(data, status, headers, config) {
 			if(data == "completado"){
 				if($rootScope.miCuenta.usuario != $scope.usuarioActual){

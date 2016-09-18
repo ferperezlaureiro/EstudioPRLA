@@ -16,12 +16,12 @@ public class Involucrado implements Serializable{
 	private String nombre;
 	private String cedula;
 	private String nacionalidad;
-	private String direccion;
+	private String domicilio;
 	private String clase;
 	
 	protected Involucrado() {}
 
-	public Involucrado(long idCaso, String fechaDeNacimiento, String nombre, String cedula, String nacionalidad, String direccion,
+	public Involucrado(long idCaso, String fechaDeNacimiento, String nombre, String cedula, String nacionalidad, String domicilio,
 			String clase) {
 		super();
 		this.idCaso = idCaso;
@@ -29,7 +29,7 @@ public class Involucrado implements Serializable{
 		this.nombre = nombre;
 		this.cedula = cedula;
 		this.nacionalidad = nacionalidad;
-		this.direccion = direccion;
+		this.domicilio = domicilio;
 		this.clase = clase;
 	}
 	
@@ -90,12 +90,12 @@ public class Involucrado implements Serializable{
 	}
 	
 	@Basic
-	public String getDireccion() {
-		return direccion;
+	public String getDomicilio() {
+		return domicilio;
 	}
 	@XmlElement
-	public void setDireccion(String direccion) {
-		this.direccion = direccion;
+	public void setDomicilio(String domicilio) {
+		this.domicilio = domicilio;
 	}
 	
 	@Basic

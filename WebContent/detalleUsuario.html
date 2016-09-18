@@ -95,7 +95,14 @@
 				<li class="list-group-item">
 					<span>Fecha de Nacimiento: </span>
 					<span ng-hide="modificandoCaso">{{usuarioDetallado.fechaDeNacimiento}}</span>
-					<input type="text" class="form-control" id="fechaDeNacimiento" placeholder="Ingresar Fecha de Nacimiento" ng-model="usuarioDetallado.fechaDeNacimiento" ng-hide="!modificandoUsuario">
+					<div ng-hide="!modificandoUsuario">
+						<p class="input-group">
+							<input type="text" class="form-control" uib-datepicker-popup="dd/MM/yyyy" ng-model="dtFechaDeNacimiento" is-open="fechaNacimientoPopUp.opened" datepicker-options="dateOptions" close-text="Close"/>
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+							</span>
+						</p>
+					</div>
 				</li>
 			</ul>
 			<button class="btn btn-default navbar-btn" type="button" ng-click="modificarUsuario()" ng-hide="!modificandoUsuario">Aplicar Modificacion</button>

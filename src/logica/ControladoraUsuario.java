@@ -289,7 +289,7 @@ public class ControladoraUsuario {
 			
 			String usr = validateUsrSession(usuarioActual);
 			
-			if(usuarioUsado != usr){
+			if(!usuarioUsado.equals(usr)){
 				u.setContrasenia(contrasenia);
 			}
 			u.setNombre(nombre);

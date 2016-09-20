@@ -6,7 +6,6 @@ public class Fachada {
 	private static Fachada instancia;
 	
 	private Fachada(){
-		new Configuracion();
 	}
 	
 	

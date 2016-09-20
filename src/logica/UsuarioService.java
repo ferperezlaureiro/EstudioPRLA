@@ -14,9 +14,6 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/UsuarioService")
 public class UsuarioService {
-	
-	Fachada fachada = Fachada.getInstancia();
-		
 	@GET
     @Path("/login")
 	@Produces(MediaType.TEXT_HTML)

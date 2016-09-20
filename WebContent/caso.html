@@ -178,6 +178,19 @@
 					<input type="checkbox" class="checkbox" id="suscrito" placeholder="Ingresar suscrito" ng-model="suscrito">
 				</div>
 			</div>
+
+
+			<div class="alert alert-danger" role="alert" ng-show="errores.iueVacia || errores.turnoVacio || errores.caratuladoVacio|| errores.iueFormato || errores.turnoFormato || errores.iueDuplicado">
+				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+				<span>Corregir errores:</span>
+				<span ng-show="errores.iueVacia"></br>- Campo IUE vacio</span>
+				<span ng-show="errores.iueFormato"></br>- Error en formato de IUE (ej: 2-1542/2015)</span>
+				<span ng-show="errores.turnoVacio"></br>- Campo Turno vacio</span>
+				<span ng-show="errores.turnoFormato"></br>- El turno debe tener dos digitos numericos que van del 1 al 29</span>
+				<span ng-show="errores.caratuladoVacio"></br>- Campo Caratulado vacio</span>
+				<span ng-show="errores.iueDuplicado"></br>- Ya hay un caso registrado con el mismo IUE</span>
+			</div>
+
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
 					<button type="button" class="btn btn-default" ng-click="agregarCaso()" ng-show="botonAgregarCaso">Agregar</button>

@@ -634,7 +634,7 @@ public class ControladoraCaso {
 				if (casoUpdate == null) {
 					c.setIUE(iUE);
 				} else {
-					throw new Exception("Duplicado");
+					throw new Exception("duplicado");
 				}
 			}
 			
@@ -695,7 +695,7 @@ public class ControladoraCaso {
             query.setParameter("ciInvolucrado", cedula);
     		
     		if(!query.list().isEmpty())
-    			throw new Exception("Duplicado");
+    			throw new Exception("duplicado");
     		
     		i.setCedula(cedula);
         }	

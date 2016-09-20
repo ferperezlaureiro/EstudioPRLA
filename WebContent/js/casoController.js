@@ -15,7 +15,43 @@ app.controller("casoController", ['$scope', '$location', '$window', '$rootScope'
 		$rootScope.casoADetallar = "";
 		$rootScope.misCasos = "";
 		$scope.cargarMisCasos();
+
+		$scope.limpiarErrores();
 	});
+
+	$scope.limpiarErrores = function(){
+		$scope.errores = {iueVacia:false, turnoVacio:false, caratuladoVacio:false, iueFormato:false, turnoFormato:false, iueDuplicado:false};
+	}
+
+	$scope.validarCampos = function(){
+		if($scope.iue == undefined || $scope.iue == ""){
+			$scope.errores.iueVacia = true;
+		} else{
+			var regex = new RegExp("(([0-9]{1,3})+(-([0-9]{2,6}))+(/([1-9]{1}[0-9]{3})))");
+			if(!regex.test($scope.iue)){
+				$scope.errores.iueFormato = true;
+			}
+		}
+		if($scope.turno == undefined || $scope.turno == ""){
+			$scope.errores.turnoVacio = true;	
+		} else {
+			if(isNaN($scope.turno)){
+				$scope.errores.turnoFormato = true;
+			} else{
+				if(parseInt($scope.turno)<0 || parseInt($scope.turno)>29){
+					$scope.errores.turnoFormato = true;
+				}
+			}
+		}
+		if($scope.caratulado == undefined || $scope.caratulado == ""){
+			$scope.errores.caratuladoVacio = true;	
+		}
+	}
+
+	$scope.hayErores = function(){
+		return ($scope.errores.iueVacia || $scope.errores.turnoVacio || $scope.errores.caratuladoVacio || $scope.errores.iueFormato || 
+				$scope.errores.turnoFormato || $scope.errores.iueDuplicado);
+	}
 
 	$scope.cargarTodosLosCasos = function(){
 		$http({
@@ -72,24 +108,34 @@ app.controller("casoController", ['$scope', '$location', '$window', '$rootScope'
 	}
 
 	$scope.agregarCaso = function(){
-		$http({
-			method: 'POST',
-			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/agregarCaso?usrKey=' + $rootScope.token 
-																				+ '&iUE=' + $scope.iue 
-																				+ '&juzgado=' + $scope.juzgado.juzgado 
-																				+ '&turno=' + $scope.turno 
-																				+ '&caratulado=' + $scope.caratulado
-																				+ '&suscrito=' + $scope.suscrito
-		}).success(function(data, status, headers, config) {
-			$scope.cancelarCaso();
-			if ($rootScope.accionesPermitidas.obtenerTodosCasos == true) {
-				$scope.cargarTodosLosCasos();
-			}
+		$scope.limpiarErrores();
+		$scope.validarCampos();
+		if(!$scope.hayErores()){
+			$http({
+				method: 'POST',
+				url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/agregarCaso?usrKey=' + $rootScope.token 
+																					+ '&iUE=' + $scope.iue 
+																					+ '&juzgado=' + $scope.juzgado.juzgado 
+																					+ '&turno=' + $scope.turno 
+																					+ '&caratulado=' + $scope.caratulado
+																					+ '&suscrito=' + $scope.suscrito
+			}).success(function(data, status, headers, config) {
+				if(data != "duplicado"){
+					$scope.cancelarCaso();
 
-			$scope.cargarMisCasos();
-		}).error(function(data, status, headers, config) {
-			alert("Ha fallado la petición. Estado HTTP:"+status);
-		});
+					if ($rootScope.accionesPermitidas.obtenerTodosCasos == true) {
+						$scope.cargarTodosLosCasos();
+					}
+				} else {
+					if(data == "duplicado"){
+						$scope.errores.iueDuplicado = true;
+					}
+				}
+				$scope.cargarMisCasos();
+			}).error(function(data, status, headers, config) {
+				alert("Ha fallado la petición. Estado HTTP:"+status);
+			});
+		}
 	}
 
 	$scope.mostrarModificarCaso = function(casos, iue){
@@ -115,28 +161,39 @@ app.controller("casoController", ['$scope', '$location', '$window', '$rootScope'
 	}
 
 	$scope.modificarCaso = function(){
-		$http({
-			method: 'PUT',
-			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/modificarCaso?usrKey=' + $rootScope.token 
-																				+ '&iUEUsado='  + $scope.iueUsado 
-																				+ '&iUE=' +  $scope.iue 
-																				+ '&juzgado=' + $scope.juzgado.juzgado 
-																				+ '&turno=' + $scope.turno 
-																				+ '&caratulado='+ $scope.caratulado
-																				+ '&suscrito=' + $scope.suscrito
-		}).success(function(data, status, headers, config) {
-			$scope.cancelarCaso();
-			if ($rootScope.accionesPermitidas.obtenerTodosCasos == true) {
-				$scope.cargarTodosLosCasos();
-			}
+		$scope.limpiarErrores();
+		$scope.validarCampos();
+		if(!$scope.hayErores()){
+			$http({
+				method: 'PUT',
+				url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/modificarCaso?usrKey=' + $rootScope.token 
+																					+ '&iUEUsado='  + $scope.iueUsado 
+																					+ '&iUE=' +  $scope.iue 
+																					+ '&juzgado=' + $scope.juzgado.juzgado 
+																					+ '&turno=' + $scope.turno 
+																					+ '&caratulado='+ $scope.caratulado
+																					+ '&suscrito=' + $scope.suscrito
+			}).success(function(data, status, headers, config) {
+				if(data != "duplicado"){
+					$scope.cancelarCaso();
 
-			$scope.cargarMisCasos();
-		}).error(function(data, status, headers, config) {
-			alert("Ha fallado la petición. Estado HTTP:"+status);
-		});
+					if ($rootScope.accionesPermitidas.obtenerTodosCasos == true) {
+						$scope.cargarTodosLosCasos();
+					}
+				} else {
+					if(data == "duplicado"){
+						$scope.errores.iueDuplicado = true;
+					}
+				}
+				$scope.cargarMisCasos();
+			}).error(function(data, status, headers, config) {
+				alert("Ha fallado la petición. Estado HTTP:"+status);
+			});
+		}
 	}
 
 	$scope.cancelarCaso = function(){
+		$scope.limpiarErrores();
 		$scope.casoFormShow = false;
 		$scope.botonAgregarCaso = false;
 		$scope.botonModificarCaso = false;

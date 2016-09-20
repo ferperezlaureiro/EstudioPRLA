@@ -17,7 +17,111 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 		$scope.cargarTodosLosInvolucrados();
 		$scope.cargarUsuariosPorIUE();
 		$scope.cargarUsuariosDisponiblesPorIUE();
+
+		$scope.limpiarErroresCaso();
+		$scope.limpiarErroresInvolucrado();
 	});
+
+	$scope.limpiarErroresCaso = function(){
+		$scope.errores = {iueVacia:false, turnoVacio:false, caratuladoVacio:false, iueFormato:false, turnoFormato:false, iueDuplicado:false};
+	}
+
+	$scope.validarCamposCaso = function(){
+		if($rootScope.casoDetallado.iUE == undefined || $rootScope.casoDetallado.iUE == ""){
+			$scope.errores.iueVacia = true;
+		} else{
+			var regex = new RegExp("(([0-9]{1,3})+(-([0-9]{2,6}))+(/([1-9]{1}[0-9]{3})))");
+			if(!regex.test($rootScope.casoDetallado.iUE)){
+				$scope.errores.iueFormato = true;
+			}
+		}
+		if($rootScope.casoDetallado.turno == undefined || $rootScope.casoDetallado.turno == ""){
+			$scope.errores.turnoVacio = true;	
+		} else {
+			if(isNaN($rootScope.casoDetallado.turno)){
+				$scope.errores.turnoFormato = true;
+			} else{
+				if(parseInt($rootScope.casoDetallado.turno)<0 || parseInt($rootScope.casoDetallado.turno)>29){
+					$scope.errores.turnoFormato = true;
+				}
+			}
+		}
+		if($rootScope.casoDetallado.caratulado == undefined || $rootScope.casoDetallado.caratulado == ""){
+			$scope.errores.caratuladoVacio = true;	
+		}
+	}
+
+	$scope.hayEroresCaso = function(){
+		return ($scope.errores.iueVacia || $scope.errores.turnoVacio || $scope.errores.caratuladoVacio || $scope.errores.iueFormato || 
+				$scope.errores.turnoFormato || $scope.errores.iueDuplicado);
+	}
+
+	$scope.limpiarErroresInvolucrado = function(){
+		$scope.erroresInvolucrado = {fechaVacia:false, fechaFormato:false, nombreVacio:false, nombreFormato: false, cedulaVacia:false,  cedulaFormato:false, 
+			cedulaDuplicada:false, nacionalidadFormato:false, domicilioFormato:false, claseVacia:false, claseFormato:false}
+	}
+
+	$scope.validarCamposInvolucrado = function(){
+		if($scope.dtFechaDeNacimiento == undefined || $scope.dtFechaDeNacimiento == ""){
+			$scope.erroresInvolucrado.fechaVacia = true;
+		} else {
+			if ( Object.prototype.toString.call($scope.dtFechaDeNacimiento) === "[object Date]" ) {
+				if ( isNaN( $scope.dtFechaDeNacimiento.getTime() ) ) {
+					$scope.erroresInvolucrado.fechaFormato = true;
+				}
+			}
+			else {
+				$scope.erroresInvolucrado.fechaFormato = true;
+			}
+		}
+		if($scope.nombre == undefined || $scope.nombre == ""){
+			$scope.erroresInvolucrado.nombreVacio = true;
+		} else {
+			var regexNombre = new RegExp("^[A-Za-z]+(?:([ ])+[A-Za-z]+){1,3}$");
+			if(!regexNombre.test($scope.nombre)){
+				$scope.erroresInvolucrado.nombreFormato = true;
+			}
+		}
+		if($scope.cedula == undefined || $scope.cedula == ""){
+			$scope.erroresInvolucrado.cedulaVacia = true;
+		} else {
+			var regexCedula = new RegExp("([0-9]{8})");
+			if(!regexCedula.test($scope.cedula)){
+				$scope.erroresInvolucrado.cedulaFormato = true;
+			}
+		}
+		if($scope.nacionalidad == undefined || $scope.nacionalidad == ""){
+			
+		} else {
+			var regexNacionalidad = new RegExp("^[A-Za-z]+(?:([ ])+[A-Za-z]+){0,1}$");
+			if(!regexNacionalidad.test($scope.nacionalidad)){
+				$scope.erroresInvolucrado.nacionalidadFormato = true;
+			}
+		}
+		if($scope.domicilio == undefined || $scope.domicilio == ""){
+			
+		} else {
+			var regexDomicilio = new RegExp("^[A-Za-z]+(?:([ ])+[A-Za-z]+){0,3}(([ ])([0-9]{3,4}))$");
+			if(!regexDomicilio.test($scope.domicilio)){
+				$scope.erroresInvolucrado.domicilioFormato = true;
+			}
+		}
+		if($scope.clase == undefined || $scope.clase == ""){
+			$scope.erroresInvolucrado.claseVacia = true;
+		} else {
+			var regexClase = new RegExp("^[A-Za-z]+(?:([ ])+[A-Za-z]+){0,1}$");
+			if(!regexClase.test($scope.clase)){
+				$scope.erroresInvolucrado.claseFormato = true;
+			}
+		}
+	}
+
+	$scope.hayErroresInvolucrado = function(){
+		return ($scope.erroresInvolucrado.fechaVacia || $scope.erroresInvolucrado.fechaFormato || $scope.erroresInvolucrado.nombreVacio || 
+				$scope.erroresInvolucrado.nombreFormato || $scope.erroresInvolucrado.cedulaVacia || $scope.erroresInvolucrado.cedulaFormato || 
+				$scope.erroresInvolucrado.cedulaDuplicada || $scope.erroresInvolucrado.nacionalidadFormato || $scope.erroresInvolucrado.domicilioFormato || 
+				$scope.erroresInvolucrado.claseVacia || $scope.erroresInvolucrado.claseFormato);
+	}
 
 	$scope.open1 = function() {
 		$scope.fechaNacimientoPopUp.opened = true;
@@ -73,6 +177,7 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 	}
 
 	$scope.cambiarAModificar = function(){
+		$scope.limpiarErroresCaso();
 		$scope.cancelarInvolucrado();
 		$scope.cancelarAsginarUsuario();
 		$scope.modificandoCaso = true;
@@ -83,22 +188,30 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 	}
 	
 	$scope.modificarCaso = function(){
-		$http({
-			method: 'PUT',
-			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/modificarCaso?usrKey=' + $rootScope.token 
-																				+ '&iUEUsado='  + $rootScope.casoADetallar 
-																				+ '&iUE=' +  $rootScope.casoDetallado.iUE 
-																				+ '&juzgado=' + $rootScope.casoDetallado.juzgado.juzgado
-																				+ '&turno=' + $rootScope.casoDetallado.turno 
-																				+ '&caratulado=' + $rootScope.casoDetallado.caratulado
-																				+ '&suscrito=' + $rootScope.casoDetallado.suscrito
-		}).success(function(data, status, headers, config) {
-			$rootScope.casoADetallar =  $rootScope.casoDetallado.iUE;
-			$scope.modificandoCaso = false;
-			$scope.cargarDatosGenerales();
-		}).error(function(data, status, headers, config) {
-			alert("Ha fallado la petición. Estado HTTP:"+status);
-		});
+		$scope.limpiarErroresCaso();
+		$scope.validarCamposCaso();
+		if(!$scope.hayEroresCaso()){
+			$http({
+				method: 'PUT',
+				url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/modificarCaso?usrKey=' + $rootScope.token 
+																					+ '&iUEUsado='  + $rootScope.casoADetallar 
+																					+ '&iUE=' +  $rootScope.casoDetallado.iUE 
+																					+ '&juzgado=' + $rootScope.casoDetallado.juzgado.juzgado
+																					+ '&turno=' + $rootScope.casoDetallado.turno 
+																					+ '&caratulado=' + $rootScope.casoDetallado.caratulado
+																					+ '&suscrito=' + $rootScope.casoDetallado.suscrito
+			}).success(function(data, status, headers, config) {
+				if(data == "duplicado"){
+					$scope.errores.iueDuplicado = true;
+				}else {
+					$rootScope.casoADetallar =  $rootScope.casoDetallado.iUE;
+					$scope.modificandoCaso = false;
+					$scope.cargarDatosGenerales();
+				}
+			}).error(function(data, status, headers, config) {
+				alert("Ha fallado la petición. Estado HTTP:"+status);
+			});
+		}
 	}
 
 	$scope.eliminarInvolucrado = function(cedula){
@@ -117,6 +230,7 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 	}
 
 	$scope.mostrarAgregarInvolucrado = function(){
+		$scope.limpiarErroresInvolucrado();
 		$scope.modificandoCaso = false;
 		$scope.cancelarInvolucrado();
 		$scope.cancelarModificarCaso();
@@ -128,37 +242,46 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 	}
 	
 	$scope.agregarInvolucrado = function(){
-		var fecha = "";
-		var day = parseInt($scope.dtFechaDeNacimiento.getDate());
-		if(day<10)
-			fecha += "0" + day;
-		else
-			fecha += day;
-		var month = parseInt($scope.dtFechaDeNacimiento.getMonth())+1;
-		if (month<10)
-			fecha += "/0" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
-		else
-			fecha += "/" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
-		$http({
-			method: 'POST',
-			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/agregarInvolucrado?usrKey=' + $rootScope.token 
-																					+ '&iUE=' + $rootScope.casoADetallar 
-																					+ '&fechaDeNacimiento=' + fecha 
-																					+ '&nombre=' + $scope.nombre 
-																					+ '&cedula=' + $scope.cedula
-																					+ '&nacionalidad=' + $scope.nacionalidad
-																					+ '&domicilio=' + $scope.domicilio
-																					+ '&clase=' + $scope.clase
-		}).success(function(data, status, headers, config) {
-			$scope.cargarTodosLosInvolucrados();
-			$scope.cancelarInvolucrado();
-		}).error(function(data, status, headers, config) {
-			alert("Ha fallado la petición. Estado HTTP:"+status);
-		});
+		$scope.limpiarErroresInvolucrado();
+		$scope.validarCamposInvolucrado();
+		if(!$scope.hayErroresInvolucrado()){
+			var fecha = "";
+			var day = parseInt($scope.dtFechaDeNacimiento.getDate());
+			if(day<10)
+				fecha += "0" + day;
+			else
+				fecha += day;
+			var month = parseInt($scope.dtFechaDeNacimiento.getMonth())+1;
+			if (month<10)
+				fecha += "/0" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
+			else
+				fecha += "/" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
+			$http({
+				method: 'POST',
+				url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/agregarInvolucrado?usrKey=' + $rootScope.token 
+																						+ '&iUE=' + $rootScope.casoADetallar 
+																						+ '&fechaDeNacimiento=' + fecha 
+																						+ '&nombre=' + $scope.nombre 
+																						+ '&cedula=' + $scope.cedula
+																						+ '&nacionalidad=' + $scope.nacionalidad
+																						+ '&domicilio=' + $scope.domicilio
+																						+ '&clase=' + $scope.clase
+			}).success(function(data, status, headers, config) {
+				if(data == "duplicado"){
+					$scope.erroresInvolucrado.cedulaDuplicada = true;
+				} else {
+					$scope.cargarTodosLosInvolucrados();
+					$scope.cancelarInvolucrado();
+				}
+			}).error(function(data, status, headers, config) {
+				alert("Ha fallado la petición. Estado HTTP:"+status);
+			});
+		}
 	}
 
 
 	$scope.mostrarModificarInvolucrado = function(cedula){
+		$scope.limpiarErroresInvolucrado();
 		$scope.modificandoCaso = false;
 		$scope.cancelarInvolucrado();
 		$scope.cancelarModificarCaso();
@@ -184,34 +307,42 @@ app.controller("detalleCasoController", ['$scope', '$location', '$window', '$roo
 	}
 	
 	$scope.modificarInvolucrado = function(){
-		var fecha = "";
-		var day = parseInt($scope.dtFechaDeNacimiento.getDate());
-		if(day<10)
-			fecha += "0" + day;
-		else
-			fecha += day;
-		var month = parseInt($scope.dtFechaDeNacimiento.getMonth())+1;
-		if (month<10)
-			fecha += "/0" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
-		else
-			fecha += "/" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
-		$http({
-			method: 'PUT',
-			url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/modificarInvolucrado?usrKey=' + $rootScope.token 
-																						+ '&iUE=' +  $rootScope.casoADetallar 
-																						+ '&cedulaUsada=' + $scope.cedulaUsada 
-																						+ '&fechaDeNacimiento=' + fecha 
-																						+ '&nombre='+ $scope.nombre 
-																						+ '&cedula='+ $scope.cedula
-																						+ '&nacionalidad=' + $scope.nacionalidad
-																						+ '&domicilio=' + $scope.domicilio
-																						+ '&clase=' + $scope.clase
-		}).success(function(data, status, headers, config) {
-			$scope.cargarTodosLosInvolucrados();
-			$scope.cancelarInvolucrado();
-		}).error(function(data, status, headers, config) {
-			alert("Ha fallado la petición. Estado HTTP:"+status);
-		});
+		$scope.limpiarErroresInvolucrado();
+		$scope.validarCamposInvolucrado();
+		if(!$scope.hayErroresInvolucrado()){
+			var fecha = "";
+			var day = parseInt($scope.dtFechaDeNacimiento.getDate());
+			if(day<10)
+				fecha += "0" + day;
+			else
+				fecha += day;
+			var month = parseInt($scope.dtFechaDeNacimiento.getMonth())+1;
+			if (month<10)
+				fecha += "/0" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
+			else
+				fecha += "/" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
+			$http({
+				method: 'PUT',
+				url: 'http://localhost:8080/EstudioPRLA/rest/CasoService/modificarInvolucrado?usrKey=' + $rootScope.token 
+																							+ '&iUE=' +  $rootScope.casoADetallar 
+																							+ '&cedulaUsada=' + $scope.cedulaUsada 
+																							+ '&fechaDeNacimiento=' + fecha 
+																							+ '&nombre='+ $scope.nombre 
+																							+ '&cedula='+ $scope.cedula
+																							+ '&nacionalidad=' + $scope.nacionalidad
+																							+ '&domicilio=' + $scope.domicilio
+																							+ '&clase=' + $scope.clase
+			}).success(function(data, status, headers, config) {
+				if(data == "duplicado"){
+					$scope.erroresInvolucrado.cedulaDuplicada = true;
+				} else {
+					$scope.cargarTodosLosInvolucrados();
+					$scope.cancelarInvolucrado();
+				}
+			}).error(function(data, status, headers, config) {
+				alert("Ha fallado la petición. Estado HTTP:"+status);
+			});
+		}
 	}
 
 	$scope.cancelarInvolucrado = function(){

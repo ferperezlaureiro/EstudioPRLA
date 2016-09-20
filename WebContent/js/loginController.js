@@ -1,24 +1,61 @@
 app.controller("loginController", ['$scope', '$location', '$http', '$rootScope', function ($scope, $location, $http, $rootScope) {  
 	
+	$scope.$on('$viewContentLoaded', function(){
+		$scope.limpiarErrores();
+	});
+
+	$scope.limpiarErrores = function(){
+		$scope.errores = {contraseniaVacia:false, usuarioVacio:false, usuarioNoExistente:false, contraseniaIncorrecta:false};
+	}
+
+	$scope.validarCampos = function(){
+		if($scope.contrasenia == undefined || $scope.contrasenia == ""){
+			$scope.errores.contraseniaVacia = true;
+		}
+		if($scope.usuario == undefined || $scope.usuario == ""){
+			$scope.errores.usuarioVacio = true;	
+		}
+	}
+
+	$scope.hayErores = function(){
+		return ($scope.errores.contraseniaVacia || $scope.errores.usuarioVacio || $scope.errores.usuarioNoExistente || $scope.errores.contraseniaIncorrecta);
+	}
+
 	$scope.login = function(){
-		if($scope.usuario != "" && $scope.usuario != undefined && $scope.contrasenia != "" && $scope.contrasenia != undefined){
+		$scope.limpiarErrores();
+		$scope.validarCampos();
+		if(!$scope.hayErores()){
 			$http({
-				method: 'GET', 
-				url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/login?usuario=' + $scope.usuario 
-																				+ '&contrasenia=' + $scope.contrasenia
-			}).success(function(data, status, headers, config) {
-				if (data != "usuario" && data != "|contrasenia" && data != "usuario|contrasenia" 
-					&& data != "contrasenia incorrecta" && data != "usuario no encontrado") {
-					$scope.tokenAux = data;
-					$scope.cargarUsuario();
-					$scope.cargarPermisos();
-				} else {
-					//todo error
-				}
-			}).error(function(data, status, headers, config) {
-				alert("Ha fallado la petición. Estado HTTP:"+status);
-			});
-		} 
+					method: 'GET', 
+					url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/login?usuario=' + $scope.usuario 
+																					+ '&contrasenia=' + $scope.contrasenia
+				}).success(function(data, status, headers, config) {
+					if (data != "usuario" && data != "|contrasenia" && data != "usuario|contrasenia" 
+						&& data != "contrasenia incorrecta" && data != "usuario no encontrado") {
+						$scope.tokenAux = data;
+						$scope.cargarUsuario();
+						$scope.cargarPermisos();
+					} else {
+						if(data == "usuario"){
+							$scope.errores.usuarioNoExistente = true;
+						}
+						if(data == "usuario|contrasenia"){
+							$scope.errores.usuarioNoExistente = true;
+						}
+						if(data == "usuario no encontrado"){
+							$scope.errores.usuarioNoExistente = true;
+						}
+						if(data == "|contrasenia"){
+							$scope.errores.contraseniaIncorrecta = true;
+						}
+						if(data == "contrasenia incorrecta"){
+							$scope.errores.contraseniaIncorrecta = true;
+						}
+					}
+				}).error(function(data, status, headers, config) {
+					alert("Ha fallado la petición. Estado HTTP:"+status);
+				});
+		}
 	}
 
 	$scope.cargarUsuario = function(){

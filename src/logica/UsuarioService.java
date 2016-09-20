@@ -195,9 +195,10 @@ public class UsuarioService {
 	@Path("/modificarContrasenia")
 	@Produces(MediaType.TEXT_HTML)
 	public String ModificarContrasenia(@QueryParam("usrKey") String usrKey, 
-									@QueryParam("contrasenia") String contrasenia) {
+										@QueryParam("contraseniaAnterior") String contraseniaAnterior, 
+										@QueryParam("contrasenia") String contrasenia) {
 		try {
-			return ControladoraUsuario.modificarContrasenia(usrKey, contrasenia);
+			return ControladoraUsuario.modificarContrasenia(usrKey, contraseniaAnterior, contrasenia);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return e.getMessage();

@@ -82,6 +82,30 @@
 					</div>
 				</li>
 			</ul>
+
+
+			<div class="alert alert-danger" role="alert" ng-show="modificandoUsuario && (errores.usuarioVacio || errores.usuarioFormato || errores.usuarioDuplicado || errores.contraseniaVacia || errores.contraseniaFormato || errores.nombreVacio || errores.nombreFormato || errores.cedulaVacia || errores.cedulaFormato || errores.emailVacio || errores.emailFormato || errores.telFormato || errores.celVacio || errores.celFormato || errores.domicilioFormato || errores.domicilioLaboralFormato || errores.fechaVacia || errores.fechaFormato || errores.rutFormato)">
+				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+				<span>Corregir errores:</span>
+				<span ng-show="errores.usuarioVacio"></br>- Campo Usuario vacio</span>
+				<span ng-show="errores.usuarioFormato"></br>- Error formato Usuario (ej: Ejemplo - Debe poseer 5 o mas caracteres incluyendo una letra mayuscula y una minuscula)</span>
+				<span ng-show="errores.usuarioDuplicado"></br>- Ya hay un usuario registrado con el mismo Usuario</span>
+				<span ng-show="errores.nombreVacio"></br>- Campo Nombre vacio</span>
+				<span ng-show="errores.nombreFormato"></br>- Error formato Nombre (debe contener de dos a cuatro palabras)</span>
+				<span ng-show="errores.cedulaVacia"></br>- Campo Cedula vacio</span>
+				<span ng-show="errores.cedulaFormato"></br>- Error formato Cedula (ej: 51458794 - sin puntos ni guiones)</span>
+				<span ng-show="errores.emailVacio"></br>- Campo Email vacio</span>
+				<span ng-show="errores.emailFormato"></br>- Error formato Email (ej: ejemplo@ejemplo.com)</span>
+				<span ng-show="errores.telFormato"></br>- Error formato Tel (ej: 29999999)</span>
+				<span ng-show="errores.celVacio"></br>- Campo Cel vacio</span>
+				<span ng-show="errores.celFormato"></br>- Error formato Cel (ej: 099999999)</span>
+				<span ng-show="errores.domicilioFormato"></br>- Error formato Domicilio(ej: Calle 1111)</span>
+				<span ng-show="errores.domicilioLaboralFormato"></br>- Error formato Domicilio Laboral(ej: Calle 1111)</span>
+				<span ng-show="errores.fechaVacia"></br>- Campo Fecha de Nacimiento vacio</span>
+				<span ng-show="errores.fechaFormato"></br>- Error de formato de Fecha de Nacimiento (ej: 25/05/2015 - usar seleccionador de fecha)</span>
+				<span ng-show="errores.rutFormato"></br>- Error de formato de Rut (ej: )</span>
+			</div>
+
 			<button class="btn btn-default navbar-btn" type="button" ng-click="modificarUsuario()" ng-hide="!modificandoUsuario">Aplicar Modificacion</button>
 			<button class="btn btn-default navbar-btn" type="button" ng-click="cancelarModificarUsuario()" ng-hide="!modificandoUsuario">Cancelar</button>
 		</div>
@@ -90,23 +114,34 @@
 	<div class="jumbotron" ng-show="cambiarContraseniaFormShow">
 		<form class="form-horizontal">
 			<div class="form-group">
-				<label class="control-label col-sm-2" for="password">Contrasenia actual:</label>
+				<label class="control-label col-sm-2" for="password">Contraseña actual:</label>
 				<div class="col-sm-10">
-					<input type="password" class="form-control" id="password" placeholder="Ingresar contrasenia actual" ng-model="password">
+					<input type="password" class="form-control" id="password" placeholder="Ingresar contraseña actual" ng-model="password">
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="control-label col-sm-2" for="nuevaPassword">Contrasenia nueva:</label>
+				<label class="control-label col-sm-2" for="nuevaPassword">Contraseña nueva:</label>
 				<div class="col-sm-10">
-					<input type="password" class="form-control" id="nuevaPassword" placeholder="Ingresar nueva contrasenia" ng-model="nuevaPassword">
+					<input type="password" class="form-control" id="nuevaPassword" placeholder="Ingresar nueva contraseña" ng-model="nuevaPassword">
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="control-label col-sm-2" for="repetirPassword">Repetir contrasenia:</label>
+				<label class="control-label col-sm-2" for="repetirPassword">Repetir contraseña:</label>
 				<div class="col-sm-10">
-					<input type="password" class="form-control" id="repetirPassword" placeholder="Repetir nueva contrasenia" ng-model="repetirPassword">
+					<input type="password" class="form-control" id="repetirPassword" placeholder="Repetir nueva contraseña" ng-model="repetirPassword">
 				</div>
 			</div>
+
+			<div class="alert alert-danger" role="alert" ng-show="cambiarContraseniaFormShow && (errores.contraseniaVacia || errores.contraseniaIncorrecta || errores.contraseniaNuevaVacia || errores.contraseniaNuevaFormato || errores.contraseniaRepetirVacia || errores.contraseniaRepetirDesigual)">
+				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+				<span ng-show="errores.contraseniaVacia"></br>- Campo Contraseña actual vacio</span>
+				<span ng-show="errores.contraseniaIncorrecta"></br>- Contraseña incorrecta</span>
+				<span ng-show="errores.contraseniaNuevaVacia"></br>- Campo Contraseña nueva vacio</span>
+				<span ng-show="errores.contraseniaNuevaFormato"></br>- Error formato Contraseña (ej: Ejemplo1! - Debe poseer 5 o mas caracteres incluyendo una letra mayuscula, una minuscula, un numero y un caracter no alfanumerico)</span>
+				<span ng-show="errores.contraseniaRepetirVacia"></br>- Campo Repetir contraseña vacio</span>
+				<span ng-show="errores.contraseniaRepetirDesigual"></br>- Campo Contraseña nueva y campo Repetir contraseña diferentes</span>
+			</div>
+
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
 					<button type="button" class="btn btn-default" ng-click="cambiarContrasenia()">Cambiar</button>

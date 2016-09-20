@@ -68,6 +68,18 @@
 					<input type="checkbox" class="checkbox" id="suscrito" placeholder="Ingresar suscrito"  ng-disabled="!modificandoCaso" ng-model="casoDetallado.suscrito">
 				</li>
 			</ul>
+
+
+			<div class="alert alert-danger" role="alert" ng-show="modificandoCaso && (errores.iueVacia || errores.turnoVacio || errores.caratuladoVacio|| errores.iueFormato || errores.turnoFormato || errores.iueDuplicado)">
+				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+				<span>Corregir errores:</span>
+				<span ng-show="errores.iueVacia"></br>- Campo IUE vacio</span>
+				<span ng-show="errores.iueFormato"></br>- Error en formato de IUE (ej: 2-1542/2015)</span>
+				<span ng-show="errores.turnoVacio"></br>- Campo Turno vacio</span>
+				<span ng-show="errores.turnoFormato"></br>- El turno debe tener dos digitos numericos que van del 1 al 29</span>
+				<span ng-show="errores.caratuladoVacio"></br>- Campo Caratulado vacio</span>
+				<span ng-show="errores.iueDuplicado"></br>- Ya hay un caso registrado con el mismo IUE</span>
+			</div>
 			<button class="btn btn-default navbar-btn" type="button" ng-click="modificarCaso()" ng-hide="!modificandoCaso">Aplicar Modificacion</button>
 			<button class="btn btn-default navbar-btn" type="button" ng-click="cancelarModificarCaso()" ng-hide="!modificandoCaso">Cancelar</button>
 		</div>
@@ -192,6 +204,23 @@
 					<input type="text" class="form-control" id="clase" placeholder="Ingresar clase" ng-model="clase">
 				</div>
 			</div>
+
+			<div class="alert alert-danger" role="alert" ng-show="erroresInvolucrado.fechaVacia || erroresInvolucrado.fechaFormato || erroresInvolucrado.nombreVacio || erroresInvolucrado.nombreFormato || erroresInvolucrado.cedulaVacia || erroresInvolucrado.cedulaFormato || erroresInvolucrado.cedulaDuplicada || erroresInvolucrado.nacionalidadFormato || erroresInvolucrado.domicilioFormato || erroresInvolucrado.claseVacia || erroresInvolucrado.claseFormato">
+				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+				<span>Corregir errores:</span>
+				<span ng-show="erroresInvolucrado.fechaVacia"></br>- Campo Fecha de Nacimiento vacio</span>
+				<span ng-show="erroresInvolucrado.fechaFormato"></br>- Error de formato de Fecha de Nacimiento(ej: 25/05/2015 - usar seleccionador de fecha)</span>
+				<span ng-show="erroresInvolucrado.nombreVacio"></br>- Campo Nombre vacio</span>
+				<span ng-show="erroresInvolucrado.nombreFormato"></br>- Error formato Nombre(debe contener de dos a cuatro palabras)</span>
+				<span ng-show="erroresInvolucrado.cedulaDuplicada"></br>- Ya hay un involucrado registrado con la misma cedula</span>
+				<span ng-show="erroresInvolucrado.cedulaVacia"></br>- Campo Cedula vacio</span>
+				<span ng-show="erroresInvolucrado.cedulaFormato"></br>- Error formato Cedula(ej: 51458794 - sin puntos ni guiones)</span>
+				<span ng-show="erroresInvolucrado.nacionalidadFormato"></br>- Error formato Nacionalidad(debe contener una o dos palabras)</span>
+				<span ng-show="erroresInvolucrado.domicilioFormato"></br>- Error formato Domicilio(ej: Calle 1111)</span>
+				<span ng-show="erroresInvolucrado.claseVacia"></br>- Campo Clase vacio</span>
+				<span ng-show="erroresInvolucrado.claseFormato"></br>- Error formato Clase(debe contener una o dos palabras)</span>
+			</div>
+
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
 					<button type="button" class="btn btn-default" ng-click="agregarInvolucrado()" ng-show="botonAgregarInvolucrado">Agregar</button>

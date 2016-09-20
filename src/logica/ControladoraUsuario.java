@@ -208,7 +208,7 @@ public class ControladoraUsuario {
 	//FIN SECCION ALTAS
 	
 	//PRINCIPIO SECCION MODIFICACIONES
-	public static String modificarContrasenia(String usuarioActual, String contrasenia) throws Exception{
+	public static String modificarContrasenia(String usuarioActual, String contraseniaAnterior, String contrasenia) throws Exception{
 		//Se valida que la sesion sea valida
 		String usr = validateUsrSession(usuarioActual);
 		
@@ -217,8 +217,10 @@ public class ControladoraUsuario {
 		if(u == null) {
 			return "not found";
 		} else {
+			if(!u.getContrasenia().equals(contraseniaAnterior)){
+				throw new Exception("contrasenia incorrecta");
+			}
 			//Se valida que los datos sean validos
-
 			if(!Validacion.validarContrasenia(contrasenia))
 				throw new Exception("contrasenia");
 			
@@ -277,13 +279,13 @@ public class ControladoraUsuario {
 			validarDatosUsuario(usuario, contrasenia, nombre, cedula, email, tel, cel, domicilio, domicilioLaboral, fechaDeNacimiento);
 			
 			//Se valida que en caso de haber cambiado el nombre de usuario, el nuevo nombre no este aun registrado
-			if (!usuario.equals(usuarioUsado)) {
+			if (!usuarioUsado.equals(usuario)) {
 				Usuario usrUpdate = buscarUsuarioPrivate(usuario);
 				
 				if (usrUpdate == null) {
 					u.setUsuario(usuario);
 				} else {
-					throw new Exception ("Duplicado");
+					throw new Exception ("duplicado");
 				}
 			}
 			

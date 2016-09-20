@@ -18,7 +18,114 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 		$scope.cargarCasosDisponibles();
 		$scope.cargarPermisos();
 		$scope.cargarPermisosRestantes();
+
+		$scope.limpiarErrores();
 	});
+
+	$scope.limpiarErrores = function(){
+		$scope.errores = {usuarioVacio:false, usuarioFormato:false, usuarioDuplicado:false, contraseniaVacia:false, contraseniaFormato:false, nombreVacio:false, 
+							nombreFormato:false, cedulaVacia:false, cedulaFormato:false, emailVacio:false, emailFormato:false, telFormato:false, celVacio:false, 
+							celFormato:false, domicilioFormato:false, domicilioLaboralFormato:false, fechaVacia:false, fechaFormato:false, rutFormato:false};
+	}
+
+	$scope.validarCampos = function(){
+		if($rootScope.usuarioDetallado.usuario == undefined || $rootScope.usuarioDetallado.usuario == ""){
+			$scope.errores.usuarioVacio = true;
+		} else {
+			var regexUsuario = new RegExp("(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{5,15}");
+			if(!regexUsuario.test($rootScope.usuarioDetallado.usuario)){
+				$scope.errores.usuarioFormato = true;
+			}
+		}
+		if($rootScope.usuarioDetallado.contrasenia == undefined || $rootScope.usuarioDetallado.contrasenia == ""){
+			$scope.errores.contraseniaVacia = true;
+		} else {
+			var regexContrasenia = new RegExp("(?=.*\\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\\S{6,16}");
+			if(!regexContrasenia.test($rootScope.usuarioDetallado.contrasenia)){
+				$scope.errores.contraseniaFormato = true;
+			}
+		}
+		if($rootScope.usuarioDetallado.nombre == undefined || $rootScope.usuarioDetallado.nombre == ""){
+			$scope.errores.nombreVacio = true;
+		} else {
+			var regexNombre = new RegExp("^[A-Za-z]+(?:([ ])+[A-Za-z]+){1,3}$");
+			if(!regexNombre.test($rootScope.usuarioDetallado.nombre)){
+				$scope.errores.nombreFormato = true;
+			}
+		}
+		if($rootScope.usuarioDetallado.cedula == undefined || $rootScope.usuarioDetallado.cedula == ""){
+			$scope.errores.cedulaVacia = true;
+		} else {
+			var regexCedula = new RegExp("([0-9]{8})");
+			if(!regexCedula.test($rootScope.usuarioDetallado.cedula)){
+				$scope.errores.cedulaFormato = true;
+			}
+		}
+		if($rootScope.usuarioDetallado.email == undefined || $rootScope.usuarioDetallado.email == ""){
+			$scope.errores.emailVacio = true;
+		} else {
+			var regexEmail = new RegExp("[a-zA-Z0-9._%-]+@[a-zA-Z.-]+\\.[a-zA-Z]{2,4}");
+			if(!regexEmail.test($rootScope.usuarioDetallado.email)){
+				$scope.errores.emailFormato = true;
+			}
+		}
+		if($rootScope.usuarioDetallado.tel == undefined || $rootScope.usuarioDetallado.tel == ""){
+
+		}else{
+			var regexTel = new RegExp("(^([1-9]{1})([0-9]{7})$)");
+			if(!regexTel.test($rootScope.usuarioDetallado.tel)){
+				$scope.errores.telFormato = true;
+			}
+		}
+		if($rootScope.usuarioDetallado.cel == undefined || $rootScope.usuarioDetallado.cel == ""){
+			$scope.errores.celVacio = true;
+		} else {
+			var regexCel = new RegExp("^09[0-9]{7}$");
+			if(!regexCel.test($rootScope.usuarioDetallado.cel)){
+				$scope.errores.celFormato = true;
+			}
+		}
+		if($rootScope.usuarioDetallado.domicilio == undefined || $rootScope.usuarioDetallado.domicilio == ""){
+			
+		} else {
+			var regexDomicilio = new RegExp("^[A-Za-z]+(?:([ ])+[A-Za-z]+){0,3}(([ ])([0-9]{3,4}))$");
+			if(!regexDomicilio.test($rootScope.usuarioDetallado.domicilio)){
+				$scope.errores.domicilioFormato = true;
+			}
+		}
+		if($rootScope.usuarioDetallado.domicilioLaboral == undefined || $rootScope.usuarioDetallado.domicilioLaboral == ""){
+			
+		} else {
+			var regexdomicilioLaboral = new RegExp("^[A-Za-z]+(?:([ ])+[A-Za-z]+){0,3}(([ ])([0-9]{3,4}))$");
+			if(!regexdomicilioLaboral.test($rootScope.usuarioDetallado.domicilioLaboral)){
+				$scope.errores.domicilioLaboralFormato = true;
+			}
+		}
+		if($scope.dtFechaDeNacimiento == undefined || $scope.dtFechaDeNacimiento == ""){
+			$scope.errores.fechaVacia = true;
+		} else {
+			if ( Object.prototype.toString.call($scope.dtFechaDeNacimiento) === "[object Date]" ) {
+				if ( isNaN( $scope.dtFechaDeNacimiento.getTime() ) ) {
+					$scope.errores.fechaFormato = true;
+				}
+			} else {
+				$scope.errores.fechaFormato = true;
+			}
+		}
+		if($scope.rut == undefined || $scope.rut == ""){
+
+		}else{
+
+		}
+	}
+
+	$scope.hayErores = function(){
+		return ($scope.errores.usuarioVacio || $scope.errores.usuarioFormato || $scope.errores.usuarioDuplicado || $scope.errores.contraseniaVacia || 
+			$scope.errores.contraseniaFormato || $scope.errores.nombreVacio || $scope.errores.nombreFormato || $scope.errores.cedulaVacia || 
+			$scope.errores.cedulaFormato || $scope.errores.emailVacio || $scope.errores.emailFormato || $scope.errores.telFormato || $scope.errores.celVacio || 
+			$scope.errores.celFormato || $scope.errores.domicilioFormato || $scope.errores.domicilioLaboralFormato || $scope.errores.fechaVacia || 
+			$scope.errores.fechaFormato || $scope.errores.rutFormato);
+	}
 
 	$scope.open1 = function() {
 		$scope.fechaNacimientoPopUp.opened = true;
@@ -136,50 +243,60 @@ app.controller("detalleUsuarioController", ['$scope', '$location', '$window', '$
 	}
 
 	$scope.cancelarModificarUsuario = function(){
+		$scope.limpiarErrores();
+		$scope.cargarDatosGenerales();
 		$scope.modificandoUsuario = false;
 	}
 
 	$scope.modificarUsuario = function(){
-		var fecha = "";
-		var day = parseInt($scope.dtFechaDeNacimiento.getDate());
-		if(day<10)
-			fecha += "0" + day;
-		else
-			fecha += day;
-		var month = parseInt($scope.dtFechaDeNacimiento.getMonth())+1;
-		if (month<10)
-			fecha += "/0" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
-		else
-			fecha += "/" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
-		$http({
-			method: 'PUT',
-			url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/modificarUsuario?usrKey=' + $rootScope.token 
-																						+ '&usuarioUsado=' + $rootScope.usuarioADetallar 
-																						+ '&usuario=' + $rootScope.usuarioDetallado.usuario 
-																						+ '&contrasenia=' + $rootScope.usuarioDetallado.contrasenia 
-																						+ '&nombre=' + $rootScope.usuarioDetallado.nombre 
-																						+ '&cedula=' + $rootScope.usuarioDetallado.cedula
-																						+ '&email=' + $rootScope.usuarioDetallado.email
-																						+ '&tel=' + $rootScope.usuarioDetallado.tel
-																						+ '&cel=' + $rootScope.usuarioDetallado.cel
-																						+ '&domicilio=' + $rootScope.usuarioDetallado.domicilio
-																						+ '&domicilioLaboral=' + $rootScope.usuarioDetallado.domicilioLaboral
-																						+ '&rut=' + $rootScope.usuarioDetallado.rut
-																						+ '&fechaDeNacimiento=' + fecha
-		}).success(function(data, status, headers, config) {
-			if(data == "completado"){
-				if(($scope.usuarioADetallar != $rootScope.usuarioDetallado.usuario || $rootScope.currentUsr.contrasenia != $rootScope.usuarioDetallado.contrasenia) 
-					&& $scope.usuarioADetallar == $rootScope.currentUsr.usuario){
-					$scope.reLoggear($rootScope.usuarioDetallado.usuario, $rootScope.usuarioDetallado.contrasenia);
+		$scope.limpiarErrores();
+		$scope.validarCampos();
+		if(!$scope.hayErores()){
+			var fecha = "";
+			var day = parseInt($scope.dtFechaDeNacimiento.getDate());
+			if(day<10)
+				fecha += "0" + day;
+			else
+				fecha += day;
+			var month = parseInt($scope.dtFechaDeNacimiento.getMonth())+1;
+			if (month<10)
+				fecha += "/0" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
+			else
+				fecha += "/" + month + "/" + $scope.dtFechaDeNacimiento.getFullYear();
+			$http({
+				method: 'PUT',
+				url: 'http://localhost:8080/EstudioPRLA/rest/UsuarioService/modificarUsuario?usrKey=' + $rootScope.token 
+																							+ '&usuarioUsado=' + $rootScope.usuarioADetallar 
+																							+ '&usuario=' + $rootScope.usuarioDetallado.usuario 
+																							+ '&contrasenia=' + $rootScope.usuarioDetallado.contrasenia 
+																							+ '&nombre=' + $rootScope.usuarioDetallado.nombre 
+																							+ '&cedula=' + $rootScope.usuarioDetallado.cedula
+																							+ '&email=' + $rootScope.usuarioDetallado.email
+																							+ '&tel=' + $rootScope.usuarioDetallado.tel
+																							+ '&cel=' + $rootScope.usuarioDetallado.cel
+																							+ '&domicilio=' + $rootScope.usuarioDetallado.domicilio
+																							+ '&domicilioLaboral=' + $rootScope.usuarioDetallado.domicilioLaboral
+																							+ '&rut=' + $rootScope.usuarioDetallado.rut
+																							+ '&fechaDeNacimiento=' + fecha
+			}).success(function(data, status, headers, config) {
+				if(data == "duplicado"){
+					$scope.errores.usuarioDuplicado = true;
 				} else {
-					$rootScope.usuarioADetallar =  $rootScope.usuarioDetallado.usuario;
-					$scope.cancelarModificarUsuario();
-					$scope.cargarDatosGenerales();
+					if(data == "completado"){
+						if(($scope.usuarioADetallar != $rootScope.usuarioDetallado.usuario || $rootScope.currentUsr.contrasenia != $rootScope.usuarioDetallado.contrasenia) 
+							&& $scope.usuarioADetallar == $rootScope.currentUsr.usuario){
+							$scope.reLoggear($rootScope.usuarioDetallado.usuario, $rootScope.usuarioDetallado.contrasenia);
+						} else {
+							$rootScope.usuarioADetallar =  $rootScope.usuarioDetallado.usuario;
+							$scope.cancelarModificarUsuario();
+							$scope.cargarDatosGenerales();
+						}
+					}
 				}
-			}
-		}).error(function(data, status, headers, config) {
-			alert("Ha fallado la petición. Estado HTTP:"+status);
-		});
+			}).error(function(data, status, headers, config) {
+				alert("Ha fallado la petición. Estado HTTP:"+status);
+			});
+		}
 	}
 
 

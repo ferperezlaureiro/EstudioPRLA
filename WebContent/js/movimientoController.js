@@ -103,7 +103,7 @@ app.controller("movimientoController", ['$scope', '$location', '$window', '$root
 		}).error(function(data, status, headers, config) {
 			alert("Ha fallado la petición. Estado HTTP:"+status);
 		});
-	}
+	};
 
 	$scope.cargarMisCasosSuscritos = function(){
 		$http({
